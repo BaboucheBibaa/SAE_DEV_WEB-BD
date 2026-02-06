@@ -23,7 +23,7 @@ class GestionProfil {
 
         $view = 'views/profil/profil.php';
 
-        require 'views/includes.php';
+        require_once 'views/includes.php';
     }
 
 }

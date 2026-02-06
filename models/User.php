@@ -7,7 +7,7 @@ class User {
         $db = Database::getConnection();
 
         $stmt = $db->prepare(
-            "SELECT * FROM Personnel WHERE login = :login"
+            "SELECT Personnel.*, role.est_admin FROM Personnel JOIN role ON Personnel.ID_Role = role.ID_Role WHERE login = :login"
         );
         $stmt->execute([
             'login' => $login

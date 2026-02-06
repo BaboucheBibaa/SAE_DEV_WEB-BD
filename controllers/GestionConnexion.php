@@ -24,9 +24,9 @@ class GestionConnexion {
         }
         $title = "Connexion";
 
-        $view = 'views/auth/login.php';
+        $view = 'views/connexion/login.php';
 
-        require 'views/layout.php';
+        require_once 'views/includes.php';
 
     }
 
