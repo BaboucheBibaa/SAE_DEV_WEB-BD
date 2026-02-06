@@ -1,6 +1,7 @@
 <div class="container mt-4">
     <h2>Liste des Employés</h2>
-    
+
+    <a href="index.php?action=create_employee" class="btn btn-sm btn-success">Ajouter un Employé</a>
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
@@ -20,8 +21,8 @@
                         <td><?= $employee['Prenom'] ?? '' ?></td>
                         <td><?= $employee['mail'] ?? '' ?></td>
                         <td>
-                            <button class="btn btn-sm btn-primary">Modifier</button>
-                            <button class="btn btn-sm btn-danger">Supprimer</button>
+                            <a href="index.php?action=edit_employee&id=<?= $employee['ID_Personnel'] ?>" class="btn btn-sm btn-primary">Modifier</a>
+                            <a href="index.php?action=remove_employee&id=<?= $employee['ID_Personnel'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?')">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
