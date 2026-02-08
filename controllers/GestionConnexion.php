@@ -3,7 +3,7 @@ require_once 'models/User.php';
 
 class GestionConnexion {
 
-    public function showLogin() {
+    public function afficheConnexion() {
 
         $title = "Connexion";
 
@@ -13,7 +13,7 @@ class GestionConnexion {
     }
 
 
-    public function login() {
+    public function connexion() {
         $login = $_POST['login'] ?? '';
         $password = $_POST['password'] ?? '';
         $user = User::recupParLogs($login);
@@ -21,6 +21,8 @@ class GestionConnexion {
             $_SESSION['user'] = $user;
             header('Location: index.php?action=profil');
             exit;
+        } else {
+            $error = "Identifiant ou mot de passe incorrect.";
         }
         $title = "Connexion";
 
@@ -30,9 +32,9 @@ class GestionConnexion {
 
     }
 
-    public function logout() {
+    public function deconnexion() {
         session_destroy();
-        header('Location: index.php?action=login');
+        header('Location: index.php?action=afficheConnexion');
         exit;
     }
 }

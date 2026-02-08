@@ -11,41 +11,48 @@ $controller_admin = new GestionPagesAdmin();
 $controller_profil = new GestionProfil();
 
 switch ($action) {
-    case 'login':
-        $controller->showLogin();
+    case 'afficheConnexion':
+        $controller->afficheConnexion();
         break;
 
-    case 'loginPost':
-        $controller->login();
+    case 'connexion':
+        $controller->connexion();
         break;
 
-    case 'logout':
-        $controller->logout();
+    case 'deconnexion':
+        $controller->deconnexion();
         break;
 
     case 'profil':
-        $controller_profil->profile();
+        $controller_profil->profil();
+        break;
+
+    case 'update_password':
+        $controller_profil->update_password();
         break;
 
     case 'admin_dashboard':
-        $controller_admin->admin_profile();
+        $controller_admin->profil_admin();
         break;
     
-    case 'remove_employee':
-        $controller_admin->remove_employee($id);
-        header('Location: index.php?action=admin_dashboard');
+    case 'supprEmployee':
+        $controller_admin->supprEmployee($_GET['id']);
         break;
 
-    case 'create_employee':
-        $controller_admin->create_employee();
-        header('Location: index.php?action=create_employee');
+    case 'creationEmployee':
+        $controller_admin->creationEmployee();
         break;
-    case 'add_employee':
-        $controller_admin->add_employee();
-        header('Location: index.php?action=admin_dashboard');
+        
+    case 'ajoutEmployee':
+        $controller_admin->ajoutEmployee();
         break;
-    case 'edit_employee':
-        // Cette action n'est pas encore implémentée, mais elle pourrait être utilisée pour afficher un formulaire de modification d'employé
+        
+    case 'editionEmployee':
+        $controller_admin->editionEmployee($_GET['id']);
+        break;
+        
+    case 'majEmployee':
+        $controller_admin->majEmployee($_GET['id']);
         break;
 
     default:

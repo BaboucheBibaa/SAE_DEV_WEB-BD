@@ -6,7 +6,7 @@
                     <h3>Créer un nouvel employé</h3>
                 </div>
                 <div class="card-body">
-                    <form action="index.php?action=add_employee" method="POST">
+                    <form action="index.php?action=ajoutEmployee" method="POST">
                         <div class="mb-3">
                             <label for="nom_cree" class="form-label">Nom <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="nom_cree" name="nom_cree" required>

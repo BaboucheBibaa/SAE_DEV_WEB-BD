@@ -43,12 +43,12 @@
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li><a class="dropdown-item" href="index.php?action=logout">Déconnexion</a></li>
+                                    <li><a class="dropdown-item" href="index.php?action=deconnexion">Déconnexion</a></li>
                                 </ul>
                             </li>
                         <?php else: ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="index.php?action=login">Connexion</a>
+                                <a class="nav-link" href="index.php?action=connexion">Connexion</a>
                             </li>
                         <?php endif; ?>
                     </ul>

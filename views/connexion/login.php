@@ -10,7 +10,7 @@
                     </div>
                 <?php endif; ?>
 
-                <form method="post" action="index.php?action=loginPost">
+                <form method="post" action="index.php?action=connexion">
                     <div class="mb-3">
                         <label for="login" class="form-label">Identifiant</label>
                         <input type="text" class="form-control" id="login" name="login" required>
