@@ -4,7 +4,7 @@ require_once 'controllers/GestionProfil.php';
 require_once 'controllers/GestionConnexion.php';
 require_once 'controllers/GestionPagesAdmin.php';
 //toutes les pages se chargeront par index.php via la méthode GET action, une seule page sera affichée
-$action = $_GET['action'] ?? 'login';
+$action = $_GET['action'] ?? 'connexion';
 
 $controller = new GestionConnexion();
 $controller_admin = new GestionPagesAdmin();
@@ -49,6 +49,9 @@ switch ($action) {
         
     case 'editionEmployee':
         $controller_admin->editionEmployee($_GET['id']);
+        break;
+    case 'updateEmployee':
+        $controller_admin->majEmployee($_GET['id']);
         break;
         
     case 'majEmployee':

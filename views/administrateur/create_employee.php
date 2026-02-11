@@ -25,8 +25,7 @@
                         <div class="mb-3">
                             <label for="MDP_cree" class="form-label">Mot de passe <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="MDP_cree" name="MDP_cree" value="<?= 
-                            ($generatedPassword ?? '') ?>" readonly required>
+                                <input type="text" class="form-control" id="MDP_cree" name="MDP_cree" value="<?=($generatedPassword ?? '') ?>" readonly required>
                                 <button class="btn btn-outline-secondary" type="button" onclick="location.reload()">
                                     <i class="fas fa-sync-alt"></i> Régénérer
                                 </button>
@@ -45,13 +44,25 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="id_role_cree" class="form-label">ID Role</label>
-                            <input type="text" class="form-control" id="id_role_cree" name="id_role_cree" placeholder="Ex: Soigneur, Vétérinaire, Guide...">
+                            <label for="id_role_cree" class="form-label">Fonction</label>
+                            <?php
+                            //Affichage du menu déroulant
+                            if (!empty($liste_roles)) {
+
+                                echo '<select name="role_modif" id="id_role_modif" class="form-control">';
+
+                                foreach ($liste_roles as $role) {
+                                    echo '<option value="' . $role['Nom_Role'] . '"';
+                                    echo '>' . $role['Nom_Role'] . '</option>';
+                                }
+                                echo '</select>';
+                            }
+                            ?>
                         </div>
 
                         <div class="mb-3">
                             <label for="login_cree" class="form-label">Login</label>
-                            <input type="text" class="form-control" id="login_cree" name="login_cree" placeholder="Ex: Soigneur, Vétérinaire, Guide...">
+                            <input type="text" class="form-control" id="login_cree" name="login_cree" placeholder="">
                         </div>
 
                         <div class="d-flex gap-2">

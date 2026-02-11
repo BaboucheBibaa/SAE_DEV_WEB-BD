@@ -1,6 +1,6 @@
 <?php
 require_once 'models/User.php';
-
+require_once 'models/Role.php';
 class GestionPagesAdmin
 {
 
@@ -61,14 +61,15 @@ class GestionPagesAdmin
             header('Location: index.php?action=admin_dashboard');
             exit;
         }
-
+        $liste_roles = Role::recupTousLesRoles();
         $employee = User::recupParID($id);
 
         if (!$employee) {
             header('Location: index.php?action=admin_dashboard');
             exit;
         }
-
+        //Récupération pour affichage par défaut du rôle actuel de l'employé
+        $job = Role::recupNomRoleParID($employee['ID_Role']);
         $title = "Modifier un Employé";
         $view = 'views/administrateur/edit_employee.php';
         require_once 'views/includes.php';
@@ -82,7 +83,14 @@ class GestionPagesAdmin
         // Récupération du mot de passe actuel
         $employee = User::recupParID($id);
 
-        // Si le champ mot de passe est vide, on garde l'ancien, sinon on hash le nouveau
+        //on modifie le champ id_role_modif pour qu'il contienne l'id du rôle correspondant au nom du rôle sélectionné dans le form
+        $nom_role = $_POST['role_modif'] ?? null;
+        if (!(empty($nom_role))) {
+            $role = new Role();
+            $id_role = $role->recupIDRoleParNom($nom_role);
+            $_POST['id_role_modif'] = $id_role['ID_Role'];
+        }
+        // Si le champ mot de passe n'est pas vide on prend le nouveau mot de passe hashé sinon on garde l'ancien mot de passe
         $password = !empty($_POST['MDP_modif']) ? password_hash($_POST['MDP_modif'], PASSWORD_DEFAULT) : $employee['MDP'];
 
         $data = [
@@ -100,10 +108,12 @@ class GestionPagesAdmin
         header('Location: index.php?action=admin_dashboard');
         exit;
     }
+
     public function creationEmployee()
     {
         //Affiche la page de création d'un nouvel employé
-        $title = "Ajouter un Employé";
+        $liste_roles = Role::recupTousLesRoles();
+
         $generatedPassword = $this->genereMDP();
         $view = 'views/administrateur/create_employee.php';
         require_once 'views/includes.php';

@@ -7,7 +7,7 @@
                 </div>
                 <div class="card-body">
                     <!--ID employé en hidden car l'admin a pas à le modifier mais il doit quand même être transmis pour l'update-->
-                    <form action="index.php?action=update_employee&id=<?= $employee['ID_Personnel'] ?>" method="POST">
+                    <form action="index.php?action=updateEmployee&id=<?= $employee['ID_Personnel'] ?>" method="POST">
                         <input type="hidden" name="id_employee" value="<?= $employee['ID_Personnel'] ?>">
 
                         <div class="mb-3">
@@ -48,10 +48,25 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="id_role_modif" class="form-label">ID Rôle</label>
-                            <input type="text" class="form-control" id="id_role_modif" name="id_role_modif" 
-                                   value="<?= $employee['ID_Role'] ?? '' ?>" 
-                                   placeholder="Ex: Soigneur, Vétérinaire, Guide...">
+                            <label for="id_role_modif" class="form-label">Fonction</label>
+                            <?php 
+                            //Affichage du menu déroulant
+                            if (!empty($liste_roles)){
+
+                                echo '<select name="role_modif" id="id_role_modif" class="form-control">';
+                                echo '<option value="' .$job['Nom_Role']. '">'.$job['Nom_Role'].'</option>';
+                    
+                                foreach ($liste_roles as $role) {
+                                    // On n'affiche pas le rôle actuel de l'employé dans la liste déroulante pour éviter les doublons
+                                    if (($role['Nom_Role'] == $job['Nom_Role'])) {
+                                        continue;
+                                    }
+                                    echo '<option value="' . $role['Nom_Role'] . '"';
+                                    echo '>' . $role['Nom_Role'] . '</option>';
+                                }
+                                echo '</select>';
+                            }
+                            ?>
                         </div>
 
                         <div class="mb-3">
