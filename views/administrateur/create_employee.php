@@ -46,14 +46,14 @@
                         <div class="mb-3">
                             <label for="id_role_cree" class="form-label">Fonction</label>
                             <?php
-                            //Affichage du menu déroulant
+                            //Affichage du menu déroulante
                             if (!empty($liste_roles)) {
 
-                                echo '<select name="role_modif" id="id_role_modif" class="form-control">';
+                                echo '<select name="id_role_cree" id="id_role_cree" class="form-control">';
 
                                 foreach ($liste_roles as $role) {
-                                    echo '<option value="' . $role['Nom_Role'] . '"';
-                                    echo '>' . $role['Nom_Role'] . '</option>';
+                                    echo '<option value="' . $role['ID_ROLE'] . '"';
+                                    echo '>' . $role['NOM_ROLE'] . '</option>';
                                 }
                                 echo '</select>';
                             }

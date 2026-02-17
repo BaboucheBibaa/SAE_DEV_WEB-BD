@@ -1,20 +1,20 @@
 <?php
 require_once("myparams.inc.php");
-class Database {
+class Database
+{
 
     private static $conn = null;
 
-    public static function getConnection() {
-        $base="zoo";
-        $dsn="mysql:host=".MYHOST.";dbname=".$base;
-        $user=MYUSER;
-        $pass=MYPASS;
-        try {
-            $idcom = new PDO($dsn,$user,$pass);
-            return $idcom;
+    public static function getConnection()
+    {
+        // connexion à la base oracle
+        $conn = oci_connect(USERNAME, MYPASS, CONNEX);
+        
+        if (!$conn) {
+            $e = oci_error();
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
-        catch(PDOException $except){
-            die('Erreur : ' . $except->getMessage());
-        }
+        
+        return $conn;
     }
 }

@@ -4,13 +4,17 @@ require_once 'controllers/GestionProfil.php';
 require_once 'controllers/GestionConnexion.php';
 require_once 'controllers/GestionPagesAdmin.php';
 //toutes les pages se chargeront par index.php via la méthode GET action, une seule page sera affichée
-$action = $_GET['action'] ?? 'connexion';
+$action = $_GET['action'] ?? 'home';
 
 $controller = new GestionConnexion();
 $controller_admin = new GestionPagesAdmin();
 $controller_profil = new GestionProfil();
 
 switch ($action) {
+    case 'home':
+        $controller->home();
+        break;
+
     case 'afficheConnexion':
         $controller->afficheConnexion();
         break;

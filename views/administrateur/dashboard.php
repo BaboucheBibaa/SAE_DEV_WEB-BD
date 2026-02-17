@@ -16,13 +16,13 @@
             <?php if (!empty($employees)): ?>
                 <?php foreach ($employees as $employee): ?>
                     <tr>
-                        <td><?= $employee['ID_Personnel'] ?? '' ?></td>
-                        <td><?= $employee['Nom'] ?? '' ?></td>
-                        <td><?= $employee['Prenom'] ?? '' ?></td>
-                        <td><?= $employee['mail'] ?? '' ?></td>
+                        <td><?= $employee['ID_PERSONNEL'] ?? '' ?></td>
+                        <td><?= $employee['NOM'] ?? '' ?></td>
+                        <td><?= $employee['PRENOM'] ?? '' ?></td>
+                        <td><?= $employee['MAIL'] ?? '' ?></td>
                         <td>
-                            <a href="index.php?action=editionEmployee&id=<?= $employee['ID_Personnel'] ?>" class="btn btn-sm btn-primary">Modifier</a>
-                            <a href="index.php?action=supprEmployee&id=<?= $employee['ID_Personnel'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?')">Supprimer</a>
+                            <a href="index.php?action=editionEmployee&id=<?= $employee['ID_PERSONNEL'] ?>" class="btn btn-sm btn-primary">Modifier</a>
+                            <a href="index.php?action=supprEmployee&id=<?= $employee['ID_PERSONNEL'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?')">Supprimer</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

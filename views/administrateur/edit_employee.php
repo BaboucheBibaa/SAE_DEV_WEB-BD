@@ -7,25 +7,25 @@
                 </div>
                 <div class="card-body">
                     <!--ID employé en hidden car l'admin a pas à le modifier mais il doit quand même être transmis pour l'update-->
-                    <form action="index.php?action=updateEmployee&id=<?= $employee['ID_Personnel'] ?>" method="POST">
-                        <input type="hidden" name="id_employee" value="<?= $employee['ID_Personnel'] ?>">
+                    <form action="index.php?action=updateEmployee&id=<?= $employee['ID_PERSONNEL'] ?>" method="POST">
+                        <input type="hidden" name="id_employee" value="<?= $employee['ID_PERSONNEL'] ?>">
 
                         <div class="mb-3">
                             <label for="nom_modif" class="form-label">Nom <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="nom_modif" name="nom_modif" 
-                                   value="<?= $employee['Nom'] ?>" required>
+                                   value="<?= $employee['NOM'] ?>" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="prenom_modif" class="form-label">Prénom <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="prenom_modif" name="prenom_modif" 
-                                   value="<?= $employee['Prenom'] ?>" required>
+                                   value="<?= $employee['PRENOM'] ?>" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="mail_modif" class="form-label">Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control" id="mail_modif" name="mail_modif" 
-                                   value="<?= $employee['mail'] ?>" required>
+                                   value="<?= $employee['MAIL'] ?>" required>
                         </div>
 
                         <div class="mb-3">
@@ -38,31 +38,31 @@
                         <div class="mb-3">
                             <label for="date_entree_modif" class="form-label">Date d'entrée</label>
                             <input type="date" class="form-control" id="date_entree_modif" name="date_entree_modif" 
-                                   value="<?= $employee['Date_Entree'] ?>">
+                                   value="<?= $employee['DATE_ENTREE'] ?>">
                         </div>
 
                         <div class="mb-3">
                             <label for="salaire_modif" class="form-label">Salaire <span class="text-danger">*</span></label>
                             <input type="number" class="form-control" id="salaire_modif" name="salaire_modif" 
-                                   value="<?= $employee['Salaire'] ?? '' ?>" required>
+                                   value="<?= $employee['SALAIRE'] ?? '' ?>" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="id_role_modif" class="form-label">Fonction</label>
                             <?php 
                             //Affichage du menu déroulant
+                            echo "prout";
                             if (!empty($liste_roles)){
-
                                 echo '<select name="role_modif" id="id_role_modif" class="form-control">';
-                                echo '<option value="' .$job['Nom_Role']. '">'.$job['Nom_Role'].'</option>';
+                                echo '<option value="' .$job['NOM_ROLE']. '">'.$job['NOM_ROLE'].'</option>';
                     
                                 foreach ($liste_roles as $role) {
                                     // On n'affiche pas le rôle actuel de l'employé dans la liste déroulante pour éviter les doublons
-                                    if (($role['Nom_Role'] == $job['Nom_Role'])) {
+                                    if (($role['NOM_ROLE'] == $job['NOM_ROLE'])) {
                                         continue;
                                     }
-                                    echo '<option value="' . $role['Nom_Role'] . '"';
-                                    echo '>' . $role['Nom_Role'] . '</option>';
+                                    echo '<option value="' . $role['NOM_ROLE'] . '"';
+                                    echo '>' . $role['NOM_ROLE'] . '</option>';
                                 }
                                 echo '</select>';
                             }
@@ -72,7 +72,7 @@
                         <div class="mb-3">
                             <label for="login_modif" class="form-label">Login</label>
                             <input type="text" class="form-control" id="login_modif" name="login_modif" 
-                                   value="<?= $employee['login'] ?? '' ?>" 
+                                   value="<?= $employee['LOGIN'] ?? '' ?>" 
                                    placeholder="Nom d'utilisateur">
                         </div>
 

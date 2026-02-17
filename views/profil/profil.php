@@ -24,25 +24,25 @@
                     <div class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0">
                         <div class="ms-2 me-auto">
                             <div class="fw-bold">Email</div>
-                            <div class="text-muted"><?= htmlspecialchars($user['mail']) ?></div>
+                            <div class="text-muted"><?= htmlspecialchars($user['MAIL'] ?? '') ?></div>
                         </div>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0">
                         <div class="ms-2 me-auto">
                             <div class="fw-bold">Nom</div>
-                            <div class="text-muted"><?= htmlspecialchars($user['Nom']) ?></div>
+                            <div class="text-muted"><?= htmlspecialchars($user['NOM'] ?? '') ?></div>
                         </div>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0">
                         <div class="ms-2 me-auto">
                             <div class="fw-bold">Prénom</div>
-                            <div class="text-muted"><?= htmlspecialchars($user['Prenom']) ?></div>
+                            <div class="text-muted"><?= htmlspecialchars($user['PRENOM'] ?? '') ?></div>
                         </div>
                     </div>
                     <div class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0">
                         <div class="ms-2 me-auto">
                             <div class="fw-bold">Inscrit le</div>
-                            <div class="text-muted"><?= htmlspecialchars($user['Date_Entree']) ?></div>
+                            <div class="text-muted"><?= htmlspecialchars($user['DATE_ENTREE'] ?? '') ?></div>
                         </div>
                     </div>
                 </div>

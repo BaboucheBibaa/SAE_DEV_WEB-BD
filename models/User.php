@@ -9,14 +9,19 @@ class User {
     public static function recupParLogs($login) {
         $db = Database::getConnection();
 
-        $stmt = $db->prepare(
-            "SELECT Personnel.*, role.est_admin FROM Personnel JOIN role ON Personnel.ID_Role = role.ID_Role WHERE login = :login"
-        );
-        $stmt->execute([
-            'login' => $login
-        ]);
+        // Oracle : les noms de colonnes sont insensibles à la casse dans les requêtes
+        // mais retournés en MAJUSCULES dans le résultat
+        $query = "SELECT Personnel.*, role.est_admin FROM Personnel LEFT JOIN role ON Personnel.ID_Role = role.ID_Role WHERE LOGIN = :login";
+        $stid = oci_parse($db, $query);
+        oci_bind_by_name($stid, ':login', $login);
+        
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
 
-        return $stmt->fetch();
+        return oci_fetch_assoc($stid);
     }
 
     /**
@@ -25,18 +30,20 @@ class User {
     public static function recupParID($id) {
         $db = Database::getConnection();
 
-        $stmt = $db->prepare(
-            "SELECT Personnel.*, role.est_admin 
+        $sql = "SELECT Personnel.*, role.est_admin 
             FROM Personnel 
             LEFT JOIN role ON Personnel.ID_Role = role.ID_Role 
-            WHERE ID_Personnel = :id"
-        );
+            WHERE ID_Personnel = :id";
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid, ':id', $id);
 
-        $stmt->execute([
-            'id' => $id
-        ]);
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
 
-        return $stmt->fetch();
+        return oci_fetch_assoc($stid);
     }
 
     /**
@@ -44,9 +51,18 @@ class User {
      */
     public static function toutRecup() {
         $db = Database::getConnection();
-        $stmt = $db->prepare("SELECT * FROM Personnel");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM Personnel";
+        $stid = oci_parse($db, $sql);
+        
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
     }
 
     /**
@@ -54,21 +70,35 @@ class User {
      */
     public static function creer($data) {
         $db = Database::getConnection();
-        $stmt = $db->prepare(
-            "INSERT INTO Personnel (Nom, Prenom, mail, MDP, Date_Entree, Salaire, ID_Role, login) 
-            VALUES (:nom, :prenom, :mail, :MDP, :date_entree, :salaire, :id_role, :login)"
-        );
+        $sql = "INSERT INTO Personnel (Nom, Prenom, mail, MDP, Date_Entree, Salaire, ID_Role, login) 
+            VALUES (:nom, :prenom, :mail, :MDP, :date_entree, :salaire, :id_role, :login)";
+        $stid = oci_parse($db, $sql);
         
-        return $stmt->execute([
-            'nom' => $data['nom'] ?? null,
-            'prenom' => $data['prenom'] ?? null,
-            'mail' => $data['mail'] ?? null,
-            'MDP' => $data['MDP'],
-            'date_entree' => $data['date_entree'] ?? null,
-            'salaire' => $data['salaire'] ?? null,
-            'id_role' => $data['id_role'] ?? null,
-            'login' => $data['login'] ?? null
-        ]);
+        $nom = $data['nom'] ?? null;
+        $prenom = $data['prenom'] ?? null;
+        $mail = $data['mail'] ?? null;
+        $mdp = $data['MDP'];
+        $date_entree = $data['date_entree'] ?? null;
+        $salaire = $data['salaire'] ?? null;
+        $id_role = $data['id_role'] ?? null;
+        $login = $data['login'] ?? null;
+        
+        oci_bind_by_name($stid, ':nom', $nom);
+        oci_bind_by_name($stid, ':prenom', $prenom);
+        oci_bind_by_name($stid, ':mail', $mail);
+        oci_bind_by_name($stid, ':MDP', $mdp);
+        oci_bind_by_name($stid, ':date_entree', $date_entree);
+        oci_bind_by_name($stid, ':salaire', $salaire);
+        oci_bind_by_name($stid, ':id_role', $id_role);
+        oci_bind_by_name($stid, ':login', $login);
+        
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        
+        return $r;
     }
 
     /**
@@ -76,24 +106,38 @@ class User {
      */
     public static function maj($id, $data) {
         $db = Database::getConnection();
-        $stmt = $db->prepare(
-            'UPDATE Personnel 
+        $sql = 'UPDATE Personnel 
             SET Nom = :nom, Prenom = :prenom, mail = :mail, MDP = :MDP, 
                 Date_Entree = :date_entree, Salaire = :salaire, ID_Role = :id_role, login = :login 
-            WHERE ID_Personnel = :id'
-        );
+            WHERE ID_Personnel = :id';
+        $stid = oci_parse($db, $sql);
         
-        return $stmt->execute([
-            'id' => $id,
-            'nom' => $data['nom'] ?? null,
-            'prenom' => $data['prenom'] ?? null,
-            'mail' => $data['mail'] ?? null,
-            'MDP' => $data['MDP'],
-            'date_entree' => $data['date_entree'] ?? null,
-            'salaire' => $data['salaire'] ?? null,
-            'id_role' => $data['id_role'] ?? null,
-            'login' => $data['login'] ?? null
-        ]);
+        $nom = $data['nom'] ?? null;
+        $prenom = $data['prenom'] ?? null;
+        $mail = $data['mail'] ?? null;
+        $mdp = $data['MDP'];
+        $date_entree = $data['date_entree'] ?? null;
+        $salaire = $data['salaire'] ?? null;
+        $id_role = $data['id_role'] ?? null;
+        $login = $data['login'] ?? null;
+        
+        oci_bind_by_name($stid, ':id', $id);
+        oci_bind_by_name($stid, ':nom', $nom);
+        oci_bind_by_name($stid, ':prenom', $prenom);
+        oci_bind_by_name($stid, ':mail', $mail);
+        oci_bind_by_name($stid, ':MDP', $mdp);
+        oci_bind_by_name($stid, ':date_entree', $date_entree);
+        oci_bind_by_name($stid, ':salaire', $salaire);
+        oci_bind_by_name($stid, ':id_role', $id_role);
+        oci_bind_by_name($stid, ':login', $login);
+        
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        
+        return $r;
     }
 
     /**
@@ -101,8 +145,17 @@ class User {
      */
     public static function suppr($id) {
         $db = Database::getConnection();
-        $stmt = $db->prepare("DELETE FROM Personnel WHERE ID_Personnel = :id");
-        return $stmt->execute(['id' => $id]);
+        $sql = "DELETE FROM Personnel WHERE ID_Personnel = :id";
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid, ':id', $id);
+        
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        
+        return $r;
     }
 
 }

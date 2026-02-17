@@ -6,11 +6,15 @@ class GestionPagesAdmin
 
     public function profil_admin()
     {
+        // Vérifier si l'utilisateur est connecté et s'il est admin
         if (empty($_SESSION['user'])) {
-            if ($_SESSION['user']['est_admin'] == true) {
-                header('Location: index.php?action=profil');
-                exit;
-            }
+            header('Location: index.php?action=afficheConnexion');
+            exit;
+        }
+        
+        if (!isset($_SESSION['user']['ID_ROLE']) || $_SESSION['user']['ID_ROLE'] != 1) {
+            header('Location: index.php?action=profil');
+            exit;
         }
         $title = "Profil Administrateur";
         $employees = $this->recupTousEmployes();
@@ -69,7 +73,8 @@ class GestionPagesAdmin
             exit;
         }
         //Récupération pour affichage par défaut du rôle actuel de l'employé
-        $job = Role::recupNomRoleParID($employee['ID_Role']);
+        $job = Role::recupNomRoleParID($employee['ID_ROLE']);
+
         $title = "Modifier un Employé";
         $view = 'views/administrateur/edit_employee.php';
         require_once 'views/includes.php';
@@ -80,15 +85,14 @@ class GestionPagesAdmin
     {
         //Met à jour les données d'un employé dans la base de données en fonction de l'id passé en paramètre
 
-        // Récupération du mot de passe actuel
+        // récup les données de l'employé via son ID
         $employee = User::recupParID($id);
 
         //on modifie le champ id_role_modif pour qu'il contienne l'id du rôle correspondant au nom du rôle sélectionné dans le form
         $nom_role = $_POST['role_modif'] ?? null;
         if (!(empty($nom_role))) {
-            $role = new Role();
-            $id_role = $role->recupIDRoleParNom($nom_role);
-            $_POST['id_role_modif'] = $id_role['ID_Role'];
+            $id_role = Role::recupIDRoleParNom($nom_role);
+            $_POST['id_role_modif'] = $id_role['ID_ROLE'];
         }
         // Si le champ mot de passe n'est pas vide on prend le nouveau mot de passe hashé sinon on garde l'ancien mot de passe
         $password = !empty($_POST['MDP_modif']) ? password_hash($_POST['MDP_modif'], PASSWORD_DEFAULT) : $employee['MDP'];

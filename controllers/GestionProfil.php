@@ -11,7 +11,7 @@ class GestionProfil {
             exit;
         }
 
-        $userId = $_SESSION['user']['ID_Personnel'];
+        $userId = $_SESSION['user']['ID_PERSONNEL'] ?? null;
         
         $user = User::recupParID($userId);
 
@@ -33,7 +33,7 @@ class GestionProfil {
             exit;
         }
 
-        $userId = $_SESSION['user']['ID_Personnel'];
+        $userId = $_SESSION['user']['ID_PERSONNEL'];
         $oldPassword = $_POST['old_password'] ?? '';
         $newPassword = $_POST['new_password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
@@ -63,14 +63,14 @@ class GestionProfil {
 
         // maj du mdp
         $data = [
-            'nom' => $user['Nom'],
-            'prenom' => $user['Prenom'],
-            'mail' => $user['mail'],
+            'nom' => $user['NOM'],
+            'prenom' => $user['PRENOM'] ?? '',
+            'mail' => $user['MAIL'],
             'MDP' => password_hash($newPassword, PASSWORD_DEFAULT),
-            'date_entree' => $user['Date_Entree'],
-            'salaire' => $user['Salaire'],
-            'id_role' => $user['ID_Role'],
-            'login' => $user['login']
+            'date_entree' => $user['DATE_ENTREE'],
+            'salaire' => $user['SALAIRE'],
+            'id_role' => $user['ID_ROLE'],
+            'login' => $user['LOGIN']
         ];
 
         User::maj($userId, $data);

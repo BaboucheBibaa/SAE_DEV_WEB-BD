@@ -28,7 +28,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="index.php?action=home">Accueil</a>
                         </li>
-                        <?php if (isset($_SESSION['user']['est_admin']) && $_SESSION['user']['est_admin'] == true){ ?>
+                        <?php if (isset($_SESSION['user']['ID_ROLE']) && $_SESSION['user']['ID_ROLE'] == 1){ ?>
                         <li class="nav-item">
                             <a class="nav-link" href="index.php?action=admin_dashboard">Dashboard Administrateur</a>
                         </li>
@@ -36,7 +36,7 @@
                         <?php }if (!empty($_SESSION['user'])): ?>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <?= htmlspecialchars($_SESSION['user']['Nom'] . " " . $_SESSION['user']['Prenom'] ?? 'Utilisateur') ?>
+                                    <?= htmlspecialchars($_SESSION['user']['NOM'] ?? '') . " " . htmlspecialchars($_SESSION['user']['PRENOM'] ?? '') ?>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="index.php?action=profil">Mon profil</a></li>
