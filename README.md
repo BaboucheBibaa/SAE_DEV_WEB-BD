@@ -1,44 +1,80 @@
-# SAE_DEV_WEB-BD
+# SAE_DEV_WEB-BD - Zoo'land
 
-Site créé pour une SAE en développement web et bases de données
+> Site créé pour une SAE en développement web et bases de données
 
-Architecture du site en MVC (Modèle Vue-Controlleur)
+---
 
---- DONE:
+## Architecture du Projet
 
-Profil utilisateur individuel avec:
-    - Possibilité de changer de MDP
+Le site utilise l'architecture **MVC (Modèle-Vue-Contrôleur)** pour une meilleure organisation du code.
 
-Dashboard administrateur avec possibilité de:
-    - Ajouter un employé
-    - Supprimer un employé
-    - Modifier un employé
+### Intérêts de cette architecture
 
+- **Modularité** : Il est simple d'ajouter ou de supprimer des fonctionnalités car tout est décomposé de sorte à ce qu'aucune fonction ne soit dépendante d'une autre (ou en tout cas, le moins possible)
 
-TODO Liste:
+- **Lisibilité** : Structure claire et séparée :
+  - **Modèles** : Requêtes SQL
+  - **Contrôleurs** : Traitement des requêtes SQL
+  -  **Vues** : Affichage des données (HTML)
 
-Page responsable zone et affiche:
-    - Liste des enclos, nombre d'animaux
-    - Historique des réparations sur tel enclos
-    - Historique des animaux dans les enclos
+---
 
-Page responsable soigneurs d'une zone:
-    - Liste des enclos, nombre d'animaux
-    - Historique des animaux dans les enclos
-    - Liste des animaux
-    - Historique des soins et des doses de nourriture quotidiennes fournies à un animal particulier
+## Fonctionnalités Implémentées
 
-Page profil:
-    - Ajouter la possibilité de mettre une absence entre tel et tel jour + motif [BONUS]
-    - Référence sur un contrat de travail fictif (voir pour utiliser FPDF ?) [BONUS]
+### Profil Utilisateur Individuel
 
-Page responsable de boutique:
-    - Page de management de la boutique
-    - Chiffre d'affaires journalier et ensuite afficher le chiffre d'affaires annuel et mensuel
-    - Afficher la liste des salariés de cette boutique
-    - Afficher les statistiques de ventes de la boutique par employés présents tel ou tel jour
-      - ça implique de modifier le MCD, à voir si c'est pertinent de le faire ?
+- ✅ Possibilité de changer de mot de passe
 
-Page Gestionnaire du zoo:
-    - Gestion des animaux au sein du zoo (possibilité de déplacer un animal d'un enclos à un autre, ou de le supprimer du zoo)
-    - Gestionnaire des parrainages du zoo (affichage des parrainages + nom du visiteur qui parraine l'animal)
+### Dashboard Administrateur
+
+- ✅ Ajouter un employé
+- ✅ Supprimer un employé
+- ✅ Modifier un employé
+
+---
+
+## TODO Liste
+
+### Page Responsable de Zone
+
+- [ ] Liste des enclos, nombre d'animaux
+- [ ] Historique des réparations sur tel enclos
+- [ ] Historique des animaux dans les enclos
+
+### Page Responsable Soigneurs d'une Zone
+
+- [ ] Liste des enclos, nombre d'animaux
+- [ ] Historique des animaux dans les enclos
+- [ ] Liste des animaux
+- [ ] Historique des soins et des doses de nourriture quotidiennes fournies à un animal particulier
+
+### Page Profil (Améliorations)
+
+- [ ] **[BONUS]** Ajouter la possibilité de mettre une absence entre tel et tel jour + motif
+- [ ] **[BONUS]** Référence sur un contrat de travail fictif (voir pour utiliser FPDF ?)
+
+### Page Responsable de Boutique
+
+- [ ] Page de management de la boutique
+- [ ] Chiffre d'affaires journalier, mensuel et annuel
+- [ ] Liste des salariés de cette boutique
+- [ ] Statistiques de ventes de la boutique par employés présents tel ou tel jour
+  - _Cela implique de modifier le MCD, à voir si c'est pertinent de le faire ?_
+
+### Page Gestionnaire du Zoo
+
+- [ ] Gestion des animaux au sein du zoo
+  - Possibilité de déplacer un animal d'un enclos à un autre
+  - Possibilité de supprimer un animal du zoo
+- [ ] Gestionnaire des parrainages du zoo
+  - Affichage des parrainages
+  - Affichage du nom du visiteur qui parraine l'animal
+
+---
+
+## Technologies Utilisées
+
+- **Backend** : PHP avec Oracle Database (OCI)
+- **Frontend** : HTML5, CSS3, Bootstrap 5
+- **Architecture** : MVC (Modèle-Vue-Contrôleur)
+- **Base de données** : Oracle Database
