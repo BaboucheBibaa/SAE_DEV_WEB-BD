@@ -3,6 +3,12 @@ require_once 'models/User.php';
 
 class GestionConnexion {
 
+    public function home() {
+        $title = "Accueil - Zoo'land";
+        $view = 'views/home.php';
+        require 'views/includes.php';
+    }
+
     public function afficheConnexion() {
 
         $title = "Connexion";
