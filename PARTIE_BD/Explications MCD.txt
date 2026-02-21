@@ -1,8 +1,0 @@
-Explications MCD:
-Une espèce est compatible avec aucune ou plusieurs espèces (0,n sur les associations réflexives)
-Un animal fait partie d'une seule et unique espèce (1,1) mais il peut y avoir un ou plusieurs animaux de la même espèce dans le zoo (on part du principe qu'on stocke uniquement les animaux qui sont actuellement dans le zoo)
-Un animal peut être parrainé par aucune personne ou une seule personne et une personne peut parrainer un animal ou plusieurs (on stocke le visiteur uniquement s'il parraine quelqu'un)
-Un animal peut être le parent de 0 ou n enfants et un enfant a pour parents 0 (si le parent a été déplacé du zoo) ou n parents (nmax = 2 ici)
-Un animal habite dans un seul et unique enclos mais un enclos peut contenir 1 animal ou plusieurs
-Le bien-être quotidien de l'animal est suivi par un soigneur ou plusieurs en cas de remplaçants (1,n) et 
-
