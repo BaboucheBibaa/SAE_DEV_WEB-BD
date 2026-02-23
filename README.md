@@ -27,9 +27,15 @@ Le site utilise l'architecture **MVC (Modèle-Vue-Contrôleur)** pour une meille
 
 ### Dashboard Administrateur
 
-- ✅ Ajouter un employé
-- ✅ Supprimer un employé
-- ✅ Modifier un employé
+- ✅ Ajouter / Supprimer / Modifier un employé
+- ✅ Ajouter / Supprimer / Modifier une zone
+- ✅ Ajouter / Supprimer / Modifier une boutique
+
+### Page Responsable des Soigneurs d'une zone
+
+- ✅ Liste des employés dans la zone
+- ✅ Liste des enclos
+- ✅ Liste des animaux
 
 ---
 
@@ -37,10 +43,7 @@ Le site utilise l'architecture **MVC (Modèle-Vue-Contrôleur)** pour une meille
 
 ### Page Responsable des Soigneurs d'une zone
 
-- [ ] Liste des employés dans la zone
-- [ ] Liste des enclos, nombre d'animaux
 - [ ] Historique des réparations sur tel enclos
-- [ ] Liste des animaux
 
 ### Page Profil (Améliorations)
 
