@@ -15,7 +15,7 @@ Le site utilise l'architecture **MVC (Modèle-Vue-Contrôleur)** pour une meille
 - **Lisibilité** : Structure claire et séparée :
   - **Modèles** : Requêtes SQL
   - **Contrôleurs** : Traitement des requêtes SQL
-  -  **Vues** : Affichage des données (HTML)
+  - **Vues** : Affichage des données (HTML)
 
 ---
 
@@ -35,18 +35,12 @@ Le site utilise l'architecture **MVC (Modèle-Vue-Contrôleur)** pour une meille
 
 ## TODO Liste
 
-### Page Responsable de Zone
+### Page Responsable des Soigneurs d'une zone
 
+- [ ] Liste des employés dans la zone
 - [ ] Liste des enclos, nombre d'animaux
 - [ ] Historique des réparations sur tel enclos
-- [ ] Historique des animaux dans les enclos
-
-### Page Responsable Soigneurs d'une Zone
-
-- [ ] Liste des enclos, nombre d'animaux
-- [ ] Historique des animaux dans les enclos
 - [ ] Liste des animaux
-- [ ] Historique des soins et des doses de nourriture quotidiennes fournies à un animal particulier
 
 ### Page Profil (Améliorations)
 
@@ -61,6 +55,17 @@ Le site utilise l'architecture **MVC (Modèle-Vue-Contrôleur)** pour une meille
 - [ ] Statistiques de ventes de la boutique par employés présents tel ou tel jour
   - _Cela implique de modifier le MCD, à voir si c'est pertinent de le faire ?_
 
+### Page métier (Soigneur / Personnel entretien)
+
+- [ ] Contrat de travail (FPDF Optionnel)
+- [ ] Affichage de la zone d'affectation
+- [ ] Soigneurs:
+  - [ ] liste des parrainages sur les animaux traités par un soigneur
+  - [ ] historique des soins sur les animaux qu'il gère
+- [ ] Entretien:
+  - [ ] Liste des enclos de la zone
+  - [ ] Historique des entretiens des enclos de sa zone
+
 ### Page Gestionnaire du Zoo
 
 - [ ] Gestion des animaux au sein du zoo
@@ -69,12 +74,3 @@ Le site utilise l'architecture **MVC (Modèle-Vue-Contrôleur)** pour une meille
 - [ ] Gestionnaire des parrainages du zoo
   - Affichage des parrainages
   - Affichage du nom du visiteur qui parraine l'animal
-
----
-
-## Technologies Utilisées
-
-- **Backend** : PHP avec Oracle Database (OCI)
-- **Frontend** : HTML5, CSS3, Bootstrap 5
-- **Architecture** : MVC (Modèle-Vue-Contrôleur)
-- **Base de données** : Oracle Database

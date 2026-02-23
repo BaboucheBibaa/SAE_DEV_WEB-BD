@@ -1,9 +1,11 @@
 <?php
 require_once 'models/User.php';
 
-class GestionProfil {
+class GestionProfil
+{
 
-    public function profil() {
+    public function profil()
+    {
 
         // Vérifier si l'utilisateur est connecté
         if (empty($_SESSION['user'])) {
@@ -12,7 +14,7 @@ class GestionProfil {
         }
 
         $userId = $_SESSION['user']['ID_PERSONNEL'] ?? null;
-        
+
         $user = User::recupParID($userId);
 
         if (!$user) {
@@ -26,7 +28,8 @@ class GestionProfil {
         require_once 'views/includes.php';
     }
 
-    public function update_password() {
+    public function update_password()
+    {
         // Met à jour le MDP de l'utilisateur connecté
         if (empty($_SESSION['user'])) {
             header('Location: index.php?action=afficheConnexion');
@@ -73,11 +76,13 @@ class GestionProfil {
             'login' => $user['LOGIN']
         ];
 
-        User::maj($userId, $data);
+        if (User::maj($userId, $data)) {
+            $_SESSION['message_success'] = "Votre mot de passe a été modifié avec succès.";
+        } else {
+            $_SESSION['message_error'] = "Une erreur a eu lieu lors de la mise à jour du profil.";
+        }
 
-        $_SESSION['message_success'] = "Votre mot de passe a été modifié avec succès.";
         header('Location: index.php?action=profil');
         exit;
     }
-
 }

@@ -1,8 +1,8 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
+            <div class="card ">
+                <div class="card-header bg-primary text-white">
                     <h3>Modifier l'employé</h3>
                 </div>
                 <div class="card-body">
@@ -51,22 +51,61 @@
                             <label for="id_role_modif" class="form-label">Fonction</label>
                             <?php 
                             //Affichage du menu déroulant
-                            echo "prout";
                             if (!empty($liste_roles)){
                                 echo '<select name="role_modif" id="id_role_modif" class="form-control">';
-                                echo '<option value="' .$job['NOM_ROLE']. '">'.$job['NOM_ROLE'].'</option>';
+                                echo '<option value="' .$job['NOM_FONCTION']. '">'.$job['NOM_FONCTION'].'</option>';
                     
                                 foreach ($liste_roles as $role) {
                                     // On n'affiche pas le rôle actuel de l'employé dans la liste déroulante pour éviter les doublons
-                                    if (($role['NOM_ROLE'] == $job['NOM_ROLE'])) {
+                                    if (($role['NOM_FONCTION'] == $job['NOM_FONCTION'])) {
                                         continue;
                                     }
-                                    echo '<option value="' . $role['NOM_ROLE'] . '"';
-                                    echo '>' . $role['NOM_ROLE'] . '</option>';
+                                    echo '<option value="' . $role['NOM_FONCTION'] . '"';
+                                    echo '>' . $role['NOM_FONCTION'] . '</option>';
                                 }
                                 echo '</select>';
                             }
                             ?>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_remplacant_modif" class="form-label">Remplaçant (optionnel)</label>
+                            <select name="id_remplacant_modif" id="id_remplacant_modif" class="form-control">
+                                <option value="">-- Aucun --</option>
+                                <?php
+                                if (!empty($liste_employes)) {
+                                    foreach ($liste_employes as $employe) {
+                                        $selected = '';
+                                        if (isset($employee['ID_REMPLACANT']) && $employe['ID_PERSONNEL'] == $employee['ID_REMPLACANT']) {
+                                            $selected = 'selected';
+                                        }
+                                        echo '<option value="' . $employe['ID_PERSONNEL'] . '" ' . $selected . '>';
+                                        echo htmlspecialchars($employe['NOM'] . ' ' . $employe['PRENOM']);
+                                        echo '</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_superieur_modif" class="form-label">Supérieur hiérarchique (optionnel)</label>
+                            <select name="id_superieur_modif" id="id_superieur_modif" class="form-control">
+                                <option value="">-- Aucun --</option>
+                                <?php
+                                if (!empty($liste_employes)) {
+                                    foreach ($liste_employes as $employe) {
+                                        $selected = '';
+                                        if (isset($employee['ID_SUPERIEUR']) && $employe['ID_PERSONNEL'] == $employee['ID_SUPERIEUR']) {
+                                            $selected = 'selected';
+                                        }
+                                        echo '<option value="' . $employe['ID_PERSONNEL'] . '" ' . $selected . '>';
+                                        echo htmlspecialchars($employe['NOM'] . ' ' . $employe['PRENOM']);
+                                        echo '</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
                         </div>
 
                         <div class="mb-3">

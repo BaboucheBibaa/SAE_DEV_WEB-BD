@@ -28,9 +28,13 @@
                         <li class="nav-item">
                             <a class="nav-link" href="index.php?action=home">Accueil</a>
                         </li>
-                        <?php if (isset($_SESSION['user']['ID_ROLE']) && $_SESSION['user']['ID_ROLE'] == 1){ ?>
+                        <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID){ ?>
                         <li class="nav-item">
                             <a class="nav-link" href="index.php?action=admin_dashboard">Dashboard Administrateur</a>
+                        </li>
+                        <?php } if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == RESPSOIG){ ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.php?action=respZone_dashboard">Dashboard Responsable de Zone</a>
                         </li>
 
                         <?php }if (!empty($_SESSION['user'])): ?>

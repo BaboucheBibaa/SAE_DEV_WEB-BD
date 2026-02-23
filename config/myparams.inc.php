@@ -1,6 +1,9 @@
 <?php
-define("USERNAME","SYSTEM");
+define("USERNAME","SAE_USER");
 define("CONNEX","localhost:1521/FREEPDB1");
-define("MYPASS","SAE2026");
+define("MYPASS","sae2026");
+define("ADMINID",3);
+define("RESPSOIG",4);
+
 ?>
 

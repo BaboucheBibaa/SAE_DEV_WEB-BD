@@ -45,6 +45,12 @@
                             <div class="text-muted"><?= htmlspecialchars($user['DATE_ENTREE'] ?? '') ?></div>
                         </div>
                     </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Fonction actuelle au sein du zoo</div>
+                            <div class="text-muted"><?= htmlspecialchars($user['NOM_FONCTION'] ?? '') ?></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
