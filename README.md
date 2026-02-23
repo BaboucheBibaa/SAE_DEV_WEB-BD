@@ -41,10 +41,6 @@ Le site utilise l'architecture **MVC (Modèle-Vue-Contrôleur)** pour une meille
 
 ## TODO Liste
 
-### Page Responsable des Soigneurs d'une zone
-
-- [ ] Historique des réparations sur tel enclos
-
 ### Page Profil (Améliorations)
 
 - [ ] **[BONUS]** Ajouter la possibilité de mettre une absence entre tel et tel jour + motif
