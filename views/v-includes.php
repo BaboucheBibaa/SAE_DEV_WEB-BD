@@ -28,16 +28,18 @@
                         <li class="nav-item">
                             <a class="nav-link" href="index.php?action=home">Accueil</a>
                         </li>
-                        <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID){ ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.php?action=admin_dashboard">Dashboard Administrateur</a>
-                        </li>
-                        <?php } if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == RESPSOIG){ ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.php?action=respZone_dashboard">Dashboard Responsable de Zone</a>
-                        </li>
+                        <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID) { ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?action=admin_dashboard">Dashboard Administrateur</a>
+                            </li>
+                        <?php }
+                        if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == RESPSOIG) { ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?action=respZone_dashboard">Dashboard Responsable de Zone</a>
+                            </li>
 
-                        <?php }if (!empty($_SESSION['user'])): ?>
+                        <?php }
+                        if (!empty($_SESSION['user'])): ?>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <?= htmlspecialchars($_SESSION['user']['NOM'] ?? '') . " " . htmlspecialchars($_SESSION['user']['PRENOM'] ?? '') ?>
@@ -63,6 +65,15 @@
 
     <main class="flex-grow-1 py-4">
         <div class="container">
+
+            <?php if (!empty($_SESSION['flash'])): ?>
+                <div class="alert alert-<?= htmlspecialchars($_SESSION['flash']['type']) ?> alert-dismissible fade show" role="alert">
+                    <?= htmlspecialchars($_SESSION['flash']['message']) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <?php unset($_SESSION['flash']); ?>
+            <?php endif; ?>
+
             <?php require $view; ?>
         </div>
     </main>

@@ -39,6 +39,7 @@
                             <label for="date_entree_modif" class="form-label">Date d'entrée</label>
                             <input type="date" class="form-control" id="date_entree_modif" name="date_entree_modif" 
                                    value="<?= $employee['DATE_ENTREE'] ?>">
+                            <small class="text-muted">Laisser vide pour conserver la date actuelle</small>
                         </div>
 
                         <div class="mb-3">
@@ -48,11 +49,11 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="id_role_modif" class="form-label">Fonction</label>
+                            <label for="id_role_modif" class="form-label">Fonction <span class="text-danger">*</span></label>
                             <?php 
                             //Affichage du menu déroulant
                             if (!empty($liste_roles)){
-                                echo '<select name="role_modif" id="id_role_modif" class="form-control">';
+                                echo '<select name="role_modif" id="id_role_modif" class="form-control" required>';
                                 echo '<option value="' .$job['NOM_FONCTION']. '">'.$job['NOM_FONCTION'].'</option>';
                     
                                 foreach ($liste_roles as $role) {
@@ -69,12 +70,16 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="id_remplacant_modif" class="form-label">Remplaçant (optionnel)</label>
-                            <select name="id_remplacant_modif" id="id_remplacant_modif" class="form-control">
-                                <option value="">-- Aucun --</option>
+                            <label for="id_remplacant_modif" class="form-label">Remplaçant <span class="text-danger">*</span></label>
+                            <select name="id_remplacant_modif" id="id_remplacant_modif" class="form-control" required>
+                                <option value="<?= $employee['ID_PERSONNEL'] ?>" <?= (isset($employee['ID_REMPLACANT']) && $employee['ID_REMPLACANT'] == $employee['ID_PERSONNEL']) ? 'selected' : '' ?>>Lui-même</option>
                                 <?php
                                 if (!empty($liste_employes)) {
                                     foreach ($liste_employes as $employe) {
+                                        // Ne pas afficher l'employé lui-même dans la liste (déjà dans "Moi-même")
+                                        if ($employe['ID_PERSONNEL'] == $employee['ID_PERSONNEL']) {
+                                            continue;
+                                        }
                                         $selected = '';
                                         if (isset($employee['ID_REMPLACANT']) && $employe['ID_PERSONNEL'] == $employee['ID_REMPLACANT']) {
                                             $selected = 'selected';
@@ -86,6 +91,7 @@
                                 }
                                 ?>
                             </select>
+                            <small class="text-muted">Sélectionnez "Lui-même" si l'employé n'a pas de remplaçant attitré</small>
                         </div>
 
                         <div class="mb-3">

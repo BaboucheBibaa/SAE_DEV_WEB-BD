@@ -44,12 +44,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="id_fonction_cree" class="form-label">Fonction</label>
+                            <label for="id_fonction_cree" class="form-label">Fonction <span class="text-danger">*</span></label>
                             <?php
                             //Affichage du menu déroulante
                             if (!empty($liste_fonctions)) {
 
-                                echo '<select name="id_fonction_cree" id="id_fonction_cree" class="form-control">';
+                                echo '<select name="id_fonction_cree" id="id_fonction_cree" class="form-control" required>';
 
                                 foreach ($liste_fonctions as $fonction) {
                                     echo '<option value="' . $fonction['ID_FONCTION'] . '"';
@@ -61,9 +61,9 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="id_remplacant_cree" class="form-label">Remplaçant (optionnel)</label>
+                            <label for="id_remplacant_cree" class="form-label">Remplaçant</label>
                             <select name="id_remplacant_cree" id="id_remplacant_cree" class="form-control">
-                                <option value="">-- Aucun --</option>
+                                <option value="" selected>Moi-même (par défaut)</option>
                                 <?php
                                 if (!empty($liste_employes)) {
                                     foreach ($liste_employes as $employe) {
@@ -74,6 +74,7 @@
                                 }
                                 ?>
                             </select>
+                            <small class="text-muted">Laissez "Moi-même" si l'employé n'a pas de remplaçant attitré</small>
                         </div>
 
                         <div class="mb-3">

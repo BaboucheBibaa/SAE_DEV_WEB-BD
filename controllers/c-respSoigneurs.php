@@ -1,15 +1,12 @@
 <?php
-include 'models/Zone.php';
-include 'models/Enclos.php';
-include 'models/Animal.php';
-class GestionPagesRespZone
+
+class respSoigneurController extends BaseController
 {
     public function afficherPage()
     {
         // Vérifier si l'utilisateur est connecté
         if (empty($_SESSION['user'])) {
-            header('Location: index.php?action=afficheConnexion');
-            exit;
+            $this->redirectWithMessage('afficheConnexion', 'Vous devez être connecté pour accéder à cette page.', 'error');
         }
 
         // Récupérer les informations de l'utilisateur connecté
@@ -30,12 +27,17 @@ class GestionPagesRespZone
             }
 
             $title = "Dashboard Responsable de Zone";
-            $view = 'views/resp_zone/dashboard.php';
-            require_once 'views/includes.php';
+            $this->render('resp_zone/v-dashboard', [
+                'user' => $user,
+                'title' => $title,
+                'zone' => $zone,
+                'employes' => $employes,
+                'enclos' => $enclos,
+                'animaux' => $animaux
+            ]);
         } else {
             // Rediriger vers une page d'erreur ou d'accueil si l'utilisateur n'est pas autorisé
-            header('Location: index.php');
-            exit();
+            $this->redirectWithMessage('home', 'Vous n\'êtes pas autorisé à accéder à cette page.', 'error');
         }
     }
 }

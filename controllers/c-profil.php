@@ -1,7 +1,6 @@
 <?php
-require_once 'models/User.php';
 
-class GestionProfil
+class ProfilController extends BaseController
 {
 
     public function profil()
@@ -9,8 +8,7 @@ class GestionProfil
 
         // Vérifier si l'utilisateur est connecté
         if (empty($_SESSION['user'])) {
-            header('Location: index.php?action=afficheConnexion');
-            exit;
+            $this->redirectWithMessage('afficheConnexion', 'Vous devez être connecté pour accéder à votre profil.', 'error');
         }
 
         $userId = $_SESSION['user']['ID_PERSONNEL'] ?? null;
@@ -23,17 +21,17 @@ class GestionProfil
 
         $title = "Mon profil";
 
-        $view = 'views/profil/profil.php';
-
-        require_once 'views/includes.php';
+        $this->render('profil/v-profil', [
+            'title' => $title,
+            'user' => $user
+        ]);
     }
 
     public function update_password()
     {
         // Met à jour le MDP de l'utilisateur connecté
         if (empty($_SESSION['user'])) {
-            header('Location: index.php?action=afficheConnexion');
-            exit;
+            $this->redirectWithMessage('afficheConnexion', 'Vous devez être connecté pour modifier votre mot de passe.', 'error');
         }
 
         $userId = $_SESSION['user']['ID_PERSONNEL'];
@@ -46,22 +44,19 @@ class GestionProfil
         // mdp = actuel ?
         if (!password_verify($oldPassword, $user['MDP'])) {
             $_SESSION['message_error'] = "Le mot de passe actuel est incorrect.";
-            header('Location: index.php?action=profil');
-            exit;
+            $this->redirectWithMessage('profil', 'Le mot de passe actuel est incorrect.', "error");
         }
 
         // correspondance entre les mdp
         if ($newPassword !== $confirmPassword) {
             $_SESSION['message_error'] = "Les nouveaux mots de passe ne correspondent pas.";
-            header('Location: index.php?action=profil');
-            exit;
+            $this->redirectWithMessage('profil', 'Les nouveaux mots de passe ne correspondent pas.', "error");
         }
 
         // longueur du mdp
         if (strlen($newPassword) < 6) {
             $_SESSION['message_error'] = "Le nouveau mot de passe doit contenir au moins 6 caractères.";
-            header('Location: index.php?action=profil');
-            exit;
+            $this->redirectWithMessage('profil', 'Le nouveau mot de passe doit contenir au moins 6 caractères.', "error");
         }
 
         // maj du mdp
@@ -82,7 +77,6 @@ class GestionProfil
             $_SESSION['message_error'] = "Une erreur a eu lieu lors de la mise à jour du profil.";
         }
 
-        header('Location: index.php?action=profil');
-        exit;
+        $this->redirectWithMessage('profil', 'Votre mot de passe a été modifié avec succès.', "success");
     }
 }

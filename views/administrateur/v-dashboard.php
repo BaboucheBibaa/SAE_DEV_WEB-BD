@@ -75,6 +75,83 @@
         </div>
     </div>
 
+    <!-- Section Animaux -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4><i class="fas fa-paw"></i> Liste des Animaux (<?= count($animals) ?>)</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <a href="index.php?action=creationAnimal" class="btn btn-success">
+                            <i class="fas fa-plus"></i> Ajouter un Animal
+                        </a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Espèce</th>
+                                    <th>Date de naissance</th>
+                                    <th>Poids (kg)</th>
+                                    <th>Régime</th>
+                                    <th>Enclos</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($animals)): ?>
+                                    <?php foreach ($animals as $animal): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?></td>
+                                            <td><?= htmlspecialchars($animal['NOM_ANIMAL'] ?? '') ?></td>
+                                            <td>
+                                                <?php
+                                                // Récupérer le nom de l'espèce
+                                                if (!empty($animal['ID_ESPECE'])) {
+                                                    $espece = Espece::recupParID($animal['ID_ESPECE']);
+                                                    echo htmlspecialchars($espece['NOM_ESPECE'] ?? 'N/A');
+                                                } else {
+                                                    echo 'N/A';
+                                                }
+                                                ?>
+                                            </td>
+                                            <td><?= htmlspecialchars($animal['DATE_NAISSANCE'] ?? 'N/A') ?></td>
+                                            <td><?= htmlspecialchars(number_format(intval($animal['POIDS']) ?? 0, 2)) ?></td>
+                                            <td><?= htmlspecialchars($animal['REGIME_ALIMENTAIRE'] ?? 'N/A') ?></td>
+                                            <td>
+                                                <?php if (!empty($animal['LATITUDE_ENCLOS']) && !empty($animal['LONGITUDE_ENCLOS'])): ?>
+                                                    <?= htmlspecialchars($animal['LATITUDE_ENCLOS']) ?>, <?= htmlspecialchars($animal['LONGITUDE_ENCLOS']) ?>
+                                                <?php else: ?>
+                                                    <span class="text-muted">Non assigné</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <a href="index.php?action=editionAnimal&id=<?= $animal['ID_ANIMAL'] ?>" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-edit"></i> Modifier
+                                                </a>
+                                                <a href="index.php?action=supprAnimal&id=<?= $animal['ID_ANIMAL'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet animal ?')">
+                                                    <i class="fas fa-trash"></i> Supprimer
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="8" class="text-center">Aucun animal trouvé</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Section Zones et Boutiques -->
     <div class="row mb-4">
         <!-- Colonne Zones -->

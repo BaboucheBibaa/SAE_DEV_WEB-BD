@@ -1,0 +1,5 @@
+doc perso: 
+
+$_SESSION['flash'] est une norme au sein de la communauté afin de noter les messages flash, cela permet de créer un message dans une page et de l'afficher dans une autre page après une redirection et supprimé immédiatement.
+
+CEPENDANT c'est pas un mot clé particulier, c'est juste une norme, ça aurait très bien pu s'appeler $_SESSION['prout'] et ça marcherait quand même

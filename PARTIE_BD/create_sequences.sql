@@ -1,0 +1,80 @@
+-- =========================
+-- SEQUENCES POUR AUTO-INCREMENT
+-- =========================
+
+-- Séquence pour ID_Personnel
+CREATE SEQUENCE seq_personnel
+START WITH 100
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Séquence pour ID_Fonction
+CREATE SEQUENCE seq_fonction
+START WITH 10
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Séquence pour ID_Contrat
+CREATE SEQUENCE seq_contrat
+START WITH 100
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Séquence pour ID_Zone
+CREATE SEQUENCE seq_zone
+START WITH 10
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Séquence pour ID_Boutique
+CREATE SEQUENCE seq_boutique
+START WITH 10
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Séquence pour ID_Prestataire
+CREATE SEQUENCE seq_prestataire
+START WITH 10
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Séquence pour ID_Espece
+CREATE SEQUENCE seq_espece
+START WITH 100
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Séquence pour ID_Animal
+CREATE SEQUENCE seq_animal
+START WITH 1000
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Séquence pour ID_Visiteur
+CREATE SEQUENCE seq_visiteur
+START WITH 1000
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Séquence pour ID_Parrainage
+CREATE SEQUENCE seq_parrainage
+START WITH 10
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Séquence pour ID_Prestation
+CREATE SEQUENCE seq_prestation
+START WITH 10
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;

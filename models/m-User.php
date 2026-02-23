@@ -75,8 +75,16 @@ class User
     public static function creer($data)
     {
         $db = Database::getConnection();
+        
+        // Récupérer le prochain ID de la séquence
+        $sql_seq = "SELECT seq_personnel.NEXTVAL AS new_id FROM DUAL";
+        $stid_seq = oci_parse($db, $sql_seq);
+        oci_execute($stid_seq);
+        $row = oci_fetch_assoc($stid_seq);
+        $new_id = $row['NEW_ID'];
+        
         $sql = "INSERT INTO Personnel (ID_Personnel, Nom, Prenom, Mail, MDP, Date_Entree, Salaire, ID_Fonction, LOGIN, ID_Remplacant, ID_Superieur) 
-            VALUES (seq_personnel.NEXTVAL, :nom, :prenom, :mail, :MDP, TO_DATE(:date_entree, 'YYYY-MM-DD'), :salaire, :ID_Fonction, :login, :ID_Remplacant, :ID_Superieur)";
+            VALUES (:id_personnel, :nom, :prenom, :mail, :MDP, TO_DATE(:date_entree, 'YYYY-MM-DD'), :salaire, :ID_Fonction, :login, :ID_Remplacant, :ID_Superieur)";
         $stid = oci_parse($db, $sql);
 
         $nom = $data['nom'] ?? null;
@@ -90,6 +98,7 @@ class User
         $ID_Remplacant = $data['id_remplacant'] ?? null;
         $ID_Superieur = $data['id_superieur'] ?? null;
 
+        oci_bind_by_name($stid, ':id_personnel', $new_id);
         oci_bind_by_name($stid, ':nom', $nom);
         oci_bind_by_name($stid, ':prenom', $prenom);
         oci_bind_by_name($stid, ':mail', $mail);
@@ -107,7 +116,8 @@ class User
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
 
-        return $r;
+        oci_commit($db);
+        return $new_id;
     }
 
     /**
@@ -152,6 +162,28 @@ class User
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
 
+        return $r;
+    }
+
+    /**
+     * Met à jour uniquement le remplaçant d'un employé
+     */
+    public static function majRemplacant($id, $id_remplacant)
+    {
+        $db = Database::getConnection();
+        $sql = 'UPDATE Personnel SET ID_Remplacant = :id_remplacant WHERE ID_Personnel = :id';
+        $stid = oci_parse($db, $sql);
+
+        oci_bind_by_name($stid, ':id', $id);
+        oci_bind_by_name($stid, ':id_remplacant', $id_remplacant);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        oci_commit($db);
         return $r;
     }
 

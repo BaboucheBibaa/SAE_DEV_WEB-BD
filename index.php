@@ -1,17 +1,28 @@
 <?php
 session_start();
-require_once 'controllers/GestionProfil.php';
-require_once 'controllers/GestionConnexion.php';
-require_once 'controllers/GestionPagesAdmin.php';
-require_once 'controllers/GestionPagesRespZone.php';
+require_once 'models/m-Fonction.php';
+require_once 'models/m-Boutique.php';
+require_once 'models/m-Animal.php';
+require_once 'models/m-Espece.php';
+require_once 'models/m-Enclos.php';
+require_once 'models/m-User.php';
+require_once 'models/m-Zone.php';
+
+require_once 'utilities/Utils.php';
+
+require_once 'controllers/c-base.php';
+require_once 'controllers/c-profil.php';
+require_once 'controllers/c-connexion.php';
+require_once 'controllers/c-pageAdmin.php';
+require_once 'controllers/c-respSoigneurs.php';
 
 //toutes les pages se chargeront par index.php via la méthode GET action, une seule page sera affichée
 $action = $_GET['action'] ?? 'home';
 
-$controller = new GestionConnexion();
-$controller_admin = new GestionPagesAdmin();
-$controller_profil = new GestionProfil();
-$controller_resp_zone = new GestionPagesRespZone();
+$controller = new ConnexionController();
+$controller_admin = new AdminController();
+$controller_profil = new ProfilController();
+$controller_resp_zone = new respSoigneurController();
 
 
 switch ($action) {
@@ -106,6 +117,27 @@ switch ($action) {
 
     case 'supprZone':
         $controller_admin->supprZone($_GET['id']);
+        break;
+
+    // Routes pour les animaux
+    case 'creationAnimal':
+        $controller_admin->creationAnimal();
+        break;
+
+    case 'ajoutAnimal':
+        $controller_admin->ajoutAnimal();
+        break;
+
+    case 'editionAnimal':
+        $controller_admin->editionAnimal($_GET['id']);
+        break;
+
+    case 'majAnimal':
+        $controller_admin->majAnimal($_GET['id']);
+        break;
+
+    case 'supprAnimal':
+        $controller_admin->supprAnimal($_GET['id']);
         break;
 
     case 'respZone_dashboard':

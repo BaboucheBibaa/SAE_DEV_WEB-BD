@@ -1,7 +1,7 @@
 <?php
 require_once 'config/database.php';
 
-class FONCTION
+class Fonction
 {
 
     /**
