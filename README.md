@@ -43,7 +43,6 @@ Le site utilise l'architecture **MVC (Modèle-Vue-Contrôleur)** pour une meille
 
 ### Page Profil (Améliorations)
 
-- [ ] **[BONUS]** Ajouter la possibilité de mettre une absence entre tel et tel jour + motif
 - [ ] **[BONUS]** Référence sur un contrat de travail fictif (voir pour utiliser FPDF ?)
 
 ### Page Responsable de Boutique
