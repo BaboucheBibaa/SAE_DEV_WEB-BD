@@ -35,16 +35,10 @@
                         <div class="mb-3">
                             <label for="date_naissance_modif" class="form-label">Date de naissance</label>
                             <?php
-                            // Convertir la date Oracle au format HTML (YYYY-MM-DD)
-                            $date_naissance = '';
-                            if (!empty($animal['DATE_NAISSANCE'])) {
-                                $date_obj = DateTime::createFromFormat('d-M-y', $animal['DATE_NAISSANCE']);
-                                if ($date_obj) {
-                                    $date_naissance = $date_obj->format('Y-m-d');
-                                }
-                            }
+                            $dateObj = DateTime::createFromFormat('d/m/y', $animal['DATE_NAISSANCE']);
+                            $nouvelleDate = $dateObj->format('Y-m-d');
                             ?>
-                            <input type="date" class="form-control" id="date_naissance_modif" name="date_naissance_modif" value="<?= htmlspecialchars($date_naissance) ?>">
+                            <input type="date" class="form-control" id="date_naissance_modif" name="date_naissance_modif" value="<?= $nouvelleDate ?>">
                             <small class="text-muted">Laisser vide pour conserver la date actuelle</small>
                         </div>
 
@@ -97,7 +91,7 @@
                                     <option value="">-- Sélectionner d'abord une zone --</option>
                                 <?php else: ?>
                                     <option value="">-- Sélectionner un enclos --</option>
-                                    <?php 
+                                    <?php
                                     foreach ($enclos as $enc) {
                                         $enclosValue = $enc['LATITUDE'] . '|' . $enc['LONGITUDE'];
                                         $currentEnclos = $animal['LATITUDE_ENCLOS'] . '|' . $animal['LONGITUDE_ENCLOS'];
@@ -129,13 +123,13 @@
 </div>
 
 <script>
-// Mise à jour des champs cachés lors de la sélection d'un enclos
-document.getElementById('enclos_modif').addEventListener('change', function() {
-    const value = this.value;
-    if (value) {
-        const [latitude, longitude] = value.split('|');
-        document.getElementById('latitude_enclos_modif').value = latitude;
-        document.getElementById('longitude_enclos_modif').value = longitude;
-    }
-});
+    // Mise à jour des champs cachés lors de la sélection d'un enclos
+    document.getElementById('enclos_modif').addEventListener('change', function() {
+        const value = this.value;
+        if (value) {
+            const [latitude, longitude] = value.split('|');
+            document.getElementById('latitude_enclos_modif').value = latitude;
+            document.getElementById('longitude_enclos_modif').value = longitude;
+        }
+    });
 </script>

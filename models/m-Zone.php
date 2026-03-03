@@ -1,7 +1,6 @@
 <?php
 class Zone
 {
-
     public static function toutRecup()
     {
         /*Récupère toutes les zones du zoo

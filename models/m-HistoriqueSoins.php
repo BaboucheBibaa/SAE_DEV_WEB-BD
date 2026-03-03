@@ -1,7 +1,5 @@
 <?php
-require_once 'config/database.php';
-
-class Animal
+class HistoriqueSoins
 {
 
     public static function toutRecup()

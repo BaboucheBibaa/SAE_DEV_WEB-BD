@@ -1,6 +1,4 @@
 <?php
-require_once 'config/database.php';
-
 class User
 {
 
@@ -116,8 +114,7 @@ class User
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
 
-        oci_commit($db);
-        return $new_id;
+        return $r;
     }
 
     /**
@@ -162,28 +159,6 @@ class User
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
 
-        return $r;
-    }
-
-    /**
-     * Met à jour uniquement le remplaçant d'un employé
-     */
-    public static function majRemplacant($id, $id_remplacant)
-    {
-        $db = Database::getConnection();
-        $sql = 'UPDATE Personnel SET ID_Remplacant = :id_remplacant WHERE ID_Personnel = :id';
-        $stid = oci_parse($db, $sql);
-
-        oci_bind_by_name($stid, ':id', $id);
-        oci_bind_by_name($stid, ':id_remplacant', $id_remplacant);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        oci_commit($db);
         return $r;
     }
 

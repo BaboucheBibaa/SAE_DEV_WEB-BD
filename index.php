@@ -1,5 +1,13 @@
 <?php
 session_start();
+require_once("myparams.inc.php");
+
+require_once 'config/database.php';
+
+require_once 'models/m-Absence.php';
+require_once 'models/m-Compatibilite.php';
+require_once 'models/m-Enclos.php';
+require_once 'models/m-HistoriqueSoins.php';
 require_once 'models/m-Fonction.php';
 require_once 'models/m-Boutique.php';
 require_once 'models/m-Animal.php';
@@ -9,22 +17,70 @@ require_once 'models/m-User.php';
 require_once 'models/m-Zone.php';
 
 require_once 'utilities/Utils.php';
+require_once 'services/ServiceAnimal.php';
+require_once 'services/ServiceBoutique.php';
+require_once 'services/ServiceEmployee.php';
+require_once 'services/ServiceZone.php';
 
 require_once 'controllers/c-base.php';
 require_once 'controllers/c-profil.php';
 require_once 'controllers/c-connexion.php';
 require_once 'controllers/c-pageAdmin.php';
 require_once 'controllers/c-respSoigneurs.php';
+require_once 'controllers/c-profilAnimal.php';
+
 
 //toutes les pages se chargeront par index.php via la méthode GET action, une seule page sera affichée
 $action = $_GET['action'] ?? 'home';
 
-$controller = new ConnexionController();
-$controller_admin = new AdminController();
-$controller_profil = new ProfilController();
-$controller_resp_zone = new respSoigneurController();
 
+// On instancie UNIQUEMENT les contrôleurs nécessaires au fonctionnement de la page demandée par GET.
+switch ($action){
+    case 'home':
+    case 'afficheConnexion':
+    case 'connexion':
+    case 'deconnexion':
+        $controller = new ConnexionController();
+        break;
+    case 'profil':
+    case 'update_password':
+        $controller = new ProfilController();
+        break;
+    case 'admin_dashboard':    
+    case 'supprEmployee':
+    case 'creationEmployee':
+    case 'ajoutEmployee':
+    case 'editionEmployee':
+    case 'majEmployee':
+    case 'creationBoutique':
+    case 'ajoutBoutique':
+    case 'editionBoutique':
+    case 'majBoutique':
+    case 'supprBoutique':
+    case 'creationZone':
+    case 'ajoutZone':
+    case 'editionZone':
+    case 'majZone':
+    case 'supprZone':
+    case 'creationAnimal':
+    case 'ajoutAnimal':
+    case 'editionAnimal':
+    case 'majAnimal':
+    case 'supprAnimal':
+        $controller = new AdminController();
+        break;
+    case 'respZone_dashboard':
+        $controller = new RespSoigneurController();
+        break;
+    case 'profilAnimal':
+        $controller = new ProfilAnimalController();
+        break;
+    default:
+        echo "Page introuvable";
+        exit;
+}
 
+// Gestion des pages demandées par GET
 switch ($action) {
     case 'home':
         $controller->home();
@@ -43,106 +99,107 @@ switch ($action) {
         break;
 
     case 'profil':
-        $controller_profil->profil();
+        $controller->profil();
         break;
 
     case 'update_password':
-        $controller_profil->update_password();
+        $controller->update_password();
         break;
 
     case 'admin_dashboard':
-        $controller_admin->profil_admin();
+        $controller->profil_admin();
         break;
 
     case 'supprEmployee':
-        $controller_admin->supprEmployee($_GET['id']);
+        $controller->supprEmployee($_GET['id']);
         break;
 
     case 'creationEmployee':
-        $controller_admin->creationEmployee();
+        $controller->creationEmployee();
         break;
 
     case 'ajoutEmployee':
-        $controller_admin->ajoutEmployee();
+        $controller->ajoutEmployee();
         break;
 
     case 'editionEmployee':
-        $controller_admin->editionEmployee($_GET['id']);
-        break;
-    case 'updateEmployee':
-        $controller_admin->majEmployee($_GET['id']);
+        $controller->editionEmployee($_GET['id']);
         break;
 
     case 'majEmployee':
-        $controller_admin->majEmployee($_GET['id']);
+        $controller->majEmployee($_GET['id']);
         break;
 
     // Routes pour les boutiques
     case 'creationBoutique':
-        $controller_admin->creationBoutique();
+        $controller->creationBoutique();
         break;
 
     case 'ajoutBoutique':
-        $controller_admin->ajoutBoutique();
+        $controller->ajoutBoutique();
         break;
 
     case 'editionBoutique':
-        $controller_admin->editionBoutique($_GET['id']);
+        $controller->editionBoutique($_GET['id']);
         break;
 
     case 'majBoutique':
-        $controller_admin->majBoutique($_GET['id']);
+        $controller->majBoutique($_GET['id']);
         break;
 
     case 'supprBoutique':
-        $controller_admin->supprBoutique($_GET['id']);
+        $controller->supprBoutique($_GET['id']);
         break;
 
     // Routes pour les zones
     case 'creationZone':
-        $controller_admin->creationZone();
+        $controller->creationZone();
         break;
 
     case 'ajoutZone':
-        $controller_admin->ajoutZone();
+        $controller->ajoutZone();
         break;
 
     case 'editionZone':
-        $controller_admin->editionZone($_GET['id']);
+        $controller->editionZone($_GET['id']);
         break;
 
     case 'majZone':
-        $controller_admin->majZone($_GET['id']);
+        $controller->majZone($_GET['id']);
         break;
 
     case 'supprZone':
-        $controller_admin->supprZone($_GET['id']);
+        $controller->supprZone($_GET['id']);
         break;
 
     // Routes pour les animaux
     case 'creationAnimal':
-        $controller_admin->creationAnimal();
+        $controller->creationAnimal();
         break;
 
     case 'ajoutAnimal':
-        $controller_admin->ajoutAnimal();
+        $controller->ajoutAnimal();
         break;
 
     case 'editionAnimal':
-        $controller_admin->editionAnimal($_GET['id']);
+        $controller->editionAnimal($_GET['id']);
         break;
 
     case 'majAnimal':
-        $controller_admin->majAnimal($_GET['id']);
+        $controller->majAnimal($_GET['id']);
         break;
 
     case 'supprAnimal':
-        $controller_admin->supprAnimal($_GET['id']);
+        $controller->supprAnimal($_GET['id']);
         break;
 
     case 'respZone_dashboard':
-        $controller_resp_zone->afficherPage();
+        $controller->afficherPage();
         break;
+    case 'profilAnimal':
+        $controller->profilAnimal($_GET['id']);
+        break;
+        
 
     default:
         echo "Page introuvable";

@@ -1,6 +1,4 @@
 <?php
-require_once 'config/database.php';
-
 class Animal
 {
     public static function recupParID($id)
@@ -89,7 +87,7 @@ class Animal
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
 
-        oci_commit($db);
+        return $r;
     }
 
     public static function maj($id, $data)
@@ -122,8 +120,7 @@ class Animal
             $e = oci_error($stid);
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
-
-        oci_commit($db);
+        return $r;
     }
 
     public static function suppr($id)
@@ -140,6 +137,6 @@ class Animal
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
 
-        oci_commit($db);
+        return $r;
     }
 }

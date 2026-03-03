@@ -1,5 +1,4 @@
 <?php
-
 class Boutique
 {
     public static function toutRecup()

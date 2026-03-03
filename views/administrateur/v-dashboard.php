@@ -108,17 +108,7 @@
                                         <tr>
                                             <td><?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?></td>
                                             <td><?= htmlspecialchars($animal['NOM_ANIMAL'] ?? '') ?></td>
-                                            <td>
-                                                <?php
-                                                // Récupérer le nom de l'espèce
-                                                if (!empty($animal['ID_ESPECE'])) {
-                                                    $espece = Espece::recupParID($animal['ID_ESPECE']);
-                                                    echo htmlspecialchars($espece['NOM_ESPECE'] ?? 'N/A');
-                                                } else {
-                                                    echo 'N/A';
-                                                }
-                                                ?>
-                                            </td>
+                                            <td><?= htmlspecialchars($animal['NOM_ESPECE'] ?? 'N/A') ?></td>
                                             <td><?= htmlspecialchars($animal['DATE_NAISSANCE'] ?? 'N/A') ?></td>
                                             <td><?= htmlspecialchars(number_format(intval($animal['POIDS']) ?? 0, 2)) ?></td>
                                             <td><?= htmlspecialchars($animal['REGIME_ALIMENTAIRE'] ?? 'N/A') ?></td>
@@ -179,16 +169,12 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($zones as $zone): ?>
-                                        <?php
-                                        // Récupérer le nom du manager pour chaque zone
-                                        $nomManager = !empty($zone['ID_MANAGER']) ? Zone::recupNomManager($zone['ID_ZONE']) : null;
-                                        ?>
                                         <tr>
                                             <td><?= htmlspecialchars($zone['ID_ZONE'] ?? 'N/A') ?></td>
                                             <td><?= htmlspecialchars($zone['NOM_ZONE'] ?? 'N/A') ?></td>
                                             <td>
-                                                <?php if (!empty($nomManager)): ?>
-                                                    <?= htmlspecialchars($nomManager['PRENOM'] ?? '') ?> <?= htmlspecialchars($nomManager['NOM'] ?? '') ?>
+                                                <?php if (!empty($zone['NOM_MANAGER'])): ?>
+                                                    <?= htmlspecialchars($zone['NOM_MANAGER']) ?>
                                                 <?php else: ?>
                                                     <span class="text-muted">Non assigné</span>
                                                 <?php endif; ?>

@@ -1,427 +1,308 @@
 <?php
 class AdminController extends BaseController
 {
+    private $serviceEmployee;
+    private $serviceZone;
+    private $serviceBoutique;
+    private $serviceAnimal;
 
-    public function profil_admin()
+    //constructeur de la classe
+    public function __construct()
     {
-        // Vérifier si l'utilisateur est connecté et s'il est admin
+        $this->serviceEmployee = new ServiceEmployee();
+        $this->serviceZone = new ServiceZone();
+        $this->serviceBoutique = new ServiceBoutique();
+        $this->serviceAnimal = new ServiceAnimal();
+    }
+
+    /**
+     * Vérifie que l'utilisateur est connecté et admin.
+     * Redirige si ce n'est pas le cas.
+     */
+    private function checkAdmin()
+    {
         if (empty($_SESSION['user'])) {
             header('Location: index.php?action=afficheConnexion');
             exit;
         }
-
         if (!isset($_SESSION['user']['ID_FONCTION']) || $_SESSION['user']['ID_FONCTION'] != ADMINID) {
             header('Location: index.php?action=profil');
             exit;
         }
+    }
+
+    //  Dashboard admin
+
+    public function profil_admin()
+    {
+        $this->checkAdmin();
+
         $title = "Profil Administrateur";
-        $employees = $this->recupTousEmployes();
-        $zones = Zone::toutRecup();
+        $employees = $this->serviceEmployee->recupTousEmployes();
+        $zones = $this->serviceZone->recupToutesLesZones();
         $boutiques = Boutique::toutRecup();
         $animals = Animal::toutRecup();
+        if ($employees === null || $zones === null || $boutiques === null || $animals === null) {
+            $this->redirectWithMessage('home', 'Erreur lors de la récupération des données pour le dashboard admin.', 'error');
+        } else {
+            //Ajouter le nom de l'espèce à chaque animal (passage par référence pour modifier directement le tableau)
+            foreach ($animals as &$animal) {
+                if (!empty($animal['ID_ESPECE'])) {
+                    $espece = Espece::recupParID($animal['ID_ESPECE']);
+                    $animal['NOM_ESPECE'] = $espece['NOM_ESPECE'] ?? 'N/A';
+                } else {
+                    $animal['NOM_ESPECE'] = 'N/A';
+                }
+            }
 
-        if (isset($_SESSION["nom_cree"])) {
-            echo "prout";
+            // Ajouter le nom du manager à chaque zone
+            foreach ($zones as &$zone) {
+                if (!empty($zone['ID_MANAGER'])) {
+                    $manager = Zone::recupNomManager($zone['ID_ZONE']);
+                    $zone['NOM_MANAGER'] = ($manager['PRENOM'] ?? '') . ' ' . ($manager['NOM'] ?? '');
+                } else {
+                    $zone['NOM_MANAGER'] = null;
+                }
+            }
+            $this->render('administrateur/v-dashboard', [
+                'title' => $title,
+                'employees' => $employees,
+                'zones' => $zones,
+                'boutiques' => $boutiques,
+                'animals' => $animals
+            ]);
         }
-        $this->render('administrateur/v-dashboard', [
-            'title' => $title,
-            'employees' => $employees,
-            'zones' => $zones,
-            'boutiques' => $boutiques,
-            'animals' => $animals
-        ]);
     }
 
-    public function recupTousEmployes()
+    //  Employés
+
+    public function creationEmployee()
     {
-        //Récupère tous les employés de la base de données pour les retourner sous forme de tableau pour les afficher dans le dashboard admin
-        return User::toutRecup();
+        $this->checkAdmin();
+        $data = $this->serviceEmployee->creationEmployee();
+        if ($data === null) {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la préparation de la création de l\'employé.', 'error');
+        } else {
+            $this->render(
+                'administrateur/v-createEmployee',
+                [
+                    'liste_fonctions' => $data['liste_fonctions'],
+                    'liste_employes' => $data['liste_employes'],
+                    'generatedPassword' => $data['generatedPassword'],
+                    'title' => $data['title']
+                ]
+            );
+        }
     }
 
-    public function supprEmployee($id)
-    {
-        //Supprime un employé de la base de données en fonction de l'id passé en paramètre
-        User::suppr($id);
-        $this->redirectWithMessage('admin_dashboard', 'Employé supprimé avec succès.', 'success');
-    }
     public function ajoutEmployee()
     {
-        //Ajoute un nouvel employé à la base de données en récupérant les données du formulaire de création d'employé
-
-        // Vérifier que la fonction est bien définie, sinon utiliser une fonction par défaut (ne devrait jamais arriver avec required)
-        $id_fonction = $_POST['id_fonction_cree'] ?? null;
-        if (empty($id_fonction)) {
-            // Récupérer la première fonction disponible comme fallback
-            $fonctions = Fonction::recupToutesLesFonctions();
-            $id_fonction = !empty($fonctions) ? $fonctions[0]['ID_FONCTION'] : null;
+        $this->checkAdmin();
+        if ($this->serviceEmployee->ajoutEmployee()) {
+            $this->redirectWithMessage('admin_dashboard', 'Employé ajouté avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de l\'ajout de l\'employé.', 'error');
         }
-
-        $data = [
-            'nom' => $_POST['nom_cree'] ?? null,
-            'prenom' => $_POST['prenom_cree'] ?? null,
-            'mail' => $_POST['mail_cree'] ?? null,
-            'MDP' => Utils::hashPassword($_POST['MDP_cree']),
-            'date_entree' => $_POST['date_entree_cree'] ?? null,
-            'salaire' => $_POST['salaire_cree'] ?? null,
-            'id_fonction' => $id_fonction,
-            'login' => $_POST['login_cree'] ?? null,
-            'id_remplacant' => !empty($_POST['id_remplacant_cree']) ? $_POST['id_remplacant_cree'] : null,
-            'id_superieur' => !empty($_POST['id_superieur_cree']) ? $_POST['id_superieur_cree'] : null
-        ];
-
-        $new_id = User::creer($data);
-
-        // Si aucun remplaçant n'a été spécifié, l'employé est son propre remplaçant
-        if (empty($data['id_remplacant']) && $new_id) {
-            User::majRemplacant($new_id, $new_id);
-        }
-        $this->redirectWithMessage('admin_dashboard', 'Employé créé avec succès.', 'success');
     }
 
     public function editionEmployee($id)
     {
-        //Affiche la page d'édition de l'employé
-        if (!$id) {
+        $this->checkAdmin();
+        $data = $this->serviceEmployee->editionEmployee($id);
+        if ($data === null) {
             $this->redirectWithMessage('admin_dashboard', 'Employé non trouvé.', 'error');
+        } else {
+            $this->render(
+                'administrateur/v-editionEmployee',
+                $data
+            );
         }
-        $liste_roles = Fonction::recupToutesLesFonctions();
-        $liste_employes = User::toutRecup();
-        $employee = User::recupParID($id);
-
-        if (!$employee) {
-            $this->redirectWithMessage('admin_dashboard', 'Employé non trouvé.', 'error');
-        }
-        //Récupération pour affichage par défaut du rôle actuel de l'employé
-        echo $employee['ID_FONCTION'] . "caca";
-        $job = Fonction::recupNomFonctionParID($employee['ID_FONCTION']);
-
-        $title = "Modifier un Employé";
-
-        $this->render("administrateur/v-edit_employee", [
-            'title' => $title,
-            'employee' => $employee,
-            'liste_roles' => $liste_roles,
-            'liste_employes' => $liste_employes,
-            'job' => $job
-        ]);
     }
-
 
     public function majEmployee($id)
     {
-        //Met à jour les données d'un employé dans la base de données en fonction de l'id passé en paramètre
-
-        // récup les données de l'employé via son ID
-        $employee = User::recupParID($id);
-
-        //on modifie le champ id_fonction_modif pour qu'il contienne l'id de la fonction correspondant au nom de la fonction sélectionnée dans le form
-        $nom_fonction = $_POST['role_modif'] ?? null;
-        $id_fonction_final = $employee['ID_FONCTION']; // Par défaut, garder la fonction actuelle
-
-        if (!empty($nom_fonction)) {
-            $id_fonction = Fonction::recupIDFonctionParNom($nom_fonction);
-            $id_fonction_final = $id_fonction['ID_FONCTION'];
+        $this->checkAdmin();
+        if ($this->serviceEmployee->majEmployee($id)) {
+            $this->redirectWithMessage('admin_dashboard', 'Employé mis à jour avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la mise à jour de l\'employé.', 'error');
         }
-
-        // Si le champ mot de passe n'est pas vide on prend le nouveau mot de passe hashé sinon on garde l'ancien mot de passe
-        $password = !empty($_POST['MDP_modif']) ? password_hash($_POST['MDP_modif'], PASSWORD_DEFAULT) : $employee['MDP'];
-
-        // Si aucun remplaçant n'est spécifié, l'employé est son propre remplaçant
-        $id_remplacant = !empty($_POST['id_remplacant_modif']) ? $_POST['id_remplacant_modif'] : $id;
-
-        $data = [
-            'nom' => $_POST['nom_modif'] ?? null,
-            'prenom' => $_POST['prenom_modif'] ?? null,
-            'mail' => $_POST['mail_modif'] ?? null,
-            'MDP' => $password,
-            'date_entree' => $_POST['date_entree_modif'] ?? null,
-            'salaire' => $_POST['salaire_modif'] ?? null,
-            'id_fonction' => $id_fonction_final,
-            'login' => $_POST['login_modif'] ?? null,
-            'id_remplacant' => $id_remplacant,
-            'id_superieur' => !empty($_POST['id_superieur_modif']) ? $_POST['id_superieur_modif'] : null
-        ];
-
-        User::maj($id, $data);
-        $this->redirectWithMessage('admin_dashboard', 'Employé mis à jour avec succès.', 'success');
     }
 
-    public function creationEmployee()
+    public function supprEmployee($id)
     {
-        //Affiche la page de création d'un nouvel employé
-        $liste_fonctions = Fonction::recupToutesLesFonctions();
-        $liste_employes = User::toutRecup();
-        $generatedPassword = Utils::generatePassword(10);
-
-        $this->render('administrateur/create_employee', [
-            'liste_fonctions' => $liste_fonctions,
-            'liste_employes' => $liste_employes,
-            'generatedPassword' => $generatedPassword
-        ]);
+        $this->checkAdmin();
+        if ($this->serviceEmployee->supprEmployee($id)) {
+            $this->redirectWithMessage('admin_dashboard', 'Employé supprimé avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la suppression de l\'employé.', 'error');
+        }
     }
 
-
-
-    // ========== Gestion des Boutiques ==========
+    //  Boutiques
 
     public function creationBoutique()
     {
-        //Affiche la page de création d'une nouvelle boutique
-        $zones = Zone::toutRecup();
-        $employees = User::toutRecup();
-        $title = "Créer une Boutique";
-        $this->render('administrateur/create_boutique', [
-            'zones' => $zones,
-            'employees' => $employees,
-            'title' => $title
-        ]);
+        $this->checkAdmin();
+        $data = $this->serviceBoutique->creationBoutique();
+        if ($data === null) {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la préparation de la création de la boutique.', 'error');
+        } else {
+            $this->render('administrateur/v-createBoutique', $data);
+        }
     }
 
     public function ajoutBoutique()
     {
-        //Ajoute une nouvelle boutique à la base de données
-        $data = [
-            'id_manager' => !empty($_POST['id_manager_cree']) ? $_POST['id_manager_cree'] : null,
-            'id_zone' => $_POST['id_zone_cree'] ?? null,
-            'nom_boutique' => $_POST['nom_boutique_cree'] ?? null,
-            'description_boutique' => $_POST['description_boutique_cree'] ?? null
-        ];
-
-        Boutique::creer($data);
-        $this->redirectWithMessage('admin_dashboard', 'Boutique créée avec succès.', 'success');
-        exit;
+        $this->checkAdmin();
+        if ($this->serviceBoutique->ajoutBoutique()) {
+            $this->redirectWithMessage('admin_dashboard', 'Boutique ajoutée avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de l\'ajout de la boutique.', 'error');
+        }
     }
 
     public function editionBoutique($id)
     {
-        //Affiche la page d'édition de la boutique
-        if (!$id) {
+        $this->checkAdmin();
+        $data = $this->serviceBoutique->editionBoutique($id);
+        if ($data === null) {
             $this->redirectWithMessage('admin_dashboard', 'Boutique non trouvée.', 'error');
+        } else {
+            $this->render('administrateur/v-editionBoutique', $data);
         }
-
-        $boutique = Boutique::recupParID($id);
-        if (!$boutique) {
-            $this->redirectWithMessage('admin_dashboard', 'Boutique non trouvée.', 'error');
-        }
-
-        $zones = Zone::toutRecup();
-        $employees = User::toutRecup();
-        $title = "Modifier une Boutique";
-        $this->render('administrateur/edit_boutique', [
-            'title' => $title,
-            'boutique' => $boutique,
-            'zones' => $zones,
-            'employees' => $employees
-        ]);
     }
 
     public function majBoutique($id)
     {
-        //Met à jour les données d'une boutique
-        $data = [
-            'id_manager' => !empty($_POST['id_manager_modif']) ? $_POST['id_manager_modif'] : null,
-            'id_zone' => $_POST['id_zone_modif'] ?? null,
-            'nom_boutique' => $_POST['nom_boutique_modif'] ?? null,
-            'description_boutique' => $_POST['description_boutique_modif'] ?? null
-        ];
-
-        Boutique::maj($id, $data);
-        $this->redirectWithMessage('admin_dashboard', 'Boutique mise à jour avec succès.', 'success');
+        $this->checkAdmin();
+        if ($this->serviceBoutique->majBoutique($id)) {
+            $this->redirectWithMessage('admin_dashboard', 'Boutique mise à jour avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la mise à jour de la boutique.', 'error');
+        }
     }
 
     public function supprBoutique($id)
     {
-        //Supprime une boutique de la base de données
-        Boutique::suppr($id);
-        $this->redirectWithMessage('admin_dashboard', 'Boutique supprimée avec succès.', 'success');
+        $this->checkAdmin();
+        if ($this->serviceBoutique->supprBoutique($id)) {
+            $this->redirectWithMessage('admin_dashboard', 'Boutique supprimée avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la suppression de la boutique.', 'error');
+        }
     }
 
-    // ========== Gestion des Zones ==========
+    //  Zones
 
     public function creationZone()
     {
-        //Affiche la page de création d'une nouvelle zone
-        $employees = User::toutRecup();
-        $title = "Créer une Zone";
-        $this->render('administrateur/create_zone', [
-            'employees' => $employees,
-            'title' => $title
-        ]);
+        $this->checkAdmin();
+        $data = $this->serviceZone->creationZone();
+        if ($data === null) {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la préparation de la création de la zone.', 'error');
+        } else {
+            $this->render('administrateur/v-createZone', $data);
+        }
     }
 
     public function ajoutZone()
     {
-        //Ajoute une nouvelle zone à la base de données
-        $data = [
-            'nom_zone' => $_POST['nom_zone_cree'] ?? null,
-            'id_manager' => !empty($_POST['id_manager_cree']) ? $_POST['id_manager_cree'] : null
-        ];
-
-        Zone::creer($data);
-        $this->redirectWithMessage('admin_dashboard', 'Zone créée avec succès.', 'success');
-        exit;
+        $this->checkAdmin();
+        if ($this->serviceZone->ajoutZone()) {
+            $this->redirectWithMessage('admin_dashboard', 'Zone ajoutée avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de l\'ajout de la zone.', 'error');
+        }
     }
 
     public function editionZone($id)
     {
-        //Affiche la page d'édition de la zone
-        if (!$id) {
+        $this->checkAdmin();
+        $data = $this->serviceZone->editionZone($id);
+        if ($data === null) {
             $this->redirectWithMessage('admin_dashboard', 'Zone non trouvée.', 'error');
+        } else {
+            $this->render('administrateur/v-editionZone', $data);
         }
-
-        $zone = Zone::recupParID($id);
-        if (!$zone) {
-            $this->redirectWithMessage('admin_dashboard', 'Zone non trouvée.', 'error');
-        }
-
-        $employees = User::toutRecup();
-        $title = "Modifier une Zone";
-        $this->render('administrateur/edit_zone', [
-            'title' => $title,
-            'zone' => $zone,
-            'employees' => $employees
-        ]);
     }
 
     public function majZone($id)
     {
-        //Met à jour les données d'une zone
-        $data = [
-            'nom_zone' => $_POST['nom_zone_modif'] ?? null,
-            'id_manager' => !empty($_POST['id_manager_modif']) ? $_POST['id_manager_modif'] : null
-        ];
-
-        Zone::maj($id, $data);
-        $this->redirectWithMessage('admin_dashboard', 'Zone mise à jour avec succès.', 'success');
+        $this->checkAdmin();
+        if ($this->serviceZone->majZone($id)) {
+            $this->redirectWithMessage('admin_dashboard', 'Zone mise à jour avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la mise à jour de la zone.', 'error');
+        }
     }
 
     public function supprZone($id)
     {
-        //Supprime une zone de la base de données
-        Zone::suppr($id);
-        $this->redirectWithMessage('admin_dashboard', 'Zone supprimée avec succès.', 'success');
+        $this->checkAdmin();
+        if ($this->serviceZone->supprZone($id)) {
+            $this->redirectWithMessage('admin_dashboard', 'Zone supprimée avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la suppression de la zone.', 'error');
+        }
     }
 
-    // ========== Gestion des Animaux ==========
+    // ========================
+    //  Animaux
+    // ========================
 
     public function creationAnimal()
     {
-        //Affiche la page de création d'un nouvel animal
-        $especes = Espece::toutRecup();
-        $zones = Zone::toutRecup();
-
-        // Récupérer les données du formulaire pour pré-remplissage
-        $formData = [
-            'nom_animal' => $_POST['nom_animal_cree'] ?? '',
-            'id_espece' => $_POST['id_espece_cree'] ?? '',
-            'date_naissance' => $_POST['date_naissance_cree'] ?? '',
-            'poids' => $_POST['poids_cree'] ?? '',
-            'regime_alimentaire' => $_POST['regime_alimentaire_cree'] ?? '',
-            'id_zone' => $_POST['id_zone_cree'] ?? '',
-            'latitude_enclos' => $_POST['latitude_enclos_cree'] ?? '',
-            'longitude_enclos' => $_POST['longitude_enclos_cree'] ?? ''
-        ];
-
-        // Charger les enclos si une zone est sélectionnée
-        $enclos = [];
-        if (!empty($formData['id_zone'])) {
-            $enclos = Enclos::recupEnclosZone($formData['id_zone']);
+        $this->checkAdmin();
+        $data = $this->serviceAnimal->creationAnimal();
+        if ($data === null) {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la préparation de la création de l\'animal.', 'error');
+        } else {
+            $this->render('administrateur/v-createAnimal', $data);
         }
-
-        $title = "Créer un Animal";
-        $this->render('administrateur/create_animal', [
-            'formData' => $formData,
-            'enclos' => $enclos,
-            'title' => $title
-        ]);
     }
 
     public function ajoutAnimal()
     {
-        //Ajoute un nouvel animal à la base de données
-        $data = [
-            'nom_animal' => $_POST['nom_animal_cree'] ?? null,
-            'date_naissance' => $_POST['date_naissance_cree'] ?? null,
-            'poids' => $_POST['poids_cree'] ?? null,
-            'regime_alimentaire' => $_POST['regime_alimentaire_cree'] ?? null,
-            'id_espece' => $_POST['id_espece_cree'] ?? null,
-            'latitude_enclos' => $_POST['latitude_enclos_cree'] ?? null,
-            'longitude_enclos' => $_POST['longitude_enclos_cree'] ?? null
-        ];
-
-        Animal::creer($data);
-        $this->redirectWithMessage('admin_dashboard', 'Animal créé avec succès.', 'success');
+        $this->checkAdmin();
+        if ($this->serviceAnimal->ajoutAnimal()) {
+            $this->redirectWithMessage('admin_dashboard', 'Animal ajouté avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de l\'ajout de l\'animal.', 'error');
+        }
     }
 
     public function editionAnimal($id)
     {
-        //Affiche la page d'édition de l'animal
-        if (!$id) {
+        $this->checkAdmin();
+        $data = $this->serviceAnimal->editionAnimal($id);
+        if ($data === null) {
             $this->redirectWithMessage('admin_dashboard', 'Animal non trouvé.', 'error');
+        } else {
+            $this->render(
+                'administrateur/v-editionAnimal',
+                $data
+            );
         }
-
-        $animal = Animal::recupParID($id);
-        if (!$animal) {
-            $this->redirectWithMessage('admin_dashboard', 'Animal non trouvé.', 'error');
-        }
-
-        $especes = Espece::toutRecup();
-        $zones = Zone::toutRecup();
-
-        // Récupérer la zone sélectionnée (soit depuis le formulaire, soit depuis l'animal)
-        $id_zone_selected = $_POST['id_zone_modif'] ?? $_GET['id_zone_modif'] ?? null;
-
-        // Si pas de zone sélectionnée, trouver la zone de l'enclos actuel
-        if (empty($id_zone_selected) && !empty($animal['LATITUDE_ENCLOS']) && !empty($animal['LONGITUDE_ENCLOS'])) {
-            foreach ($zones as $zone) {
-                $enclos_zone = Enclos::recupEnclosZone($zone['ID_ZONE']);
-                foreach ($enclos_zone as $enc) {
-                    if ($enc['LATITUDE'] == $animal['LATITUDE_ENCLOS'] && $enc['LONGITUDE'] == $animal['LONGITUDE_ENCLOS']) {
-                        $id_zone_selected = $zone['ID_ZONE'];
-                        break 2;
-                    }
-                }
-            }
-        }
-
-        // Charger les enclos de la zone sélectionnée
-        $enclos = [];
-        if (!empty($id_zone_selected)) {
-            $enclos = Enclos::recupEnclosZone($id_zone_selected);
-        }
-
-        $title = "Modifier un Animal";
-        $this->render('administrateur/edit_animal', [
-            'animal' => $animal,
-            'especes' => $especes,
-            'zones' => $zones,
-            'enclos' => $enclos,
-            'id_zone_selected' => $id_zone_selected,
-            'title' => $title
-        ]);
     }
 
     public function majAnimal($id)
     {
-        //Met à jour les données d'un animal
-        $data = [
-            'nom_animal' => $_POST['nom_animal_modif'] ?? null,
-            'date_naissance' => $_POST['date_naissance_modif'] ?? null,
-            'poids' => $_POST['poids_modif'] ?? null,
-            'regime_alimentaire' => $_POST['regime_alimentaire_modif'] ?? null,
-            'id_espece' => $_POST['id_espece_modif'] ?? null,
-            'latitude_enclos' => $_POST['latitude_enclos_modif'] ?? null,
-            'longitude_enclos' => $_POST['longitude_enclos_modif'] ?? null
-        ];
-
-        Animal::maj($id, $data);
-        $this->redirectWithMessage('admin_dashboard', 'Animal mis à jour avec succès.', 'success');
+        $this->checkAdmin();
+        if ($this->serviceAnimal->majAnimal($id)) {
+            $this->redirectWithMessage('admin_dashboard', 'Animal mis à jour avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la mise à jour de l\'animal.', 'error');
+        }
     }
 
     public function supprAnimal($id)
     {
-        //Supprime un animal de la base de données
-        Animal::suppr($id);
-        $this->redirectWithMessage('admin_dashboard', 'Animal supprimé avec succès.', 'success');
+        $this->checkAdmin();
+        if ($this->serviceAnimal->supprAnimal($id)) {
+            $this->redirectWithMessage('admin_dashboard', 'Animal supprimé avec succès.', 'success');
+        } else {
+            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la suppression de l\'animal.', 'error');
+        }
     }
 }

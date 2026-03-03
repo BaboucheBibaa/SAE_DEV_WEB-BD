@@ -1,12 +1,12 @@
 <?php
 
-class respSoigneurController extends BaseController
+class RespSoigneurController extends BaseController
 {
     public function afficherPage()
     {
         // Vérifier si l'utilisateur est connecté
-        if (empty($_SESSION['user'])) {
-            $this->redirectWithMessage('afficheConnexion', 'Vous devez être connecté pour accéder à cette page.', 'error');
+        if (empty($_SESSION['user']) || !isset($_SESSION['user']['ID_FONCTION']) || $_SESSION['user']['ID_FONCTION'] != RESPSOIG) {
+            $this->redirectWithMessage('afficheConnexion', 'Vous devez être connecté en tant que responsable soigneurs pour accéder à cette page.', 'error');
         }
 
         // Récupérer les informations de l'utilisateur connecté

@@ -57,6 +57,6 @@ class Compatibilité {
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
 
-        oci_commit($db);
+        return $r;
     }
 }

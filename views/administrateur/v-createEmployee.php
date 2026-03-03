@@ -25,7 +25,7 @@
                         <div class="mb-3">
                             <label for="MDP_cree" class="form-label">Mot de passe <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="MDP_cree" name="MDP_cree" value="<?=($generatedPassword ?? '') ?>" readonly required>
+                                <input type="text" class="form-control" id="MDP_cree" name="MDP_cree" value="<?=htmlspecialchars($generatedPassword ?? '') ?>" readonly required>
                                 <button class="btn btn-outline-secondary" type="button" onclick="location.reload()">
                                     <i class="fas fa-sync-alt"></i> Régénérer
                                 </button>
@@ -53,7 +53,7 @@
 
                                 foreach ($liste_fonctions as $fonction) {
                                     echo '<option value="' . $fonction['ID_FONCTION'] . '"';
-                                    echo '>' . $fonction['NOM_FONCTION'] . '</option>';
+                                    echo '>' . htmlspecialchars($fonction['NOM_FONCTION']) . '</option>';
                                 }
                                 echo '</select>';
                             }

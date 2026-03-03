@@ -24,6 +24,7 @@ class ConnexionController extends BaseController{
         $loginValide = Utils::verifyPassword($password, $user['MDP'] ?? '');
         
         if ($loginValide) {
+            session_regenerate_id(true);
             $_SESSION['user'] = $user;
             header('Location: index.php?action=profil');
             exit;

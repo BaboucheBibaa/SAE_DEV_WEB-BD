@@ -7,21 +7,20 @@ class Utils
         $out = '';
         $max = strlen($chars) - 1;
         for ($i = 0; $i < $length; $i++) {
-            $out .= $chars[rand(0, $max)];
+            $out .= $chars[random_int(0, $max)];
         }
         return $out;
     }
 
     public static function hashPassword(string $plain): string
     {
+        // Retourne un hash du mdp (on fait une fonction afin de pouvoir maintenir + facilement le type de hashage utilisé)
         return password_hash($plain, PASSWORD_DEFAULT);
     }
 
-    public static function verifyPassword(string $plain, string $hash): bool
+    public static function verifyPassword(string $saisie, string $hash): bool
     {
-        // Si c’est un hash bcrypt, on vérifie; sinon fallback comparaison directe (legacy)
-        $isBcrypt = strlen($hash) === 60 && (str_starts_with($hash, '$2y$') || str_starts_with($hash, '$2a$'));
-        return $isBcrypt ? password_verify($plain, $hash) : $plain === $hash;
+        return password_verify($saisie, $hash);
     }
 
     public static function oracleToHtml(?string $oracleDate): ?string
@@ -40,10 +39,5 @@ class Utils
         }
         $d = DateTime::createFromFormat('Y-m-d', $htmlDate);
         return $d ? $d->format('d-M-y') : null;
-    }
-
-    public static function formValue(string $key, $default = '')
-    {
-        return $_POST[$key] ?? $_GET[$key] ?? $default;
     }
 }

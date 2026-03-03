@@ -1,7 +1,5 @@
 <?php
-require_once 'config/database.php';
-
-class Animal
+class Absence
 {
 
     public static function toutRecup()

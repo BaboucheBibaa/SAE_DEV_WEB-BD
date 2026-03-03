@@ -113,6 +113,7 @@
                                             <th>Date de naissance</th>
                                             <th>Poids</th>
                                             <th>Régime Alimentaire</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -122,6 +123,11 @@
                                                 <td><?= htmlspecialchars($animal['DATE_NAISSANCE']) ?></td>
                                                 <td><?= htmlspecialchars($animal['POIDS']) ?></td>
                                                 <td><?= htmlspecialchars($animal['REGIME_ALIMENTAIRE']) ?></td>
+                                                <td>
+                                                    <a href="index.php?action=profilAnimal&id=<?= htmlspecialchars($animal['ID_ANIMAL']) ?>" class="btn btn-sm btn-primary">
+                                                        Profil
+                                                    </a>
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
