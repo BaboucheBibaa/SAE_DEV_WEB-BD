@@ -65,4 +65,20 @@ class Fonction
         return $result ? $result : ['NOM_FONCTION' => ''];
     }
 
+
+    public static function moteurRechercheRecup($searchTerm)
+    {
+        $db = Database::getConnection();
+
+        $sql = "SELECT NOM_FONCTION FROM FONCTION WHERE LOWER(NOM_FONCTION) LIKE LOWER(:searchTerm)";
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid, ':searchTerm', $searchTerm);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        return oci_fetch_assoc($stid);
+    }
 }

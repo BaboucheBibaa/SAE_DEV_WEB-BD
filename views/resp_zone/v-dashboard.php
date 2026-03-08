@@ -34,8 +34,7 @@
                                         <tr>
                                             <th>Nom</th>
                                             <th>Prénom</th>
-                                            <th>Email</th>
-                                            <th>Date d'entrée</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -43,8 +42,11 @@
                                             <tr>
                                                 <td><?= htmlspecialchars($employe['NOM']) ?></td>
                                                 <td><?= htmlspecialchars($employe['PRENOM']) ?></td>
-                                                <td><?= htmlspecialchars($employe['MAIL'] ?? 'N/A') ?></td>
-                                                <td><?= htmlspecialchars($employe['DATE_ENTREE'] ?? 'N/A') ?></td>
+                                                <td>
+                                                    <a href="index.php?action=profil&id=<?= htmlspecialchars($employe['ID_PERSONNEL']) ?>" class="btn btn-sm btn-primary" title="Voir le profil">
+                                                        Voir le profil
+                                                    </a>
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -75,6 +77,7 @@
                                             <th>Latitude</th>
                                             <th>Longitude</th>
                                             <th>Type d'Enclos</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -83,6 +86,10 @@
                                                 <td><?= htmlspecialchars($enclo['LATITUDE']) ?></td>
                                                 <td><?= htmlspecialchars($enclo['LONGITUDE']) ?></td>
                                                 <td><?= htmlspecialchars($enclo['TYPE_ENCLOS']) ?></td>
+                                                <td>
+                                                    <a href="index.php?action=profilEnclos&latitude=<?= urlencode($enclo['LATITUDE']) ?>&longitude=<?= urlencode($enclo['LONGITUDE']) ?>" class="btn btn-sm btn-primary" title="Voir le profil de l'enclos">
+                                                        Voir le profil
+                                                    </a>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -110,9 +117,6 @@
                                     <thead class="table-dark">
                                         <tr>
                                             <th>Nom de l'animal</th>
-                                            <th>Date de naissance</th>
-                                            <th>Poids</th>
-                                            <th>Régime Alimentaire</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -120,12 +124,9 @@
                                         <?php foreach ($animaux as $animal): ?>
                                             <tr>
                                                 <td><?= htmlspecialchars($animal['NOM_ANIMAL']) ?></td>
-                                                <td><?= htmlspecialchars($animal['DATE_NAISSANCE']) ?></td>
-                                                <td><?= htmlspecialchars($animal['POIDS']) ?></td>
-                                                <td><?= htmlspecialchars($animal['REGIME_ALIMENTAIRE']) ?></td>
                                                 <td>
                                                     <a href="index.php?action=profilAnimal&id=<?= htmlspecialchars($animal['ID_ANIMAL']) ?>" class="btn btn-sm btn-primary">
-                                                        Profil
+                                                        Voir le profil
                                                     </a>
                                                 </td>
                                             </tr>

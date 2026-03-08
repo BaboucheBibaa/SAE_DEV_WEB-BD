@@ -3,7 +3,7 @@
 class ProfilController extends BaseController
 {
 
-    public function profil()
+    public function profil($id)
     {
 
         // Vérifier si l'utilisateur est connecté
@@ -11,9 +11,7 @@ class ProfilController extends BaseController
             $this->redirectWithMessage('afficheConnexion', 'Vous devez être connecté pour accéder à votre profil.', 'error');
         }
 
-        $userId = $_SESSION['user']['ID_PERSONNEL'] ?? null;
-
-        $user = User::recupParID($userId);
+        $user = User::recupParID($id);
 
         if (!$user) {
             die("Utilisateur introuvable");

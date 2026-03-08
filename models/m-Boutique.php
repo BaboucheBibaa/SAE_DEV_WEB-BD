@@ -19,6 +19,26 @@ class Boutique
         return $boutiques;
     }
 
+
+    public static function recupEmployeesBoutique($id_boutique)
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT P.NOM, P.PRENOM, P.ID_PERSONNEL
+                FROM PERSONNEL P
+                JOIN TRAVAILLE_DANS_LA_BOUTIQUE B ON P.ID_PERSONNEL = B.ID_PERSONNEL
+                WHERE B.ID_BOUTIQUE = :id_boutique";
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid, ':id_boutique', $id_boutique);
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        $employes = [];
+        oci_fetch_all($stid, $employes, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $employes;
+    }
+
     /**
      * Récupère une boutique par son ID
      */
@@ -28,6 +48,23 @@ class Boutique
         $sql = "SELECT * FROM Boutique WHERE ID_BOUTIQUE = :id";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ':id', $id);
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        return oci_fetch_assoc($stid);
+    }
+
+    /**
+     * Récupère une boutique par son manager (ID_MANAGER)
+     */
+    public static function recupParManager($id_manager)
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT * FROM Boutique WHERE ID_MANAGER = :id_manager";
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid, ':id_manager', $id_manager);
         $r = oci_execute($stid);
         if (!$r) {
             $e = oci_error($stid);
@@ -109,6 +146,27 @@ class Boutique
         }
 
         return $r;
+    }
+
+
+    public static function moteurRechercheRecup($searchTerm)
+    {
+        $db = Database::getConnection();
+
+        $sql = "SELECT * FROM BOUTIQUE WHERE LOWER(NOM_BOUTIQUE) LIKE LOWER(:searchTerm)";
+        $stid = oci_parse($db, $sql);
+        $likeTerm = '%' . $searchTerm . '%';
+        oci_bind_by_name($stid, ':searchTerm', $likeTerm);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
     }
 }
 

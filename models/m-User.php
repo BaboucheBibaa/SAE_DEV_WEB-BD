@@ -221,5 +221,22 @@ class User
         return $result;
     }
 
-    
+    public static function moteurRechercheRecup($searchTerm)
+    {
+        /*Récupère tous les employés correspondant à un terme de recherche dans leur nom ou prénom
+        */
+        $db = Database::getConnection();
+        $sql = "SELECT * FROM Personnel WHERE LOWER(Nom) LIKE LOWER(:searchTerm) OR LOWER(Prenom) LIKE LOWER(:searchTerm)";
+        $stid = oci_parse($db, $sql);
+        $likeTerm = '%' . $searchTerm . '%';
+        oci_bind_by_name($stid, ':searchTerm', $likeTerm);
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
+    }
 }

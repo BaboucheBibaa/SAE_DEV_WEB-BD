@@ -34,4 +34,26 @@ class Espece
 
         return oci_fetch_assoc($stid);
     }
+
+
+
+    public static function moteurRechercheRecup($searchTerm)
+    {
+        $db = Database::getConnection();
+
+        $sql = "SELECT * FROM ESPECE WHERE LOWER(NOM_ESPECE) LIKE LOWER(:searchTerm)";
+        $stid = oci_parse($db, $sql);
+        $likeTerm = '%' . $searchTerm . '%';
+        oci_bind_by_name($stid, ':searchTerm', $likeTerm);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
+    }
 }

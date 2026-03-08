@@ -26,7 +26,7 @@ class ConnexionController extends BaseController{
         if ($loginValide) {
             session_regenerate_id(true);
             $_SESSION['user'] = $user;
-            header('Location: index.php?action=profil');
+            header('Location: index.php?action=profil&id=' . $user['ID_PERSONNEL']);
             exit;
         } else {
             $error = "Identifiant ou mot de passe incorrect.";

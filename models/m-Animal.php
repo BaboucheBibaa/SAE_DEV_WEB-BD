@@ -5,7 +5,7 @@ class Animal
     {
         $db = Database::getConnection();
 
-        $query = "SELECT * FROM Animal WHERE ID_ANIMAL = :id_animal";
+        $query = "SELECT A.*,E.NOM_ESPECE FROM Animal A LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE WHERE A.ID_ANIMAL = :id_animal";
         $stid = oci_parse($db, $query);
         oci_bind_by_name($stid, ':id_animal', $id);
 
@@ -21,7 +21,7 @@ class Animal
     public static function toutRecup()
     {
         $db = Database::getConnection();
-        $sql = "SELECT * FROM Animal";
+        $sql = "SELECT A.*,E.NOM_ESPECE FROM Animal A LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE";
         $stid = oci_parse($db, $sql);
 
         $r = oci_execute($stid);
@@ -41,7 +41,7 @@ class Animal
      {
          $db = Database::getConnection();
 
-         $query = "SELECT * FROM Animal WHERE (LATITUDE_ENCLOS,LONGITUDE_ENCLOS) IN (SELECT LATITUDE,LONGITUDE FROM Enclos WHERE ID_ZONE = :id_zone)";
+         $query = "SELECT A.*,E.NOM_ESPECE FROM Animal A LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE WHERE (A.LATITUDE_ENCLOS,A.LONGITUDE_ENCLOS) IN (SELECT LATITUDE,LONGITUDE FROM Enclos WHERE ID_ZONE = :id_zone)";
          $stid = oci_parse($db, $query);
          oci_bind_by_name($stid, ':id_zone', $id_zone);
 
@@ -138,5 +138,25 @@ class Animal
         }
 
         return $r;
+    }
+
+    public static function moteurRechercheRecup($searchTerm)
+    {
+        $db = Database::getConnection();
+
+        $sql = "SELECT * FROM ANIMAL WHERE LOWER(NOM_ANIMAL) LIKE LOWER(:searchTerm)";
+        $stid = oci_parse($db, $sql);
+        $likeTerm = '%' . $searchTerm . '%';
+        oci_bind_by_name($stid, ':searchTerm', $likeTerm);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
     }
 }

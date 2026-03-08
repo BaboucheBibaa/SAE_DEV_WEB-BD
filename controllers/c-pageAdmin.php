@@ -14,7 +14,7 @@ class AdminController extends BaseController
         $this->serviceBoutique = new ServiceBoutique();
         $this->serviceAnimal = new ServiceAnimal();
     }
-
+    
     /**
      * Vérifie que l'utilisateur est connecté et admin.
      * Redirige si ce n'est pas le cas.
@@ -22,12 +22,10 @@ class AdminController extends BaseController
     private function checkAdmin()
     {
         if (empty($_SESSION['user'])) {
-            header('Location: index.php?action=afficheConnexion');
-            exit;
+            $this->redirectWithMessage('home', 'Vous n\'êtes pas connecté.', 'error');
         }
         if (!isset($_SESSION['user']['ID_FONCTION']) || $_SESSION['user']['ID_FONCTION'] != ADMINID) {
-            header('Location: index.php?action=profil');
-            exit;
+            $this->redirectWithMessage('home', 'Vous n\'êtes pas autorisé à accéder à cette page.', 'error');
         }
     }
 

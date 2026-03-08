@@ -21,7 +21,6 @@
                                     foreach ($especes as $espece) {
                                         $selected = ($formData['id_espece'] == $espece['ID_ESPECE']) ? 'selected' : '';
                                         echo '<option value="' . htmlspecialchars($espece['ID_ESPECE']) . '" ' . $selected . '>';
-                                        echo htmlspecialchars($espece['NOM_ESPECE']);
                                         if (!empty($espece['NOM_LATIN_ESPECE'])) {
                                             echo ' (' . htmlspecialchars($espece['NOM_LATIN_ESPECE']) . ')';
                                         }

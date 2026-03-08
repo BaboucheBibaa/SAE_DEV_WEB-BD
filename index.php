@@ -1,10 +1,9 @@
 <?php
 session_start();
-require_once("myparams.inc.php");
+require_once 'config/myparams.inc.php';
 
 require_once 'config/database.php';
 
-require_once 'models/m-Absence.php';
 require_once 'models/m-Compatibilite.php';
 require_once 'models/m-Enclos.php';
 require_once 'models/m-HistoriqueSoins.php';
@@ -21,6 +20,7 @@ require_once 'services/ServiceAnimal.php';
 require_once 'services/ServiceBoutique.php';
 require_once 'services/ServiceEmployee.php';
 require_once 'services/ServiceZone.php';
+require_once 'services/ServiceSearch.php';
 
 require_once 'controllers/c-base.php';
 require_once 'controllers/c-profil.php';
@@ -28,6 +28,9 @@ require_once 'controllers/c-connexion.php';
 require_once 'controllers/c-pageAdmin.php';
 require_once 'controllers/c-respSoigneurs.php';
 require_once 'controllers/c-profilAnimal.php';
+require_once 'controllers/c-search.php';
+require_once 'controllers/c-respBoutique.php';
+require_once 'controllers/c-enclos.php';
 
 
 //toutes les pages se chargeront par index.php via la méthode GET action, une seule page sera affichée
@@ -51,7 +54,7 @@ switch ($action){
     case 'creationEmployee':
     case 'ajoutEmployee':
     case 'editionEmployee':
-    case 'majEmployee':
+    case 'updateEmployee':
     case 'creationBoutique':
     case 'ajoutBoutique':
     case 'editionBoutique':
@@ -72,8 +75,17 @@ switch ($action){
     case 'respZone_dashboard':
         $controller = new RespSoigneurController();
         break;
+    case "respBoutique_dashboard":
+        $controller = new RespBoutiqueController();
+        break;
     case 'profilAnimal':
         $controller = new ProfilAnimalController();
+        break;
+    case 'profilEnclos':
+        $controller = new EnclosController();
+        break;
+    case 'search':
+        $controller = new SearchController();
         break;
     default:
         echo "Page introuvable";
@@ -99,7 +111,7 @@ switch ($action) {
         break;
 
     case 'profil':
-        $controller->profil();
+        $controller->profil($_GET['id']);
         break;
 
     case 'update_password':
@@ -126,7 +138,7 @@ switch ($action) {
         $controller->editionEmployee($_GET['id']);
         break;
 
-    case 'majEmployee':
+    case 'updateEmployee':
         $controller->majEmployee($_GET['id']);
         break;
 
@@ -193,14 +205,25 @@ switch ($action) {
         $controller->supprAnimal($_GET['id']);
         break;
 
+    case 'profilEnclos':
+        $controller->profilEnclos($_GET['latitude'], $_GET['longitude']);
+        break;
+
     case 'respZone_dashboard':
+        $controller->afficherPage();
+        break;
+    case 'respBoutique_dashboard':
         $controller->afficherPage();
         break;
     case 'profilAnimal':
         $controller->profilAnimal($_GET['id']);
         break;
+    
+    
+    case 'search':
+        $controller->gererRequete();
+        break;
         
-
     default:
         echo "Page introuvable";
 }

@@ -34,10 +34,8 @@
                                     <th>ID</th>
                                     <th>Nom</th>
                                     <th>Prénom</th>
-                                    <th>Email</th>
                                     <th>Login</th>
                                     <th>Salaire</th>
-                                    <th>Date d'entrée</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -48,16 +46,17 @@
                                             <td><?= htmlspecialchars($employee['ID_PERSONNEL'] ?? '') ?></td>
                                             <td><?= htmlspecialchars($employee['NOM'] ?? '') ?></td>
                                             <td><?= htmlspecialchars($employee['PRENOM'] ?? '') ?></td>
-                                            <td><?= htmlspecialchars($employee['MAIL'] ?? 'N/A') ?></td>
                                             <td><?= htmlspecialchars($employee['LOGIN'] ?? 'N/A') ?></td>
                                             <td><?= htmlspecialchars(number_format($employee['SALAIRE'] ?? 0, 2)) ?> €</td>
-                                            <td><?= htmlspecialchars($employee['DATE_ENTREE'] ?? 'N/A') ?></td>
                                             <td>
                                                 <a href="index.php?action=editionEmployee&id=<?= $employee['ID_PERSONNEL'] ?>" class="btn btn-sm btn-primary">
                                                     <i class="fas fa-edit"></i> Modifier
                                                 </a>
                                                 <a href="index.php?action=supprEmployee&id=<?= $employee['ID_PERSONNEL'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?')">
                                                     <i class="fas fa-trash"></i> Supprimer
+                                                </a>
+                                                <a href="index.php?action=profil&id=<?= $employee['ID_PERSONNEL'] ?>" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-eye"></i> Voir le profil
                                                 </a>
                                             </td>
                                         </tr>
@@ -94,10 +93,6 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nom</th>
-                                    <th>Espèce</th>
-                                    <th>Date de naissance</th>
-                                    <th>Poids (kg)</th>
-                                    <th>Régime</th>
                                     <th>Enclos</th>
                                     <th>Actions</th>
                                 </tr>
@@ -107,11 +102,9 @@
                                     <?php foreach ($animals as $animal): ?>
                                         <tr>
                                             <td><?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?></td>
-                                            <td><?= htmlspecialchars($animal['NOM_ANIMAL'] ?? '') ?></td>
-                                            <td><?= htmlspecialchars($animal['NOM_ESPECE'] ?? 'N/A') ?></td>
-                                            <td><?= htmlspecialchars($animal['DATE_NAISSANCE'] ?? 'N/A') ?></td>
-                                            <td><?= htmlspecialchars(number_format(intval($animal['POIDS']) ?? 0, 2)) ?></td>
-                                            <td><?= htmlspecialchars($animal['REGIME_ALIMENTAIRE'] ?? 'N/A') ?></td>
+                                            <td>
+                                                <?= htmlspecialchars($animal['NOM_ANIMAL'] ?? '') ?>
+                                            </td>
                                             <td>
                                                 <?php if (!empty($animal['LATITUDE_ENCLOS']) && !empty($animal['LONGITUDE_ENCLOS'])): ?>
                                                     <?= htmlspecialchars($animal['LATITUDE_ENCLOS']) ?>, <?= htmlspecialchars($animal['LONGITUDE_ENCLOS']) ?>
@@ -120,6 +113,9 @@
                                                 <?php endif; ?>
                                             </td>
                                             <td>
+                                                <a href="index.php?action=profilAnimal&id=<?= $animal['ID_ANIMAL'] ?>" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-eye"></i> Voir le profil
+                                                </a>
                                                 <a href="index.php?action=editionAnimal&id=<?= $animal['ID_ANIMAL'] ?>" class="btn btn-sm btn-primary">
                                                     <i class="fas fa-edit"></i> Modifier
                                                 </a>

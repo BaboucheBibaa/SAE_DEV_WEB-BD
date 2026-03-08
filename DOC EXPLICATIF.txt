@@ -1,5 +1,187 @@
-doc perso: 
+========================================
+DOCUMENTATION EXPLICATIVE - SAE_DEV_WEB-BD
+========================================
 
-$_SESSION['flash'] est une norme au sein de la communauté afin de noter les messages flash, cela permet de créer un message dans une page et de l'afficher dans une autre page après une redirection et supprimé immédiatement.
+## Messages Flash
 
-CEPENDANT c'est pas un mot clé particulier, c'est juste une norme, ça aurait très bien pu s'appeler $_SESSION['prout'] et ça marcherait quand même
+$_SESSION['flash'] est une norme au sein de la communauté afin de noter les messages flash. 
+Cela permet de créer un message dans une page et de l'afficher dans une autre page après une redirection et les supprimer immédiatement.
+
+CEPENDANT c'est pas un mot clé particulier, c'est juste une norme. Ça aurait très bien pu s'appeler $_SESSION['prout'] et ça marcherait quand même.
+
+Utilisation:
+- $this->redirectWithMessage($action, $message, $type) → crée un message flash
+- Le message s'affiche automatiquement dans v-includes.php
+- Le message est supprimé après affichage
+
+---
+
+## Architecture MVC Expliquée
+
+### 1. Le Routeur (index.php)
+- Point d'entrée unique de toute l'application
+- Analyse l'action demandée (?action=xxxxx)
+- Appelle le bon contrôleur
+- Gère les cas non trouvés
+
+### 2. Les Contrôleurs
+- Vérifient les droits d'accès (verrous checkAdmin(), checkRespBoutique(), etc.)
+- Appellent les modèles pour récupérer les données
+- Appellent éventuellement un service pour formater les données
+- Appellent render() avec les données et le nom de la vue
+- NE DOIVENT JAMAIS faire de SQL directement
+
+Exemple: c-respBoutique.php
+```
+checkRespBoutique() → vérifie que l'utilisateur a les droits
+User::recupParID() → récupère l'utilisateur
+Boutique::recupParManager() → récupère sa boutique
+Boutique::recupEmployeesBoutique() → récupère ses employés
+render() → affiche v-dashboard avec les données
+```
+
+### 3. Les Modèles
+- Contiennent les requêtes SQL
+- Retournent les données brutes de la BD
+- Utilent OCI8 pour Oracle
+- Gèrent les erreurs de BD
+
+Types de requêtes:
+- recupParID() → un enregistrement par ID
+- toutRecup() → tous les enregistrements
+- recupParXXX() → enregistrements filtrés
+- creer(), maj(), suppr() → modifications
+
+### 4. Les Services (optionnels)
+- Formattent/préparent les données retournées par les modèles
+- Agrègent plusieurs appels modèles
+- Effectuent des calculs sur les données
+- Rendent les données prêtes pour la vue
+
+Exemple: ServiceEmployee.php
+- Appelle User::toutRecup()
+- Ajoute le nom de la fonction à chaque employé
+- Retourne un tableau enrichi prêt pour l'affichage
+
+### 5. Les Vues
+- Affichage HTML uniquement
+- Reçoivent les données via render()
+- JAMAIS de SQL, JAMAIS de logique métier
+- Font appel à v-includes.php pour le layout principal
+
+---
+
+## Données Retournées par OCI8
+
+### oci_fetch_assoc() → Un enregistrement
+```php
+// Retourne:
+[
+    'ID_PERSONNEL' => 1,
+    'NOM' => 'Dupont',
+    'PRENOM' => 'Jean',
+    ...
+]
+```
+
+### oci_fetch_all() → Plusieurs enregistrements
+```php
+// Retourne (format colonne, attention!):
+[
+    'ID_PERSONNEL' => [1, 2, 3],
+    'NOM' => ['Dupont', 'Martin', 'Bernard'],
+    'PRENOM' => ['Jean', 'Paul', 'Pierre'],
+    ...
+]
+
+// Ou avec OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC (format ligne):
+[
+    0 => ['ID_PERSONNEL' => 1, 'NOM' => 'Dupont', 'PRENOM' => 'Jean'],
+    1 => ['ID_PERSONNEL' => 2, 'NOM' => 'Martin', 'PRENOM' => 'Paul'],
+    ...
+]
+```
+
+
+---
+
+## Gestion des Rôles/Fonctions
+
+Les rôles sont définis comme des constantes dans config/myparams.inc.php:
+- ADMINID → Administrateur
+- RESPBOUTIQUE → Responsable Boutique
+- RESPSOIG → Responsable Zone/Soigneur
+
+Chaque contrôleur a une méthode checkXXX() qui:
+1. Vérifie si l'utilisateur est connecté ($_SESSION['user'])
+2. Vérifie son rôle (ID_FONCTION)
+3. Redirige si non autorisé
+
+---
+
+## ON DELETE CASCADE - Nouvelles Restrictions
+
+Depuis v1.2, toutes les clés étrangères ont ON DELETE CASCADE.
+
+Cela signifie:
+✅ Supprimer un Personnel → supprime ses contrats, affectations, etc.
+✅ Supprimer un Animal → supprime ses soins et historiques
+✅ Supprimer une Zone → supprime ses enclos
+✅ Suppression en cascade → plus de risque de contrainte violée
+
+⚠️ ATTENTION: Une suppression peut déclencher plusieurs suppressions!
+
+---
+
+## Conventions de Nommage
+
+### Modèles
+m-NomDeLaClasse.php
+Contient la classe NomDeLaClasse
+
+Exemple: m-User.php contient la classe User
+
+### Vues
+v-nomDeLaVue.php
+Noms en kebab-case généralement
+
+Exemple: v-profilAnimal.php
+
+### Contrôleurs
+c-nomDuControleur.php
+Contient la classe NomDuControleurController
+
+Exemple: c-respBoutique.php contient RespBoutiqueController
+
+### Services (optionnels)
+Service{NomDuService}.php
+Noms en PascalCase
+
+Exemple: ServiceAnimal.php
+
+---
+
+## Debugging et Erreurs Courantes
+
+### Erreur: OCI8 execute failed
+→ Vérifier la syntaxe SQL
+→ Vérifier que les colonnes existent dans la BD
+→ Vérifier les types de données
+
+### Erreur: Variable undefined
+→ Vérifier que la variable est passée à render()
+→ Vérifier le nom de la variable (sensible à la casse)
+
+### Erreur: Affichage vide/blanc
+→ Vérifier le format retourné par oci_fetch_all() (colonne vs ligne)
+→ Utiliser isset() et is_array() pour vérifier les données
+
+### Erreur: "Vous n'êtes pas autorisé"
+→ Vérifier le rôle de l'utilisateur en BD
+→ Vérifier que ID_FONCTION est bien rempli
+→ Vérifier les constantes dans config/myparams.inc.php
+
+---
+
+Dernière mise à jour: Mars 8, 2026
+Version: 1.2

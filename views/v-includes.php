@@ -4,17 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($title ?? "Zoo'land") ?></title>
-
+    <title><?= htmlspecialchars($title ?? "Zoo'land") ?></title> 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="/public/css/style.css">
 </head>
-
 <body class="d-flex flex-column min-vh-100">
-
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
             <div class="container">
@@ -28,9 +24,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="index.php?action=home">Accueil</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.php?action=search"><i class="bi bi-search"></i> Recherche</a>
+                        </li>
                         <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID) { ?>
                             <li class="nav-item">
                                 <a class="nav-link" href="index.php?action=admin_dashboard">Dashboard Administrateur</a>
+                            </li>
+                        <?php }
+                        if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == RESPBOUTIQUE) { ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?action=respBoutique_dashboard">Dashboard Responsable de Boutique</a>
                             </li>
                         <?php }
                         if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == RESPSOIG) { ?>
@@ -45,7 +49,7 @@
                                     <?= htmlspecialchars($_SESSION['user']['NOM'] ?? '') . " " . htmlspecialchars($_SESSION['user']['PRENOM'] ?? '') ?>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="index.php?action=profil">Mon profil</a></li>
+                                    <li><a class="dropdown-item" href="index.php?action=profil&id=<?= $_SESSION['user']['ID_PERSONNEL'] ?>">Mon profil</a></li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>

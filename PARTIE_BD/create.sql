@@ -22,9 +22,9 @@ CREATE TABLE Personnel (
     Date_Entree DATE NOT NULL,
     Salaire NUMBER(10,2),
     LOGIN VARCHAR2(50) NOT NULL UNIQUE,
-    FOREIGN KEY (ID_Remplacant) REFERENCES Personnel(ID_Personnel),
-    FOREIGN KEY (ID_Superieur) REFERENCES Personnel(ID_Personnel),
-    FOREIGN KEY (ID_Fonction) REFERENCES Fonction(ID_Fonction)
+    FOREIGN KEY (ID_Remplacant) REFERENCES Personnel(ID_Personnel) ON DELETE SET NULL,
+    FOREIGN KEY (ID_Superieur) REFERENCES Personnel(ID_Personnel) ON DELETE SET NULL,
+    FOREIGN KEY (ID_Fonction) REFERENCES Fonction(ID_Fonction) ON DELETE CASCADE
 );
 
 -- =========================
@@ -36,7 +36,7 @@ CREATE TABLE Contrat_Travail (
     Fonction VARCHAR2(50),
     Date_Debut DATE,
     Date_Fin DATE,
-    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel)
+    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
 );
 
 -- =========================
@@ -46,7 +46,7 @@ CREATE TABLE Zone (
     ID_Zone NUMBER PRIMARY KEY,
     Nom_Zone VARCHAR2(100),
     ID_Manager NUMBER NOT NULL,
-    FOREIGN KEY (ID_Manager) REFERENCES Personnel(ID_Personnel)
+    FOREIGN KEY (ID_Manager) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
 );
 
 -- =========================
@@ -58,8 +58,8 @@ CREATE TABLE Boutique (
     ID_Zone NUMBER NOT NULL,
     Nom_Boutique VARCHAR2(100),
     Description_Boutique VARCHAR2(200),
-    FOREIGN KEY (ID_Manager) REFERENCES Personnel(ID_Personnel),
-    FOREIGN KEY (ID_Zone) REFERENCES Zone(ID_Zone)
+    FOREIGN KEY (ID_Manager) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Zone) REFERENCES Zone(ID_Zone) ON DELETE CASCADE
 );
 
 -- =========================
@@ -70,7 +70,7 @@ CREATE TABLE Chiffre_Affaires (
     Date_CA_Journalier DATE,
     Montant NUMBER(10,2),
     PRIMARY KEY (ID_Boutique, Date_CA_Journalier),
-    FOREIGN KEY (ID_Boutique) REFERENCES Boutique(ID_Boutique)
+    FOREIGN KEY (ID_Boutique) REFERENCES Boutique(ID_Boutique) ON DELETE CASCADE
 );
 
 -- =========================
@@ -91,7 +91,7 @@ CREATE TABLE Enclos (
     ID_Zone NUMBER,
     Type_Enclos VARCHAR2(50),
     PRIMARY KEY (Latitude, Longitude),
-    FOREIGN KEY (ID_Zone) REFERENCES Zone(ID_Zone)
+    FOREIGN KEY (ID_Zone) REFERENCES Zone(ID_Zone) ON DELETE CASCADE
 );
 
 -- =========================
@@ -117,8 +117,8 @@ CREATE TABLE Animal (
     Poids NUMBER(6,2),
     Regime_Alimentaire VARCHAR2(50),
     FOREIGN KEY (Latitude_Enclos, Longitude_Enclos)
-        REFERENCES Enclos(Latitude, Longitude),
-    FOREIGN KEY (ID_Espece) REFERENCES Espece(ID_Espece)
+        REFERENCES Enclos(Latitude, Longitude) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Espece) REFERENCES Espece(ID_Espece) ON DELETE CASCADE
 );
 
 -- =========================
@@ -139,7 +139,7 @@ CREATE TABLE Parrainage (
 );
 
 ALTER TABLE Visiteur
-ADD FOREIGN KEY (ID_Parrainage) REFERENCES Parrainage(ID_Parrainage);
+ADD FOREIGN KEY (ID_Parrainage) REFERENCES Parrainage(ID_Parrainage) ON DELETE CASCADE;
 
 -- =========================
 -- TABLE PRESTATION
@@ -156,8 +156,8 @@ CREATE TABLE Est_Parraine (
     ID_Animal NUMBER NOT NULL,
     ID_Parrainage NUMBER NOT NULL,
     PRIMARY KEY (ID_Animal, ID_Parrainage),
-    FOREIGN KEY (ID_Animal) REFERENCES Animal(ID_Animal),
-    FOREIGN KEY (ID_Parrainage) REFERENCES Parrainage(ID_Parrainage)
+    FOREIGN KEY (ID_Animal) REFERENCES Animal(ID_Animal) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Parrainage) REFERENCES Parrainage(ID_Parrainage) ON DELETE CASCADE
 );
 
 -- =========================
@@ -167,8 +167,8 @@ CREATE TABLE A_Acces_A (
     ID_Parrainage NUMBER NOT NULL,
     ID_Prestation NUMBER NOT NULL,
     PRIMARY KEY (ID_Parrainage, ID_Prestation),
-    FOREIGN KEY (ID_Parrainage) REFERENCES Parrainage(ID_Parrainage),
-    FOREIGN KEY (ID_Prestation) REFERENCES Prestation(ID_Prestation)
+    FOREIGN KEY (ID_Parrainage) REFERENCES Parrainage(ID_Parrainage) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Prestation) REFERENCES Prestation(ID_Prestation) ON DELETE CASCADE
 );
 
 -- =========================
@@ -178,8 +178,8 @@ CREATE TABLE Est_Compatible_Avec (
     ID_Espece1 NUMBER NOT NULL,
     ID_Espece2 NUMBER NOT NULL,
     PRIMARY KEY (ID_Espece1, ID_Espece2),
-    FOREIGN KEY (ID_Espece1) REFERENCES Espece(ID_Espece),
-    FOREIGN KEY (ID_Espece2) REFERENCES Espece(ID_Espece)
+    FOREIGN KEY (ID_Espece1) REFERENCES Espece(ID_Espece) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Espece2) REFERENCES Espece(ID_Espece) ON DELETE CASCADE
 );
 
 -- =========================
@@ -189,8 +189,8 @@ CREATE TABLE Est_Le_Parent_De (
     ID_Parent NUMBER NOT NULL,
     ID_Enfant NUMBER NOT NULL,
     PRIMARY KEY (ID_Parent, ID_Enfant),
-    FOREIGN KEY (ID_Parent) REFERENCES Animal(ID_Animal),
-    FOREIGN KEY (ID_Enfant) REFERENCES Animal(ID_Animal)
+    FOREIGN KEY (ID_Parent) REFERENCES Animal(ID_Animal) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Enfant) REFERENCES Animal(ID_Animal) ON DELETE CASCADE
 );
 
 -- =========================
@@ -202,8 +202,8 @@ CREATE TABLE Bien_Etre_Quotidien (
     Date_Nourrit DATE,
     Dose_Nourriture NUMBER(6,2),
     PRIMARY KEY (ID_Animal, ID_Personnel, Date_Nourrit),
-    FOREIGN KEY (ID_Animal) REFERENCES Animal(ID_Animal),
-    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel)
+    FOREIGN KEY (ID_Animal) REFERENCES Animal(ID_Animal) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
 );
 
 -- =========================
@@ -215,8 +215,8 @@ CREATE TABLE Pratique_Soins (
     Date_Soin DATE,
     Description_Soin VARCHAR2(200),
     PRIMARY KEY (ID_Animal, ID_Personnel, Date_Soin),
-    FOREIGN KEY (ID_Animal) REFERENCES Animal(ID_Animal),
-    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel)
+    FOREIGN KEY (ID_Animal) REFERENCES Animal(ID_Animal) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
 );
 
 -- =========================
@@ -226,8 +226,8 @@ CREATE TABLE Est_Affectee_A (
     ID_Zone NUMBER,
     ID_Personnel NUMBER,
     PRIMARY KEY (ID_Zone, ID_Personnel),
-    FOREIGN KEY (ID_Zone) REFERENCES Zone(ID_Zone),
-    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel)
+    FOREIGN KEY (ID_Zone) REFERENCES Zone(ID_Zone) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
 );
 
 -- =========================
@@ -237,8 +237,8 @@ CREATE TABLE Travaille_Dans_La_Boutique (
     ID_Boutique NUMBER,
     ID_Personnel NUMBER,
     PRIMARY KEY (ID_Boutique, ID_Personnel),
-    FOREIGN KEY (ID_Boutique) REFERENCES Boutique(ID_Boutique),
-    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel)
+    FOREIGN KEY (ID_Boutique) REFERENCES Boutique(ID_Boutique) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
 );
 
 -- =========================
@@ -255,7 +255,7 @@ CREATE TABLE Reparation (
     Cout_Reparation NUMBER(10,2),
     PRIMARY KEY (Date_Debut_Reparation, Latitude_Enclos, Longitude_Enclos),
     FOREIGN KEY (Latitude_Enclos, Longitude_Enclos)
-        REFERENCES Enclos(Latitude, Longitude),
-    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel),
-    FOREIGN KEY (ID_Prestataire) REFERENCES Prestataire(ID_Prestataire)
+        REFERENCES Enclos(Latitude, Longitude) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Prestataire) REFERENCES Prestataire(ID_Prestataire) ON DELETE CASCADE
 );

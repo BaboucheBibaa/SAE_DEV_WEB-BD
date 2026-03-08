@@ -143,4 +143,24 @@ class Zone
 
         return $r;
     }
+
+
+    public static function moteurRechercheRecup($searchTerm)
+    {
+        /* Récupère les zones correspondant au terme de recherche pour le moteur de recherche
+         */
+        $db = Database::getConnection();
+        $sql = "SELECT ID_ZONE, NOM_ZONE FROM ZONE WHERE LOWER(NOM_ZONE) LIKE LOWER(:searchTerm)";
+        $stid = oci_parse($db, $sql);
+        $likeTerm = '%' . $searchTerm . '%';
+        oci_bind_by_name($stid, ':searchTerm', $likeTerm);
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        $zones = [];
+        oci_fetch_all($stid, $zones, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $zones;
+    }
 }

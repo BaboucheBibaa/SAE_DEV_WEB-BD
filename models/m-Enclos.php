@@ -2,6 +2,21 @@
 
 class Enclos
 {
+
+    public static function recupParCoordonnees($latitude, $longitude)
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT E.*,A.NOM_ANIMAL,Z.NOM_ZONE FROM ENCLOS E LEFT JOIN ANIMAL A ON E.LATITUDE = A.LATITUDE_ENCLOS AND E.LONGITUDE = A.LONGITUDE_ENCLOS LEFT JOIN ZONE Z ON E.ID_ZONE = Z.ID_ZONE WHERE E.LATITUDE = :latitude AND E.LONGITUDE = :longitude";
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid, ':latitude', $latitude);
+        oci_bind_by_name($stid, ':longitude', $longitude);
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        return oci_fetch_assoc($stid);
+    }
     public static function recupEnclosZone($id_zone)
     {
         /*Récupère les enclos dans la zone
@@ -20,6 +35,22 @@ class Enclos
         $enclos = [];
         oci_fetch_all($stid, $enclos, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $enclos;
+    }
+
+    public static function moteurRechercheRecup($searchTerm)
+    {
+        $db = Database::getConnection();
+
+        $sql = "SELECT TYPE_ENCLOS FROM ENCLOS WHERE LOWER(TYPE_ENCLOS) LIKE LOWER(:searchTerm)";
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid, ':searchTerm', $searchTerm);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        return oci_fetch_assoc($stid);
     }
 }
 

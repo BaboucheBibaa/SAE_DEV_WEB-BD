@@ -12,8 +12,9 @@ class ProfilAnimalController extends BaseController {
         if (!$animal) {
             $this->redirectWithMessage('home', 'Animal non trouvé.', 'error');
         }
-
+        $nourriture = HistoriqueSoins::recupNourritureParAnimal($id);
+        $soins = HistoriqueSoins::recupSoinsParAnimal($id);
         $title = "Profil de {$animal['NOM_ANIMAL']} - Zoo'land";
-        $this->render('animal/v-profilAnimal', ['title' => $title, 'animal' => $animal]);
+        $this->render('animal/v-profil', ['title' => $title, 'animal' => $animal, 'nourriture' => $nourriture, 'soins' => $soins]);
     }
 }
