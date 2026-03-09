@@ -6,6 +6,7 @@ require_once 'config/database.php';
 
 require_once 'models/m-Compatibilite.php';
 require_once 'models/m-Enclos.php';
+require_once 'models/m-Reparation.php';
 require_once 'models/m-HistoriqueSoins.php';
 require_once 'models/m-Fonction.php';
 require_once 'models/m-Boutique.php';

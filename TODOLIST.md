@@ -98,13 +98,6 @@
   - [ ] État des enclos
   - [ ] Santé générale des animaux
 
-- [ ] **Statistiques**
-  - [ ] Nombre de soins effectués
-  - [ ] Animaux sous surveillance (Espèce menacée ou non)
-
-- [ ] **Alertes**
-  - [ ] Problèmes de compatibilité d'enclos (gérer les problèmes de compatibilité)
-
 ---
 
 ## Pages Métier (Soigneur / Personnel entretien)
@@ -181,11 +174,6 @@
   - [ ] Intégration FPDF pour génération PDF
   - [ ] Affichage du contrat signé
   - [ ] Téléchargement du contrat
-
-- [ ] **Historique d'accès**
-  - [ ] Dernière connexion
-  - [ ] Historique de connexion
-  - [ ] Activités récentes
 
 ### Dashboard Administrateur
 

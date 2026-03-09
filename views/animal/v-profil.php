@@ -135,7 +135,7 @@
                                     <strong style="min-width: 120px;">Latitude:</strong>
                                     <span class="ms-2">
                                         <?= !empty($animal['LATITUDE_ENCLOS'])
-                                            ? number_format((float)$animal['LATITUDE_ENCLOS'], 6)
+                                            ? htmlspecialchars($animal['LATITUDE_ENCLOS'])
                                             : '<span class="text-muted">Non spécifiée</span>'
                                         ?>
                                     </span>
@@ -146,7 +146,7 @@
                                     <strong style="min-width: 120px;">Longitude:</strong>
                                     <span class="ms-2">
                                         <?= !empty($animal['LONGITUDE_ENCLOS'])
-                                            ? number_format((float)$animal['LONGITUDE_ENCLOS'], 6)
+                                            ? htmlspecialchars($animal['LONGITUDE_ENCLOS'])
                                             : '<span class="text-muted">Non spécifiée</span>'
                                         ?>
                                     </span>

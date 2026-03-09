@@ -7,6 +7,7 @@ Un moteur de recherche complet pour votre infrastructure de gestion du zoo, perm
 ## Fichiers Créés
 
 ### 1. Service de Recherche (`services/ServiceSearch.php`)
+
 Ce fichier contient toute la logique de recherche :
 
 - **`recherchGlobale($searchTerm, $tables = null)`**  
@@ -26,6 +27,7 @@ Ce fichier contient toute la logique de recherche :
   Récupère les listes de filtrage (espèces, zones, fonctions).
 
 ### 2. Contrôleur de Recherche (`controllers/c-search.php`)
+
 Gère les requêtes de recherche :
 
 - **`handleRequest()`**  
@@ -41,14 +43,15 @@ Gère les requêtes de recherche :
   Affiche la page du moteur de recherche sans résultats.
 
 ### 3. Vue du Moteur de Recherche (`views/test-moteur-recherche.php`)
-Interface utilisateur avec deux onglets :
 
+Interface utilisateur avec deux onglets :
 **Onglet 1 : Recherche Globale**
+
 - Barre de recherche simple
 - Affiche les résultats organisés par catégorie (animaux, espèces, zones, employés, boutiques)
 - Chaque résultat affiche les informations pertinentes
-
 **Onglet 2 : Recherche Avancée**
+
 - Sélection de catégorie
 - Filtres dynamiques en fonction de la catégorie choisie
 - Pour les animaux : filtre par espèce et zone
@@ -56,21 +59,25 @@ Interface utilisateur avec deux onglets :
 - Affichage détaillé des résultats
 
 ### 4. Intégration dans `index.php`
+
 - Import du service et contrôleur
 - Route pour l'action `search`
 
 ### 5. Navigation (`views/v-includes.php`)
+
 Ajout d'un lien vers la recherche dans la barre de navigation.
 
 ## Utilisation
 
 ### Accès
+
 Depuis l'application, cliquez sur le lien "Recherche" dans la navigation ou visitez :
 ```
 index.php?action=search
 ```
 
-### Recherche Globale
+### Recherche 
+
 1. Entrez un terme (nom d'animal, espèce, zone, etc.)
 2. Les résultats s'affichent groupés par catégorie
 3. Les animaux affichent le poids et la date de naissance
@@ -78,6 +85,7 @@ index.php?action=search
 5. Les produits affichent le prix
 
 ### Recherche Avancée
+
 1. Sélectionnez une catégorie (Animaux, Espèces, Zones, Employés, Boutiques)
 2. Entrez votre terme de recherche
 3. Sélectionnez les filtres optionnels qui apparaissent

@@ -107,52 +107,52 @@ COMMIT;
 -- =========================
 BEGIN
   -- Zone Africaine (10 enclos)
-  INSERT INTO Enclos VALUES (10.5, 20.5, 10, 'Savane');
-  INSERT INTO Enclos VALUES (10.5, 21.5, 10, 'Savane');
-  INSERT INTO Enclos VALUES (10.5, 22.5, 10, 'Savane');
-  INSERT INTO Enclos VALUES (11.5, 20.5, 10, 'Forêt');
-  INSERT INTO Enclos VALUES (11.5, 21.5, 10, 'Forêt');
-  INSERT INTO Enclos VALUES (11.5, 22.5, 10, 'Montagne');
-  INSERT INTO Enclos VALUES (12.5, 20.5, 10, 'Plaine');
-  INSERT INTO Enclos VALUES (12.5, 21.5, 10, 'Plaine');
-  INSERT INTO Enclos VALUES (13.5, 20.5, 10, 'Bassin');
-  INSERT INTO Enclos VALUES (13.5, 21.5, 10, 'Bassin');
+  INSERT INTO Enclos VALUES (10, 20, 10, 'Savane');
+  INSERT INTO Enclos VALUES (10, 21, 10, 'Savane');
+  INSERT INTO Enclos VALUES (10, 22, 10, 'Savane');
+  INSERT INTO Enclos VALUES (11, 20, 10, 'Forêt');
+  INSERT INTO Enclos VALUES (11, 21, 10, 'Forêt');
+  INSERT INTO Enclos VALUES (11, 22, 10, 'Montagne');
+  INSERT INTO Enclos VALUES (12, 20, 10, 'Plaine');
+  INSERT INTO Enclos VALUES (12, 21, 10, 'Plaine');
+  INSERT INTO Enclos VALUES (13, 20, 10, 'Bassin');
+  INSERT INTO Enclos VALUES (13, 21, 10, 'Bassin');
   
   -- Zone Asiatique (8 enclos)
-  INSERT INTO Enclos VALUES (20.5, 30.5, 11, 'Jungle');
-  INSERT INTO Enclos VALUES (20.5, 31.5, 11, 'Jungle');
-  INSERT INTO Enclos VALUES (20.5, 32.5, 11, 'Jungle');
-  INSERT INTO Enclos VALUES (21.5, 30.5, 11, 'Montagne');
-  INSERT INTO Enclos VALUES (21.5, 31.5, 11, 'Montagne');
-  INSERT INTO Enclos VALUES (21.5, 32.5, 11, 'Forêt');
-  INSERT INTO Enclos VALUES (22.5, 30.5, 11, 'Plaine');
-  INSERT INTO Enclos VALUES (22.5, 31.5, 11, 'Plaine');
+  INSERT INTO Enclos VALUES (20, 30, 11, 'Jungle');
+  INSERT INTO Enclos VALUES (20, 31, 11, 'Jungle');
+  INSERT INTO Enclos VALUES (20, 32, 11, 'Jungle');
+  INSERT INTO Enclos VALUES (21, 30, 11, 'Montagne');
+  INSERT INTO Enclos VALUES (21, 31, 11, 'Montagne');
+  INSERT INTO Enclos VALUES (21, 32, 11, 'Forêt');
+  INSERT INTO Enclos VALUES (22, 30, 11, 'Plaine');
+  INSERT INTO Enclos VALUES (22, 31, 11, 'Plaine');
   
   -- Zone Amazonienne (8 enclos)
-  INSERT INTO Enclos VALUES (30.5, 40.5, 12, 'Jungle');
-  INSERT INTO Enclos VALUES (30.5, 41.5, 12, 'Jungle');
-  INSERT INTO Enclos VALUES (30.5, 42.5, 12, 'Jungle');
-  INSERT INTO Enclos VALUES (31.5, 40.5, 12, 'Aquatique');
-  INSERT INTO Enclos VALUES (31.5, 41.5, 12, 'Aquatique');
-  INSERT INTO Enclos VALUES (31.5, 42.5, 12, 'Aquatique');
-  INSERT INTO Enclos VALUES (32.5, 40.5, 12, 'Forêt');
-  INSERT INTO Enclos VALUES (32.5, 41.5, 12, 'Forêt');
+  INSERT INTO Enclos VALUES (30, 40, 12, 'Jungle');
+  INSERT INTO Enclos VALUES (30, 41, 12, 'Jungle');
+  INSERT INTO Enclos VALUES (30, 42, 12, 'Jungle');
+  INSERT INTO Enclos VALUES (31, 40, 12, 'Aquatique');
+  INSERT INTO Enclos VALUES (31, 41, 12, 'Aquatique');
+  INSERT INTO Enclos VALUES (31, 42, 12, 'Aquatique');
+  INSERT INTO Enclos VALUES (32, 40, 12, 'Forêt');
+  INSERT INTO Enclos VALUES (32, 41, 12, 'Forêt');
   
   -- Zone Arctique (8 enclos)
-  INSERT INTO Enclos VALUES (40.5, 50.5, 13, 'Glace');
-  INSERT INTO Enclos VALUES (40.5, 51.5, 13, 'Glace');
-  INSERT INTO Enclos VALUES (40.5, 52.5, 13, 'Glace');
-  INSERT INTO Enclos VALUES (41.5, 50.5, 13, 'Eau Froide');
-  INSERT INTO Enclos VALUES (41.5, 51.5, 13, 'Eau Froide');
-  INSERT INTO Enclos VALUES (41.5, 52.5, 13, 'Eau Froide');
-  INSERT INTO Enclos VALUES (42.5, 50.5, 13, 'Toundra');
-  INSERT INTO Enclos VALUES (42.5, 51.5, 13, 'Toundra');
+  INSERT INTO Enclos VALUES (40, 50, 13, 'Glace');
+  INSERT INTO Enclos VALUES (40, 51, 13, 'Glace');
+  INSERT INTO Enclos VALUES (40, 52, 13, 'Glace');
+  INSERT INTO Enclos VALUES (41, 50, 13, 'Eau Froide');
+  INSERT INTO Enclos VALUES (41, 51, 13, 'Eau Froide');
+  INSERT INTO Enclos VALUES (41, 52, 13, 'Eau Froide');
+  INSERT INTO Enclos VALUES (42, 50, 13, 'Toundra');
+  INSERT INTO Enclos VALUES (42, 51, 13, 'Toundra');
   
   -- Zone Marine (4 enclos)
-  INSERT INTO Enclos VALUES (50.5, 60.5, 14, 'Bassin');
-  INSERT INTO Enclos VALUES (50.5, 61.5, 14, 'Bassin');
-  INSERT INTO Enclos VALUES (51.5, 60.5, 14, 'Bassin');
-  INSERT INTO Enclos VALUES (51.5, 61.5, 14, 'Bassin');
+  INSERT INTO Enclos VALUES (50, 60, 14, 'Bassin');
+  INSERT INTO Enclos VALUES (50, 61, 14, 'Bassin');
+  INSERT INTO Enclos VALUES (51, 60, 14, 'Bassin');
+  INSERT INTO Enclos VALUES (51, 61, 14, 'Bassin');
   
   COMMIT;
 END;
@@ -213,28 +213,28 @@ END;
 -- =========================
 BEGIN
   -- Animaux nommés
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10.5, 20.5, 100, TO_DATE('2018-03-15', 'YYYY-MM-DD'), 'Simba', 180, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10.5, 20.5, 100, TO_DATE('2019-07-22', 'YYYY-MM-DD'), 'Mufasa', 190, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10.5, 21.5, 101, TO_DATE('2017-05-10', 'YYYY-MM-DD'), 'Dumbo', 5000, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10.5, 21.5, 101, TO_DATE('2019-11-08', 'YYYY-MM-DD'), 'Elmer', 4500, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10.5, 22.5, 102, TO_DATE('2020-01-17', 'YYYY-MM-DD'), 'Gérald', 1200, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 11.5, 20.5, 103, TO_DATE('2019-02-14', 'YYYY-MM-DD'), 'Marty', 450, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 11.5, 21.5, 104, TO_DATE('2018-08-25', 'YYYY-MM-DD'), 'Hipo', 3500, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 20.5, 30.5, 105, TO_DATE('2016-11-29', 'YYYY-MM-DD'), 'Rajah', 200, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 20.5, 31.5, 106, TO_DATE('2018-06-12', 'YYYY-MM-DD'), 'Chandra', 1200, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 20.5, 32.5, 107, TO_DATE('2020-04-08', 'YYYY-MM-DD'), 'Po', 100, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 21.5, 30.5, 108, TO_DATE('2017-09-03', 'YYYY-MM-DD'), 'Rhino', 2200, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 21.5, 31.5, 105, TO_DATE('2019-01-20', 'YYYY-MM-DD'), 'Kanha', 180, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 30.5, 40.5, 110, TO_DATE('2019-05-14', 'YYYY-MM-DD'), 'Jaguar', 120, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 30.5, 41.5, 113, TO_DATE('2020-02-28', 'YYYY-MM-DD'), 'Macaw', 1.2, 'Frugivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 31.5, 40.5, 114, TO_DATE('2018-07-07', 'YYYY-MM-DD'), 'Crocy', 250, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 31.5, 41.5, 111, TO_DATE('2017-10-15', 'YYYY-MM-DD'), 'Snakey', 50, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 40.5, 50.5, 115, TO_DATE('2015-12-22', 'YYYY-MM-DD'), 'Nanook', 500, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 40.5, 51.5, 116, TO_DATE('2019-03-10', 'YYYY-MM-DD'), 'Foka', 150, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 41.5, 50.5, 117, TO_DATE('2018-06-05', 'YYYY-MM-DD'), 'Beluga', 1200, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 50.5, 60.5, 120, TO_DATE('2016-08-19', 'YYYY-MM-DD'), 'Bruce', 1800, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 50.5, 61.5, 121, TO_DATE('2019-11-12', 'YYYY-MM-DD'), 'Flipper', 300, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 51.5, 60.5, 122, TO_DATE('2017-04-21', 'YYYY-MM-DD'), 'Shelly', 500, 'Omnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10, 20, 100, TO_DATE('2018-03-15', 'YYYY-MM-DD'), 'Simba', 180, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10, 20, 100, TO_DATE('2019-07-22', 'YYYY-MM-DD'), 'Mufasa', 190, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10, 21, 101, TO_DATE('2017-05-10', 'YYYY-MM-DD'), 'Dumbo', 5000, 'Herbivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10, 21, 101, TO_DATE('2019-11-08', 'YYYY-MM-DD'), 'Elmer', 4500, 'Herbivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10, 22, 102, TO_DATE('2020-01-17', 'YYYY-MM-DD'), 'Gérald', 1200, 'Herbivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 11, 20, 103, TO_DATE('2019-02-14', 'YYYY-MM-DD'), 'Marty', 450, 'Herbivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 11, 21, 104, TO_DATE('2018-08-25', 'YYYY-MM-DD'), 'Hipo', 3500, 'Herbivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 20, 30, 105, TO_DATE('2016-11-29', 'YYYY-MM-DD'), 'Rajah', 200, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 20, 31, 106, TO_DATE('2018-06-12', 'YYYY-MM-DD'), 'Chandra', 1200, 'Herbivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 20, 32, 107, TO_DATE('2020-04-08', 'YYYY-MM-DD'), 'Po', 100, 'Herbivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 21, 30, 108, TO_DATE('2017-09-03', 'YYYY-MM-DD'), 'Rhino', 2200, 'Herbivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 21, 31, 105, TO_DATE('2019-01-20', 'YYYY-MM-DD'), 'Kanha', 180, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 30, 40, 110, TO_DATE('2019-05-14', 'YYYY-MM-DD'), 'Jaguar', 120, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 30, 41, 113, TO_DATE('2020-02-28', 'YYYY-MM-DD'), 'Macaw', 1.2, 'Frugivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 31, 40, 114, TO_DATE('2018-07-07', 'YYYY-MM-DD'), 'Crocy', 250, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 31, 41, 111, TO_DATE('2017-10-15', 'YYYY-MM-DD'), 'Snakey', 50, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 40, 50, 115, TO_DATE('2015-12-22', 'YYYY-MM-DD'), 'Nanook', 500, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 40, 51, 116, TO_DATE('2019-03-10', 'YYYY-MM-DD'), 'Foka', 150, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 41, 50, 117, TO_DATE('2018-06-05', 'YYYY-MM-DD'), 'Beluga', 1200, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 50, 60, 120, TO_DATE('2016-08-19', 'YYYY-MM-DD'), 'Bruce', 1800, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 50, 61, 121, TO_DATE('2019-11-12', 'YYYY-MM-DD'), 'Flipper', 300, 'Carnivore');
+  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 51, 60, 122, TO_DATE('2017-04-21', 'YYYY-MM-DD'), 'Shelly', 500, 'Omnivore');
   
   COMMIT;
 END;
@@ -254,12 +254,12 @@ BEGIN
       
       -- Assigner des coordonnées valides selon la zone
       CASE zone_id
-        WHEN 1 THEN lat := 10.5 + MOD(i, 3); lng := 20.5 + MOD(i, 2);
-        WHEN 2 THEN lat := 20.5 + MOD(i, 2); lng := 30.5 + MOD(i, 3);
-        WHEN 3 THEN lat := 30.5 + MOD(i, 2); lng := 40.5 + MOD(i, 3);
-        WHEN 4 THEN lat := 40.5 + MOD(i, 2); lng := 50.5 + MOD(i, 3);
-        WHEN 5 THEN lat := 50.5; lng := 60.5 + MOD(i, 2);
-        ELSE lat := 13.5; lng := 20.5 + MOD(i, 2);
+        WHEN 1 THEN lat := 10 + MOD(i, 3); lng := 20 + MOD(i, 2);
+        WHEN 2 THEN lat := 20 + MOD(i, 2); lng := 30 + MOD(i, 3);
+        WHEN 3 THEN lat := 30 + MOD(i, 2); lng := 40 + MOD(i, 3);
+        WHEN 4 THEN lat := 40 + MOD(i, 2); lng := 50 + MOD(i, 3);
+        WHEN 5 THEN lat := 50; lng := 60 + MOD(i, 2);
+        ELSE lat := 13; lng := 20 + MOD(i, 2);
       END CASE;
       
       INSERT INTO Animal VALUES (
@@ -586,12 +586,12 @@ BEGIN
       
       -- Sélectionner un enclos valide
       CASE zone_id
-        WHEN 1 THEN lat := 10.5 + MOD(i, 3); lng := 20.5 + MOD(i, 2);
-        WHEN 2 THEN lat := 20.5; lng := 30.5 + MOD(i, 3);
-        WHEN 3 THEN lat := 30.5; lng := 40.5 + MOD(i, 3);
-        WHEN 4 THEN lat := 40.5; lng := 50.5 + MOD(i, 3);
-        WHEN 5 THEN lat := 50.5; lng := 60.5 + MOD(i, 2);
-        ELSE lat := 13.5; lng := 21.5;
+        WHEN 1 THEN lat := 10 + MOD(i, 3); lng := 20 + MOD(i, 2);
+        WHEN 2 THEN lat := 20; lng := 30 + MOD(i, 3);
+        WHEN 3 THEN lat := 30; lng := 40 + MOD(i, 3);
+        WHEN 4 THEN lat := 40; lng := 50 + MOD(i, 3);
+        WHEN 5 THEN lat := 50; lng := 60 + MOD(i, 2);
+        ELSE lat := 13; lng := 21;
       END CASE;
       
       INSERT INTO Reparation VALUES (

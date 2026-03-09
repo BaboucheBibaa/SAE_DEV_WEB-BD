@@ -6,7 +6,7 @@ class Enclos
     public static function recupParCoordonnees($latitude, $longitude)
     {
         $db = Database::getConnection();
-        $sql = "SELECT E.*,A.NOM_ANIMAL,Z.NOM_ZONE FROM ENCLOS E LEFT JOIN ANIMAL A ON E.LATITUDE = A.LATITUDE_ENCLOS AND E.LONGITUDE = A.LONGITUDE_ENCLOS LEFT JOIN ZONE Z ON E.ID_ZONE = Z.ID_ZONE WHERE E.LATITUDE = :latitude AND E.LONGITUDE = :longitude";
+        $sql = "SELECT E.*,Z.NOM_ZONE FROM ENCLOS E LEFT JOIN ZONE Z ON E.ID_ZONE = Z.ID_ZONE WHERE E.LATITUDE = :latitude AND E.LONGITUDE = :longitude";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ':latitude', $latitude);
         oci_bind_by_name($stid, ':longitude', $longitude);

@@ -12,7 +12,9 @@ class EnclosController extends BaseController {
         if (!$enclos) {
             $this->redirectWithMessage('home', 'Enclos non trouvé.', 'error');
         }
+        $reparations = Reparation::recupReparationsParEnclos($latitude, $longitude);
+        $animaux= Animal::recupParCoordonnees($latitude, $longitude);
         $title = "Profil de l'enclos - Zoo'land";
-        $this->render('enclos/v-profil', ['title' => $title, 'enclos' => $enclos]);
+        $this->render('enclos/v-profil', ['title' => $title, 'enclos' => $enclos, 'reparations' => $reparations, 'animaux' => $animaux]);
     }
 }

@@ -37,6 +37,27 @@ class Animal
         return $result;
     }
 
+
+    public static function recupParCoordonnees($latitude, $longitude)
+    {
+        $db = Database::getConnection();
+
+        $query = "SELECT A.* FROM Animal A WHERE A.LATITUDE_ENCLOS = :latitude AND A.LONGITUDE_ENCLOS = :longitude";
+        $stid = oci_parse($db, $query);
+        oci_bind_by_name($stid, ':latitude', $latitude);
+        oci_bind_by_name($stid, ':longitude', $longitude);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+         $result = [];
+         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+         return $result;
+    }
+
     public static function recupParZone($id_zone)
      {
          $db = Database::getConnection();

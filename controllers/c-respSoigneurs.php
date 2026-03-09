@@ -44,7 +44,7 @@ class RespSoigneurController extends BaseController
         }
 
         $title = "Dashboard Responsable de Zone";
-        $this->render('resp_zone/v-dashboard', [
+        $this->render('respSoig/v-dashboard', [
             'user' => $user,
             'title' => $title,
             'zone' => $zone,
