@@ -168,7 +168,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <?php if (!empty($nourriture) && isset($nourriture['ID_ANIMAL']) && is_array($nourriture['ID_ANIMAL'])): ?>
+                        <?php if (!empty($nourriture) && isset($nourriture[0]) && is_array($nourriture[0])): ?>
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover">
                                     <thead class="table-light">
@@ -180,12 +180,12 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $count = count($nourriture['ID_ANIMAL']);
+                                        $count = count($nourriture[0]);
                                         for ($i = 0; $i < $count; $i++) {
-                                            $dateNourrit = htmlspecialchars($nourriture['DATE_NOURRIT'][$i] ?? '');
-                                            $nomPersonnel = htmlspecialchars($nourriture['NOM'][$i] ?? 'Non spécifié');
-                                            $prenomPersonnel = htmlspecialchars($nourriture['PRENOM'][$i] ?? '');
-                                            $dose = htmlspecialchars($nourriture['DOSE_NOURRITURE'][$i] ?? '');
+                                            $dateNourrit = htmlspecialchars($nourriture[$i]['DATE_NOURRIT'] ?? '');
+                                            $nomPersonnel = htmlspecialchars($nourriture[$i]['NOM'] ?? 'Non spécifié');
+                                            $prenomPersonnel = htmlspecialchars($nourriture[$i]['PRENOM'] ?? '');
+                                            $dose = htmlspecialchars($nourriture[$i]['DOSE_NOURRITURE'] ?? '');
                                             
                                             echo "<tr>";
                                             echo "<td><strong>{$dateNourrit}</strong></td>";
@@ -217,7 +217,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <?php if (!empty($soins) && isset($soins['ID_ANIMAL']) && is_array($soins['ID_ANIMAL'])): ?>
+                        <?php if (!empty($soins) && isset($soins) && is_array($soins)): ?>
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover">
                                     <thead class="table-light">
@@ -229,12 +229,12 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $count = count($soins['ID_ANIMAL']);
+                                        $count = count($soins);
                                         for ($i = 0; $i < $count; $i++) {
-                                            $dateSoin = htmlspecialchars($soins['DATE_SOIN'][$i] ?? '');
-                                            $nomPersonnel = htmlspecialchars($soins['NOM'][$i] ?? 'Non spécifié');
-                                            $prenomPersonnel = htmlspecialchars($soins['PRENOM'][$i] ?? '');
-                                            $description = htmlspecialchars($soins['DESCRIPTION_SOIN'][$i] ?? 'Non spécifiée');
+                                            $dateSoin = htmlspecialchars($soins[$i]['DATE_SOIN'] ?? '');
+                                            $nomPersonnel = htmlspecialchars($soins[$i]['NOM'] ?? 'Non spécifié');
+                                            $prenomPersonnel = htmlspecialchars($soins[$i]['PRENOM'] ?? '');
+                                            $description = htmlspecialchars($soins[$i]['DESCRIPTION_SOIN'] ?? 'Non spécifiée');
                                             
                                             echo "<tr>";
                                             echo "<td><strong>{$dateSoin}</strong></td>";

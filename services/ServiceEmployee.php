@@ -38,9 +38,9 @@ class ServiceEmployee {
         return User::creer($data);
     }
 
-    public function editionEmployee($id)
+    public function dataEditionEmployee($id)
     {
-        //Affiche la page d'édition de l'employé
+        //Retourne les données nécessaires à l'affichage du formulaire d'édition d'un employé en fonction de l'id passé en paramètre
         if (!$id) {
             return null;
         }
@@ -104,9 +104,9 @@ class ServiceEmployee {
         return User::maj($id, $data);
     }
 
-    public function creationEmployee()
+    public function dataCreationEmployee()
     {
-        //Affiche la page de création d'un nouvel employé
+        //Retourne les données nécessaires à l'affichage du formulaire de création d'un employé
         $liste_fonctions = Fonction::recupToutesLesFonctions();
         $liste_employes = User::toutRecup();
         $generatedPassword = Utils::generatePassword(10);

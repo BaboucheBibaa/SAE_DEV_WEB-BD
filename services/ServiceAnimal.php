@@ -1,9 +1,9 @@
 <?php
 class ServiceAnimal
 {
-    public function editionAnimal($id)
+    public function dataEditionAnimal($id)
     {
-        //Affiche la page d'édition de l'animal
+        //Retourne les données nécessaires à l'affichage du formulaire d'édition d'un animal en fonction de l'id passé en paramètre
         if (!$id) {
             return null; //id inexistant
         }
@@ -86,9 +86,9 @@ class ServiceAnimal
         return Animal::suppr($id);
     }
 
-    public function creationAnimal()
+    public function dataCreationAnimal()
     {
-        //Affiche la page de création d'un nouvel animal
+        //Retourne les données nécessaires à l'affichage du formulaire de création d'un nouvel animal
         $especes = Espece::toutRecup();
         $zones = Zone::toutRecup();
 

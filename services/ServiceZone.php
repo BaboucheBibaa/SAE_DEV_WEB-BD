@@ -8,9 +8,10 @@ class ServiceZone {
         //Récupère toutes les zones de la base de données
         return Zone::toutRecup();
     }
-    public function editionZone($id)
+
+    public function dataEditionZone($id)
     {
-        //Affiche la page d'édition de la zone
+        //Retourne les données nécessaires à la création du formulaire d'édition de la zone avec l'id $id
         if (!$id) {
             return null; //id inexistant
         }
@@ -46,9 +47,9 @@ class ServiceZone {
         return Zone::suppr($id);
     }
 
-    public function creationZone()
+    public function dataCreationZone()
     {
-        //Affiche la page de création d'une zone
+        //Retourne les données pour la création d'un formulaire de création de zone
         $employees = User::toutRecup();
         if (!$employees) {
             return null; // Pas d'employés disponibles pour être manager

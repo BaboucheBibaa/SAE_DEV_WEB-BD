@@ -2,20 +2,14 @@
 
 class ServiceSearch
 {
-    /**
-     * Recherche globale dans les différentes tables
-     * @param string $searchTerm - Terme de recherche
-     * @param array $tables - Tables à rechercher (optionnel)
-     * @return array - Résultats organisés par table
-     */
     public static function recherchGlobale($searchTerm, $tables = null)
     {
         if (empty($searchTerm)) {
-            return [];
+            return null;
         }
 
         $searchTerm = trim($searchTerm);
-        
+
         $results = [];
 
         // Recherche via les modèles (retournent déjà des tableaux)

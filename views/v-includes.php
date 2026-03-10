@@ -29,17 +29,22 @@
                         </li>
                         <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID) { ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="index.php?action=admin_dashboard">Dashboard Administrateur</a>
+                                <a class="nav-link" href="index.php?action=adminDashboard">Dashboard Administrateur</a>
                             </li>
                         <?php }
                         if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == RESPBOUTIQUE) { ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="index.php?action=respBoutique_dashboard">Dashboard Responsable de Boutique</a>
+                                <a class="nav-link" href="index.php?action=respBoutiqueDashboard">Dashboard Responsable de Boutique</a>
                             </li>
                         <?php }
                         if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == RESPSOIG) { ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="index.php?action=respZone_dashboard">Dashboard Responsable de Zone</a>
+                                <a class="nav-link" href="index.php?action=respZoneDashboard">Dashboard Responsable de Zone</a>
+                            </li>
+                        <?php }
+                        if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == SOIGNEUR) { ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?action=soigneursDashboard">Dashboard Soigneur</a>
                             </li>
 
                         <?php }

@@ -42,7 +42,7 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body text-center p-3">
                         <h5 class="card-title">Administration</h5>
-                        <a href="index.php?action=admin_dashboard" class="btn btn-sm btn-primary">
+                        <a href="index.php?action=adminDashboard" class="btn btn-sm btn-primary">
                             Dashboard
                         </a>
                     </div>
@@ -66,7 +66,7 @@
             <div class="btn-group btn-group-sm" role="group">
                 <a href="index.php?action=profil&id=<?= $_SESSION['user']['ID_PERSONNEL'] ?>" class="btn btn-outline-secondary">Mon profil</a>
                 <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
-                <a href="index.php?action=admin_dashboard" class="btn btn-outline-secondary">Dashboard</a>
+                <a href="index.php?action=adminDashboard" class="btn btn-outline-secondary">Dashboard</a>
                 <?php endif; ?>
                 <a href="index.php?action=deconnexion" class="btn btn-outline-danger">Déconnexion</a>
             </div>

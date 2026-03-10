@@ -1,6 +1,25 @@
 <?php
 class Animal
 {
+
+
+    public static function recupNomParID($id)
+    {
+        $db = Database::getConnection();
+
+        $query = "SELECT NOM_ANIMAL FROM Animal WHERE ID_ANIMAL = :id_animal";
+        $stid = oci_parse($db, $query);
+        oci_bind_by_name($stid, ':id_animal', $id);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        $result = oci_fetch_assoc($stid);
+        return $result ? $result['NOM_ANIMAL'] : null;
+    }
     public static function recupParID($id)
     {
         $db = Database::getConnection();
@@ -53,47 +72,72 @@ class Animal
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
 
-         $result = [];
-         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-         return $result;
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
     }
 
+    public static function recupTousParSoigneurs($id_soigneur)
+    {
+        /* Récupère tous les animaux de la zone ou le soigneur $id_soigneur travaille */
+        $db = Database::getConnection();
+        $query = "SELECT A.*,E.NOM_ESPECE
+            FROM Animal A
+            LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE
+            WHERE (A.LATITUDE_ENCLOS, A.LONGITUDE_ENCLOS) IN (
+                SELECT E.LATITUDE, E.LONGITUDE
+                FROM Enclos E
+                WHERE E.ID_Zone IN (
+                    SELECT ID_Zone
+                    FROM Est_Affectee_A
+                    WHERE ID_Personnel = :id_soigneur
+                )
+            );";
+
+        $stid = oci_parse($db, $query);
+        oci_bind_by_name($stid, ':id_soigneur', $id_soigneur);
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
+    }
     public static function recupParZone($id_zone)
-     {
-         $db = Database::getConnection();
+    {
+        $db = Database::getConnection();
 
-         $query = "SELECT A.*,E.NOM_ESPECE FROM Animal A LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE WHERE (A.LATITUDE_ENCLOS,A.LONGITUDE_ENCLOS) IN (SELECT LATITUDE,LONGITUDE FROM Enclos WHERE ID_ZONE = :id_zone)";
-         $stid = oci_parse($db, $query);
-         oci_bind_by_name($stid, ':id_zone', $id_zone);
+        $query = "SELECT
+                A.*,E.NOM_ESPECE 
+                FROM Animal A 
+                LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE 
+                    WHERE (A.LATITUDE_ENCLOS,A.LONGITUDE_ENCLOS) IN 
+                        (SELECT LATITUDE,LONGITUDE FROM Enclos WHERE ID_ZONE = :id_zone
+    )";
+        $stid = oci_parse($db, $query);
+        oci_bind_by_name($stid, ':id_zone', $id_zone);
 
-         $r = oci_execute($stid);
-         if (!$r) {
-             $e = oci_error($stid);
-             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-         }
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
 
-         $result = [];
-         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-         return $result;
-     }
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
+    }
 
     public static function creer($data)
     {
         $db = Database::getConnection();
-        
-        // Génération du nouvel ID
-        $sql_seq = "SELECT SEQ_Animal.NEXTVAL AS next_id FROM DUAL";
-        $stid_seq = oci_parse($db, $sql_seq);
-        oci_execute($stid_seq);
-        $row = oci_fetch_assoc($stid_seq);
-        $new_id = $row['NEXT_ID'];
-
         $sql = "INSERT INTO Animal (ID_ANIMAL, NOM_ANIMAL, DATE_NAISSANCE, POIDS, REGIME_ALIMENTAIRE, ID_ESPECE, LATITUDE_ENCLOS, LONGITUDE_ENCLOS) 
-                VALUES (:id_animal, :nom_animal, TO_DATE(:date_naissance, 'YYYY-MM-DD'), :poids, :regime_alimentaire, :id_espece, :latitude_enclos, :longitude_enclos)";
-        
+                VALUES (SEQ_Animal.NEXTVAL, :nom_animal, TO_DATE(:date_naissance, 'YYYY-MM-DD'), :poids, :regime_alimentaire, :id_espece, :latitude_enclos, :longitude_enclos)";
+
         $stid = oci_parse($db, $sql);
-        
-        oci_bind_by_name($stid, ':id_animal', $new_id);
+
         oci_bind_by_name($stid, ':nom_animal', $data['nom_animal']);
         oci_bind_by_name($stid, ':date_naissance', $data['date_naissance']);
         oci_bind_by_name($stid, ':poids', $data['poids']);
@@ -175,7 +219,7 @@ class Animal
             $e = oci_error($stid);
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
-        
+
         $result = [];
         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;

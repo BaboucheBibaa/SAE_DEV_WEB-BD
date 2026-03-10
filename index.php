@@ -1,5 +1,12 @@
 <?php
+define("ADMINID",10);
+define("RESPSOIG",11);
+define("SOIGNEUR",12);
+define("EMPLOYEE_BOUTIQUE",15);
+define("RESPBOUTIQUE",14);
+
 session_start();
+
 require_once 'config/myparams.inc.php';
 
 require_once 'config/database.php';
@@ -17,6 +24,7 @@ require_once 'models/m-User.php';
 require_once 'models/m-Zone.php';
 
 require_once 'utilities/Utils.php';
+
 require_once 'services/ServiceAnimal.php';
 require_once 'services/ServiceBoutique.php';
 require_once 'services/ServiceEmployee.php';
@@ -24,14 +32,16 @@ require_once 'services/ServiceZone.php';
 require_once 'services/ServiceSearch.php';
 
 require_once 'controllers/c-base.php';
+require_once 'controllers/c-soigneurs.php';
+require_once 'controllers/c-employeBoutique.php';
 require_once 'controllers/c-profil.php';
 require_once 'controllers/c-connexion.php';
-require_once 'controllers/c-pageAdmin.php';
 require_once 'controllers/c-respSoigneurs.php';
-require_once 'controllers/c-profilAnimal.php';
-require_once 'controllers/c-search.php';
 require_once 'controllers/c-respBoutique.php';
-require_once 'controllers/c-enclos.php';
+require_once 'controllers/c-profilAnimal.php';
+require_once 'controllers/c-profilEnclos.php';
+require_once 'controllers/c-profilAdmin.php';
+require_once 'controllers/c-search.php';
 
 
 //toutes les pages se chargeront par index.php via la méthode GET action, une seule page sera affichée
@@ -47,10 +57,10 @@ switch ($action){
         $controller = new ConnexionController();
         break;
     case 'profil':
-    case 'update_password':
+    case 'updatePassword':
         $controller = new ProfilController();
         break;
-    case 'admin_dashboard':    
+    case 'adminDashboard':    
     case 'supprEmployee':
     case 'creationEmployee':
     case 'ajoutEmployee':
@@ -73,10 +83,10 @@ switch ($action){
     case 'supprAnimal':
         $controller = new AdminController();
         break;
-    case 'respZone_dashboard':
+    case 'respZoneDashboard':
         $controller = new RespSoigneurController();
         break;
-    case "respBoutique_dashboard":
+    case "respBoutiqueDashboard":
         $controller = new RespBoutiqueController();
         break;
     case 'profilAnimal':
@@ -87,6 +97,14 @@ switch ($action){
         break;
     case 'search':
         $controller = new SearchController();
+        break;
+    case 'soigneursDashboard':
+    case 'formAjoutSoin':
+    case 'addSoin':
+    case 'formAjoutNourriture':
+    case 'addNourriture':
+    case 'listerSoins':
+        $controller = new Soigneurs();
         break;
     default:
         echo "Page introuvable";
@@ -115,12 +133,12 @@ switch ($action) {
         $controller->profil($_GET['id']);
         break;
 
-    case 'update_password':
-        $controller->update_password();
+    case 'updatePassword':
+        $controller->updatePassword();
         break;
 
-    case 'admin_dashboard':
-        $controller->profil_admin();
+    case 'adminDashboard':
+        $controller->profilAdmin();
         break;
 
     case 'supprEmployee':
@@ -128,7 +146,7 @@ switch ($action) {
         break;
 
     case 'creationEmployee':
-        $controller->creationEmployee();
+        $controller->formCreationEmployee();
         break;
 
     case 'ajoutEmployee':
@@ -136,7 +154,7 @@ switch ($action) {
         break;
 
     case 'editionEmployee':
-        $controller->editionEmployee($_GET['id']);
+        $controller->formEditionEmployee($_GET['id']);
         break;
 
     case 'updateEmployee':
@@ -145,7 +163,7 @@ switch ($action) {
 
     // Routes pour les boutiques
     case 'creationBoutique':
-        $controller->creationBoutique();
+        $controller->formCreationBoutique();
         break;
 
     case 'ajoutBoutique':
@@ -153,7 +171,7 @@ switch ($action) {
         break;
 
     case 'editionBoutique':
-        $controller->editionBoutique($_GET['id']);
+        $controller->formEditionBoutique($_GET['id']);
         break;
 
     case 'majBoutique':
@@ -166,7 +184,7 @@ switch ($action) {
 
     // Routes pour les zones
     case 'creationZone':
-        $controller->creationZone();
+        $controller->formCreationZone();
         break;
 
     case 'ajoutZone':
@@ -174,7 +192,7 @@ switch ($action) {
         break;
 
     case 'editionZone':
-        $controller->editionZone($_GET['id']);
+        $controller->formEditionZone($_GET['id']);
         break;
 
     case 'majZone':
@@ -187,7 +205,7 @@ switch ($action) {
 
     // Routes pour les animaux
     case 'creationAnimal':
-        $controller->creationAnimal();
+        $controller->formCreationAnimal();
         break;
 
     case 'ajoutAnimal':
@@ -195,7 +213,7 @@ switch ($action) {
         break;
 
     case 'editionAnimal':
-        $controller->editionAnimal($_GET['id']);
+        $controller->formEditionAnimal($_GET['id']);
         break;
 
     case 'majAnimal':
@@ -210,17 +228,35 @@ switch ($action) {
         $controller->profilEnclos($_GET['latitude'], $_GET['longitude']);
         break;
 
-    case 'respZone_dashboard':
+    case 'respZoneDashboard':
         $controller->afficherPage();
         break;
-    case 'respBoutique_dashboard':
+    case 'respBoutiqueDashboard':
         $controller->afficherPage();
         break;
     case 'profilAnimal':
         $controller->profilAnimal($_GET['id']);
         break;
-    
-    
+
+    case 'soigneursDashboard':
+        $controller->index();
+        break;
+    case 'formAjoutSoin':
+        $controller->formCreationSoin();
+        break;
+    case 'ajoutSoin':
+        $controller->ajoutSoin();
+        break;
+    case 'formAjoutNourriture':
+        $controller->formCreationAjoutNourriture();
+        break;
+    case 'ajoutNourriture':
+        $controller->ajoutNourriture();
+        break;
+    case 'listerSoins':
+        $controller->listerSoins();
+        break;
+
     case 'search':
         $controller->gererRequete();
         break;

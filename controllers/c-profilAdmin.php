@@ -31,7 +31,7 @@ class AdminController extends BaseController
 
     //  Dashboard admin
 
-    public function profil_admin()
+    public function profilAdmin()
     {
         $this->checkAdmin();
 
@@ -74,12 +74,12 @@ class AdminController extends BaseController
 
     //  Employés
 
-    public function creationEmployee()
+    public function formCreationEmployee()
     {
         $this->checkAdmin();
-        $data = $this->serviceEmployee->creationEmployee();
+        $data = $this->serviceEmployee->dataCreationEmployee();
         if ($data === null) {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la préparation de la création de l\'employé.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation de la création de l\'employé.', 'error');
         } else {
             $this->render(
                 'administrateur/v-createEmployee',
@@ -97,18 +97,18 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceEmployee->ajoutEmployee()) {
-            $this->redirectWithMessage('admin_dashboard', 'Employé ajouté avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Employé ajouté avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de l\'ajout de l\'employé.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout de l\'employé.', 'error');
         }
     }
 
-    public function editionEmployee($id)
+    public function formEditionEmployee($id)
     {
         $this->checkAdmin();
-        $data = $this->serviceEmployee->editionEmployee($id);
+        $data = $this->serviceEmployee->dataEditionEmployee($id);
         if ($data === null) {
-            $this->redirectWithMessage('admin_dashboard', 'Employé non trouvé.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Employé non trouvé.', 'error');
         } else {
             $this->render(
                 'administrateur/v-editionEmployee',
@@ -121,9 +121,9 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceEmployee->majEmployee($id)) {
-            $this->redirectWithMessage('admin_dashboard', 'Employé mis à jour avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Employé mis à jour avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la mise à jour de l\'employé.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de l\'employé.', 'error');
         }
     }
 
@@ -131,20 +131,20 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceEmployee->supprEmployee($id)) {
-            $this->redirectWithMessage('admin_dashboard', 'Employé supprimé avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Employé supprimé avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la suppression de l\'employé.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de l\'employé.', 'error');
         }
     }
 
     //  Boutiques
 
-    public function creationBoutique()
+    public function formCreationBoutique()
     {
         $this->checkAdmin();
-        $data = $this->serviceBoutique->creationBoutique();
+        $data = $this->serviceBoutique->dataCreationBoutique();
         if ($data === null) {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la préparation de la création de la boutique.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation de la création de la boutique.', 'error');
         } else {
             $this->render('administrateur/v-createBoutique', $data);
         }
@@ -154,18 +154,18 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceBoutique->ajoutBoutique()) {
-            $this->redirectWithMessage('admin_dashboard', 'Boutique ajoutée avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Boutique ajoutée avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de l\'ajout de la boutique.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout de la boutique.', 'error');
         }
     }
 
-    public function editionBoutique($id)
+    public function formEditionBoutique($id)
     {
         $this->checkAdmin();
-        $data = $this->serviceBoutique->editionBoutique($id);
+        $data = $this->serviceBoutique->dataEditionBoutique($id);
         if ($data === null) {
-            $this->redirectWithMessage('admin_dashboard', 'Boutique non trouvée.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Boutique non trouvée.', 'error');
         } else {
             $this->render('administrateur/v-editionBoutique', $data);
         }
@@ -175,9 +175,9 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceBoutique->majBoutique($id)) {
-            $this->redirectWithMessage('admin_dashboard', 'Boutique mise à jour avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Boutique mise à jour avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la mise à jour de la boutique.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de la boutique.', 'error');
         }
     }
 
@@ -185,20 +185,20 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceBoutique->supprBoutique($id)) {
-            $this->redirectWithMessage('admin_dashboard', 'Boutique supprimée avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Boutique supprimée avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la suppression de la boutique.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de la boutique.', 'error');
         }
     }
 
     //  Zones
 
-    public function creationZone()
+    public function formCreationZone()
     {
         $this->checkAdmin();
-        $data = $this->serviceZone->creationZone();
+        $data = $this->serviceZone->dataCreationZone();
         if ($data === null) {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la préparation de la création de la zone.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation de la création de la zone.', 'error');
         } else {
             $this->render('administrateur/v-createZone', $data);
         }
@@ -208,18 +208,18 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceZone->ajoutZone()) {
-            $this->redirectWithMessage('admin_dashboard', 'Zone ajoutée avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Zone ajoutée avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de l\'ajout de la zone.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout de la zone.', 'error');
         }
     }
 
-    public function editionZone($id)
+    public function formEditionZone($id)
     {
         $this->checkAdmin();
-        $data = $this->serviceZone->editionZone($id);
+        $data = $this->serviceZone->dataEditionZone($id);
         if ($data === null) {
-            $this->redirectWithMessage('admin_dashboard', 'Zone non trouvée.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Zone non trouvée.', 'error');
         } else {
             $this->render('administrateur/v-editionZone', $data);
         }
@@ -229,9 +229,9 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceZone->majZone($id)) {
-            $this->redirectWithMessage('admin_dashboard', 'Zone mise à jour avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Zone mise à jour avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la mise à jour de la zone.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de la zone.', 'error');
         }
     }
 
@@ -239,9 +239,9 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceZone->supprZone($id)) {
-            $this->redirectWithMessage('admin_dashboard', 'Zone supprimée avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Zone supprimée avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la suppression de la zone.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de la zone.', 'error');
         }
     }
 
@@ -249,12 +249,12 @@ class AdminController extends BaseController
     //  Animaux
     // ========================
 
-    public function creationAnimal()
+    public function formCreationAnimal()
     {
         $this->checkAdmin();
-        $data = $this->serviceAnimal->creationAnimal();
+        $data = $this->serviceAnimal->dataCreationAnimal();
         if ($data === null) {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la préparation de la création de l\'animal.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation de la création de l\'animal.', 'error');
         } else {
             $this->render('administrateur/v-createAnimal', $data);
         }
@@ -264,18 +264,18 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceAnimal->ajoutAnimal()) {
-            $this->redirectWithMessage('admin_dashboard', 'Animal ajouté avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Animal ajouté avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de l\'ajout de l\'animal.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout de l\'animal.', 'error');
         }
     }
 
-    public function editionAnimal($id)
+    public function formEditionAnimal($id)
     {
         $this->checkAdmin();
-        $data = $this->serviceAnimal->editionAnimal($id);
+        $data = $this->serviceAnimal->dataEditionAnimal($id);
         if ($data === null) {
-            $this->redirectWithMessage('admin_dashboard', 'Animal non trouvé.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Animal non trouvé.', 'error');
         } else {
             $this->render(
                 'administrateur/v-editionAnimal',
@@ -288,9 +288,9 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceAnimal->majAnimal($id)) {
-            $this->redirectWithMessage('admin_dashboard', 'Animal mis à jour avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Animal mis à jour avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la mise à jour de l\'animal.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de l\'animal.', 'error');
         }
     }
 
@@ -298,9 +298,9 @@ class AdminController extends BaseController
     {
         $this->checkAdmin();
         if ($this->serviceAnimal->supprAnimal($id)) {
-            $this->redirectWithMessage('admin_dashboard', 'Animal supprimé avec succès.', 'success');
+            $this->redirectWithMessage('adminDashboard', 'Animal supprimé avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('admin_dashboard', 'Erreur lors de la suppression de l\'animal.', 'error');
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de l\'animal.', 'error');
         }
     }
 }

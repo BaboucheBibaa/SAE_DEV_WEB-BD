@@ -1,9 +1,9 @@
 <?php
 
 class ServiceBoutique {
-    public function creationBoutique()
+    public function dataCreationBoutique()
     {
-        //Affiche la page de création d'une nouvelle boutique
+        //Retourne les données nécessaires à la création du formulaire de création de boutique
         $zones = Zone::toutRecup();
         $employees = User::toutRecup();
         if (!$zones || !$employees) {
@@ -30,9 +30,9 @@ class ServiceBoutique {
         return Boutique::creer($data);
     }
 
-    public function editionBoutique($id)
+    public function dataEditionBoutique($id)
     {
-        //Affiche la page d'édition de la boutique
+        //Retourne les données nécessaires à la création du formulaire d'édition de boutique
         if (!$id) {
             return null; //id inexistant
         }

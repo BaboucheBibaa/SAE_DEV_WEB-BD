@@ -61,7 +61,7 @@
                 <div class="card-body p-4">
                     <h3 class="card-title mb-4">Modifier mon mot de passe</h3>
 
-                    <form action="index.php?action=update_password" method="POST">
+                    <form action="index.php?action=updatePassword" method="POST">
                         <div class="mb-3">
                             <label for="old_password" class="form-label">Mot de passe actuel <span class="text-danger">*</span></label>
                             <input type="password" class="form-control" id="old_password" name="old_password" required>

@@ -25,7 +25,7 @@ class ProfilController extends BaseController
         ]);
     }
 
-    public function update_password()
+    public function updatePassword()
     {
         // Met à jour le MDP de l'utilisateur connecté
         if (empty($_SESSION['user'])) {

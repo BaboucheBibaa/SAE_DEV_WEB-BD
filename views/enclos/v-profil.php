@@ -52,15 +52,6 @@
                                 </span>
                             </div>
                         </div>
-
-                        <hr>
-
-                        <div class="alert alert-success d-flex align-items-center" role="alert">
-                            <div>
-                                <strong>État:</strong><br>
-                                Enclos en bon état
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -103,15 +94,6 @@
                                     echo '<span class="text-muted">Non spécifiée</span>';
                                 }
                                 ?>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="alert alert-info d-flex align-items-center" role="alert">
-                            <div>
-                                <strong>Coordonnées:</strong><br>
-                                Cet enclos est situé aux coordonnées GPS ci-dessus.
                             </div>
                         </div>
                     </div>

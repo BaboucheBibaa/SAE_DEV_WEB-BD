@@ -53,7 +53,7 @@
                             <button type="submit" class="btn btn-success">
                                 <i class="fas fa-save"></i> Créer la boutique
                             </button>
-                            <a href="index.php?action=admin_dashboard" class="btn btn-secondary">
+                            <a href="index.php?action=adminDashboard" class="btn btn-secondary">
                                 <i class="fas fa-times"></i> Annuler
                             </a>
                         </div>
