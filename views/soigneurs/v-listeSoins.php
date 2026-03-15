@@ -8,7 +8,7 @@
 
         <!-- Actions -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <a href="index.php?action=soigneurs_dashboard" class="btn btn-outline-secondary">
+            <a href="index.php?action=soigneursDashboard" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left"></i> Retour
             </a>
             <a href="index.php?action=formAjoutSoin" class="btn btn-success">
@@ -33,7 +33,7 @@
                                 <?php foreach ($soins as $soin): ?>
                                     <tr>
                                         <td>
-                                            <span class="fw-semibold"><?= htmlspecialchars($soin['NOM_ANIMAL'] ?? 'Inconnu') ?></span>
+                                            <span class="fw-semibold"><a href="index.php?action=profilAnimal&id=<?= htmlspecialchars($soin['ID_ANIMAL'] ?? '') ?>"><?= htmlspecialchars($soin['NOM_ANIMAL'] ?? 'Inconnu') ?></a></span>
                                         </td>
                                         <td>
                                             <?= htmlspecialchars($soin['DATE_SOIN'] ?? '') ?>

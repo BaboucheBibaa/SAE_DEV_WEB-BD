@@ -32,17 +32,3 @@ DROP TABLE Espece CASCADE CONSTRAINTS;
 DROP TABLE Personnel CASCADE CONSTRAINTS;
 DROP TABLE Fonction CASCADE CONSTRAINTS;
 
--- =========================
--- SEQUENCES
--- =========================
-DROP SEQUENCE seq_personnel;
-DROP SEQUENCE seq_fonction;
-DROP SEQUENCE seq_contrat;
-DROP SEQUENCE seq_zone;
-DROP SEQUENCE seq_boutique;
-DROP SEQUENCE seq_prestataire;
-DROP SEQUENCE seq_espece;
-DROP SEQUENCE seq_animal;
-DROP SEQUENCE seq_visiteur;
-DROP SEQUENCE seq_parrainage;
-DROP SEQUENCE seq_prestation;

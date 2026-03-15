@@ -1,12 +1,72 @@
 <?php
 
-class ServiceZone {
+class ServiceZone
+{
 
 
-    public function recupToutesLesZones()
+    public function getToutesLesZones()
     {
         //Récupère toutes les zones de la base de données
         return Zone::toutRecup();
+    }
+    public function getZoneParID($id_zone)
+    {
+        //Récupère une zone spécifique à partir de son ID
+        return Zone::recupParID($id_zone);
+    }
+
+    public function getManagerParZone($id_zone)
+    {
+        //Récupère le manager d'une zone donnée
+        return Zone::recupNomManager($id_zone);
+    }
+
+    public function getZoneDuManager($id_manager)
+    {
+        //Récupère la zone dont l'utilisateur est le manager
+        return Zone::recupZoneDuManager($id_manager);
+    }
+
+    //MAJ/Suppression/Création d'une zone
+    public function majZone($id)
+    {
+        //Met à jour les données d'une zone
+        $data = [
+            'nom_zone' => $_POST['nom_zone_modif'] ?? null,
+            'id_manager' => !empty($_POST['id_manager_modif']) ? $_POST['id_manager_modif'] : null
+        ];
+
+        return Zone::maj($id, $data);
+    }
+    public function supprZone($id)
+    {
+        //Supprime une zone de la base de données
+        return Zone::suppr($id);
+    }
+    public function ajoutZone()
+    {
+        //Ajoute une nouvelle zone à la base de données
+        $data = [
+            'nom_zone' => $_POST['nom_zone_cree'] ?? null,
+            'id_manager' => !empty($_POST['id_manager_cree']) ? $_POST['id_manager_cree'] : null
+        ];
+
+        return Zone::creer($data);
+    }
+
+    //Fonctions permettant l'affichage de formulaires d'édition/création de zone
+    public function dataCreationZone()
+    {
+        //Retourne les données pour la création d'un formulaire de création de zone
+        $employees = User::toutRecup();
+        if (!$employees) {
+            return null; // Pas d'employés disponibles pour être manager
+        }
+        $title = "Ajouter une Zone";
+        return [
+            'title' => $title,
+            'employees' => $employees
+        ];
     }
 
     public function dataEditionZone($id)
@@ -29,48 +89,4 @@ class ServiceZone {
             'employees' => $employees
         ];
     }
-
-    public function majZone($id)
-    {
-        //Met à jour les données d'une zone
-        $data = [
-            'nom_zone' => $_POST['nom_zone_modif'] ?? null,
-            'id_manager' => !empty($_POST['id_manager_modif']) ? $_POST['id_manager_modif'] : null
-        ];
-
-        return Zone::maj($id, $data);
-    }
-
-    public function supprZone($id)
-    {
-        //Supprime une zone de la base de données
-        return Zone::suppr($id);
-    }
-
-    public function dataCreationZone()
-    {
-        //Retourne les données pour la création d'un formulaire de création de zone
-        $employees = User::toutRecup();
-        if (!$employees) {
-            return null; // Pas d'employés disponibles pour être manager
-        }
-        $title = "Ajouter une Zone";
-        return [
-            'title' => $title,
-            'employees' => $employees
-        ];
-    }
-
-    public function ajoutZone()
-    {
-        //Ajoute une nouvelle zone à la base de données
-        $data = [
-            'nom_zone' => $_POST['nom_zone_cree'] ?? null,
-            'id_manager' => !empty($_POST['id_manager_cree']) ? $_POST['id_manager_cree'] : null
-        ];
-
-        return Zone::creer($data);
-    }
-    
-    
 }

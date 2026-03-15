@@ -2,23 +2,7 @@
     <div class="col-md-8 col-lg-6">
         <div class="card border-0 shadow-sm">
             <div class="card-body p-4">
-                <h2 class="card-title mb-4">PROFIL UTILISATEUR</h2>
-
-                <?php if (isset($_SESSION['message_success'])): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="bi bi-check-circle-fill"></i> <?= htmlspecialchars($_SESSION['message_success']) ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <?php unset($_SESSION['message_success']); ?>
-                <?php endif; ?>
-
-                <?php if (isset($_SESSION['message_error'])): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill"></i> <?= htmlspecialchars($_SESSION['message_error']) ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <?php unset($_SESSION['message_error']); ?>
-                <?php endif; ?>
+                <h2 class="card-title mb-4">Profil</h2>
 
                 <div class="list-group list-group-flush">
                     <div class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0">
@@ -56,7 +40,7 @@
         </div>
 
         <!-- modif du mdp -->
-        <?php if ($_SESSION['user']['ID_PERSONNEL'] == $_GET['id']): ?>
+        <?php if ($_SESSION['user']['ID_PERSONNEL'] == $id_user): ?>
             <div class="card border-0 shadow-sm mt-4">
                 <div class="card-body p-4">
                     <h3 class="card-title mb-4">Modifier mon mot de passe</h3>

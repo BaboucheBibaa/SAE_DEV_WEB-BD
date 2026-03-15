@@ -80,7 +80,7 @@ class Zone
     {
         $db = Database::getConnection();
         $sql = "INSERT INTO ZONE (ID_ZONE, NOM_ZONE, ID_MANAGER) 
-            VALUES (seq_zone.NEXTVAL, :nom_zone, :id_manager)";
+            VALUES ((SELECT NVL(MAX(ID_ZONE), 0) + 1 FROM ZONE), :nom_zone, :id_manager)";
         $stid = oci_parse($db, $sql);
 
         $nom_zone = $data['nom_zone'] ?? null;

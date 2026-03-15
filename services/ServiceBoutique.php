@@ -1,6 +1,58 @@
 <?php
 
-class ServiceBoutique {
+class ServiceBoutique
+{
+
+    //Getters
+    public function getBoutiqueParID($id)
+    {
+        return Boutique::recupParID($id);
+    }
+    public function getBoutiqueParManager($id_manager)
+    {
+        return Boutique::recupParManager($id_manager);
+    }
+    public function getEmployeesParBoutique($id_boutique)
+    {
+        return Boutique::recupEmployeesBoutique($id_boutique);
+    }
+    public function getToutesLesBoutiques()
+    {
+        return Boutique::toutRecup();
+    }
+
+    //Ajout/MAJ/Suppression d'une boutique
+    public function ajoutBoutique()
+    {
+        //Ajoute une nouvelle boutique à la base de données
+        $data = [
+            'id_manager' => !empty($_POST['id_manager_cree']) ? $_POST['id_manager_cree'] : null,
+            'id_zone' => $_POST['id_zone_cree'] ?? null,
+            'nom_boutique' => $_POST['nom_boutique_cree'] ?? null,
+            'description_boutique' => $_POST['description_boutique_cree'] ?? null
+        ];
+
+        return Boutique::creer($data);
+    }
+    public function majBoutique($id)
+    {
+        //Met à jour les données d'une boutique
+        $data = [
+            'id_manager' => !empty($_POST['id_manager_modif']) ? $_POST['id_manager_modif'] : null,
+            'id_zone' => $_POST['id_zone_modif'] ?? null,
+            'nom_boutique' => $_POST['nom_boutique_modif'] ?? null,
+            'description_boutique' => $_POST['description_boutique_modif'] ?? null
+        ];
+
+        return Boutique::maj($id, $data);
+    }
+    public function supprBoutique($id)
+    {
+        //Supprime une boutique de la base de données
+        return Boutique::suppr($id);
+    }
+
+    //Retourne les données nécessaires à des affichages de formulaires
     public function dataCreationBoutique()
     {
         //Retourne les données nécessaires à la création du formulaire de création de boutique
@@ -16,20 +68,6 @@ class ServiceBoutique {
             'title' => $title
         ];
     }
-
-    public function ajoutBoutique()
-    {
-        //Ajoute une nouvelle boutique à la base de données
-        $data = [
-            'id_manager' => !empty($_POST['id_manager_cree']) ? $_POST['id_manager_cree'] : null,
-            'id_zone' => $_POST['id_zone_cree'] ?? null,
-            'nom_boutique' => $_POST['nom_boutique_cree'] ?? null,
-            'description_boutique' => $_POST['description_boutique_cree'] ?? null
-        ];
-
-        return Boutique::creer($data);
-    }
-
     public function dataEditionBoutique($id)
     {
         //Retourne les données nécessaires à la création du formulaire d'édition de boutique
@@ -51,24 +89,5 @@ class ServiceBoutique {
             'zones' => $zones,
             'employees' => $employees
         ];
-    }
-
-    public function majBoutique($id)
-    {
-        //Met à jour les données d'une boutique
-        $data = [
-            'id_manager' => !empty($_POST['id_manager_modif']) ? $_POST['id_manager_modif'] : null,
-            'id_zone' => $_POST['id_zone_modif'] ?? null,
-            'nom_boutique' => $_POST['nom_boutique_modif'] ?? null,
-            'description_boutique' => $_POST['description_boutique_modif'] ?? null
-        ];
-
-        return Boutique::maj($id, $data);
-    }
-
-    public function supprBoutique($id)
-    {
-        //Supprime une boutique de la base de données
-        return Boutique::suppr($id);
     }
 }

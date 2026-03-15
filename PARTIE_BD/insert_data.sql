@@ -1,6 +1,6 @@
 -- =========================
 -- SCRIPT D'INSERTION DE DONNÉES EN VOLUME - ZOO'LAND
--- Utilise les séquences définies dans create_sequences.sql
+-- Les IDs sont générés manuellement (sans séquences)
 -- Respecte toutes les contraintes de clés étrangères
 -- =========================
 
@@ -10,29 +10,29 @@ SET AUTOCOMMIT OFF;
 -- =========================
 -- 1. INSERTION DES FONCTIONS
 -- =========================
-INSERT INTO Fonction VALUES (seq_fonction.NEXTVAL, 'Administrateur', 'Gestion globale du zoo');
-INSERT INTO Fonction VALUES (seq_fonction.NEXTVAL, 'Responsable de Zone', 'Gestion d''une zone');
-INSERT INTO Fonction VALUES (seq_fonction.NEXTVAL, 'Soigneur', 'Soin et alimentation des animaux');
-INSERT INTO Fonction VALUES (seq_fonction.NEXTVAL, 'Vétérinaire', 'Soins médicaux des animaux');
-INSERT INTO Fonction VALUES (seq_fonction.NEXTVAL, 'Manager Boutique', 'Gestion d''une boutique');
-INSERT INTO Fonction VALUES (seq_fonction.NEXTVAL, 'Caissier', 'Gestion des ventes');
-INSERT INTO Fonction VALUES (seq_fonction.NEXTVAL, 'Nettoyeur', 'Entretien des installations');
-INSERT INTO Fonction VALUES (seq_fonction.NEXTVAL, 'Guide Touristique', 'Accompagnement des visiteurs');
+INSERT INTO Fonction VALUES (10, 'Administrateur', 'Gestion globale du zoo');
+INSERT INTO Fonction VALUES (11, 'Responsable de Zone', 'Gestion d''une zone');
+INSERT INTO Fonction VALUES (12, 'Soigneur', 'Soin et alimentation des animaux');
+INSERT INTO Fonction VALUES (13, 'Vétérinaire', 'Soins médicaux des animaux');
+INSERT INTO Fonction VALUES (14, 'Manager Boutique', 'Gestion d''une boutique');
+INSERT INTO Fonction VALUES (15, 'Caissier', 'Gestion des ventes');
+INSERT INTO Fonction VALUES (16, 'Nettoyeur', 'Entretien des installations');
+INSERT INTO Fonction VALUES (17, 'Guide Touristique', 'Accompagnement des visiteurs');
 COMMIT;
 
 -- =========================
 -- 2. INSERTION DES PERSONNELS
 -- =========================
 -- Admin principal
-INSERT INTO Personnel VALUES (seq_personnel.NEXTVAL, 100, 100, 10, 'Dupont', 'Jean', 'admin@zoo.com', 
+INSERT INTO Personnel VALUES (100, 100, 100, 10, 'Dupont', 'Jean', 'admin@zoo.com', 
   '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-01-15', 'YYYY-MM-DD'), 3500, 'admin');
 
 -- Responsables de zone (3)
-INSERT INTO Personnel VALUES (seq_personnel.NEXTVAL, 101, 100, 11, 'Dupont', 'Marie', 'resp_zone1@zoo.com',
+INSERT INTO Personnel VALUES (101, 101, 100, 11, 'Dupont', 'Marie', 'resp_zone1@zoo.com',
   '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-06-01', 'YYYY-MM-DD'), 2800, 'resp_zone1');
-INSERT INTO Personnel VALUES (seq_personnel.NEXTVAL, 102, 100, 11, 'Martin', 'Paul', 'resp_zone2@zoo.com',
+INSERT INTO Personnel VALUES (102, 102, 100, 11, 'Martin', 'Paul', 'resp_zone2@zoo.com',
   '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-06-15', 'YYYY-MM-DD'), 2800, 'resp_zone2');
-INSERT INTO Personnel VALUES (seq_personnel.NEXTVAL, 103, 100, 11, 'Durand', 'Sophie', 'resp_zone3@zoo.com',
+INSERT INTO Personnel VALUES (103, 103, 100, 11, 'Durand', 'Sophie', 'resp_zone3@zoo.com',
   '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-07-01', 'YYYY-MM-DD'), 2800, 'resp_zone3');
 
 -- Soigneurs (20)
@@ -40,7 +40,7 @@ DECLARE
   v_id NUMBER := 104;
 BEGIN
   FOR i IN 1..20 LOOP
-    INSERT INTO Personnel VALUES (seq_personnel.NEXTVAL, v_id, 101 + MOD(i, 3), 12, 'Soigneur', 'Pers'||i,
+    INSERT INTO Personnel VALUES (v_id, v_id, 101 + MOD(i, 3), 12, 'Soigneur', 'Pers'||i,
       'soigneur'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
       TO_DATE('2021-01-01', 'YYYY-MM-DD') + (i*15), 2000 + (i*50), 'soigneur'||i);
     v_id := v_id + 1;
@@ -54,7 +54,7 @@ DECLARE
   v_id NUMBER := 124;
 BEGIN
   FOR i IN 1..4 LOOP
-    INSERT INTO Personnel VALUES (seq_personnel.NEXTVAL, v_id, 100, 13, 'Vétérinaire', 'Dr'||i,
+    INSERT INTO Personnel VALUES (v_id, v_id, 100, 13, 'Vétérinaire', 'Dr'||i,
       'vet'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
       TO_DATE('2019-03-15', 'YYYY-MM-DD'), 2800 + (i*100), 'vet'||i);
     v_id := v_id + 1;
@@ -68,7 +68,7 @@ DECLARE
   v_id NUMBER := 128;
 BEGIN
   FOR i IN 1..5 LOOP
-    INSERT INTO Personnel VALUES (seq_personnel.NEXTVAL, v_id, 100, 14, 'Manager', 'Boutique'||i,
+    INSERT INTO Personnel VALUES (v_id, v_id, 100, 14, 'Manager', 'Boutique'||i,
       'manager_boutique'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
       TO_DATE('2021-06-01', 'YYYY-MM-DD'), 2400, 'manager_boutique'||i);
     v_id := v_id + 1;
@@ -82,7 +82,7 @@ DECLARE
   v_id NUMBER := 133;
 BEGIN
   FOR i IN 1..10 LOOP
-    INSERT INTO Personnel VALUES (seq_personnel.NEXTVAL, v_id, 128 + MOD(i, 5), 15, 'Caissier', 'Caisse'||i,
+    INSERT INTO Personnel VALUES (v_id, v_id, 128 + MOD(i, 5), 15, 'Caissier', 'Caisse'||i,
       'caissier'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
       TO_DATE('2021-09-01', 'YYYY-MM-DD') + (i*7), 1800, 'caissier'||i);
     v_id := v_id + 1;
@@ -94,12 +94,12 @@ END;
 -- =========================
 -- 3. INSERTION DES ZONES
 -- =========================
-INSERT INTO Zone VALUES (seq_zone.NEXTVAL, 'Zone Africaine', 101);
-INSERT INTO Zone VALUES (seq_zone.NEXTVAL, 'Zone Asiatique', 102);
-INSERT INTO Zone VALUES (seq_zone.NEXTVAL, 'Zone Amazonienne', 103);
-INSERT INTO Zone VALUES (seq_zone.NEXTVAL, 'Zone Arctique', 101);
-INSERT INTO Zone VALUES (seq_zone.NEXTVAL, 'Zone Marine', 102);
-INSERT INTO Zone VALUES (seq_zone.NEXTVAL, 'Zone Australienne', 103);
+INSERT INTO Zone VALUES (10, 'Zone Africaine', 101);
+INSERT INTO Zone VALUES (11, 'Zone Asiatique', 102);
+INSERT INTO Zone VALUES (12, 'Zone Amazonienne', 103);
+INSERT INTO Zone VALUES (13, 'Zone Arctique', 101);
+INSERT INTO Zone VALUES (14, 'Zone Marine', 102);
+INSERT INTO Zone VALUES (15, 'Zone Australienne', 103);
 COMMIT;
 
 -- =========================
@@ -163,46 +163,46 @@ END;
 -- =========================
 BEGIN
   -- Afrique
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Lion', 'Panthera leo', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Éléphant', 'Loxodonta africana', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Girafe', 'Giraffa camelopardalis', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Zèbre', 'Equus quagga', 0);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Hippopotame', 'Hippopotamus amphibius', 1);
+  INSERT INTO Espece VALUES (100, 'Lion', 'Panthera leo', 1);
+  INSERT INTO Espece VALUES (101, 'Éléphant', 'Loxodonta africana', 1);
+  INSERT INTO Espece VALUES (102, 'Girafe', 'Giraffa camelopardalis', 1);
+  INSERT INTO Espece VALUES (103, 'Zèbre', 'Equus quagga', 0);
+  INSERT INTO Espece VALUES (104, 'Hippopotame', 'Hippopotamus amphibius', 1);
   
   -- Asie
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Tigre du Bengale', 'Panthera tigris tigris', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Éléphant d''Asie', 'Elephas maximus', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Panda Géant', 'Ailuropoda melanoleuca', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Rhinocéros', 'Rhinoceros unicornis', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Singe Doré', 'Rhinopithecus roxellana', 1);
+  INSERT INTO Espece VALUES (105, 'Tigre du Bengale', 'Panthera tigris tigris', 1);
+  INSERT INTO Espece VALUES (106, 'Éléphant d''Asie', 'Elephas maximus', 1);
+  INSERT INTO Espece VALUES (107, 'Panda Géant', 'Ailuropoda melanoleuca', 1);
+  INSERT INTO Espece VALUES (108, 'Rhinocéros', 'Rhinoceros unicornis', 1);
+  INSERT INTO Espece VALUES (109, 'Singe Doré', 'Rhinopithecus roxellana', 1);
   
   -- Amazonie
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Jaguar', 'Panthera onca', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Anaconda', 'Eunectes murinus', 0);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Piranha', 'Pygocentrus nattereri', 0);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Ara Bleu', 'Ara ararauna', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Caïman', 'Caiman yacare', 0);
+  INSERT INTO Espece VALUES (110, 'Jaguar', 'Panthera onca', 1);
+  INSERT INTO Espece VALUES (111, 'Anaconda', 'Eunectes murinus', 0);
+  INSERT INTO Espece VALUES (112, 'Piranha', 'Pygocentrus nattereri', 0);
+  INSERT INTO Espece VALUES (113, 'Ara Bleu', 'Ara ararauna', 1);
+  INSERT INTO Espece VALUES (114, 'Caïman', 'Caiman yacare', 0);
   
   -- Arctique
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Ours Blanc', 'Ursus maritimus', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Phoque', 'Phoca vitulina', 0);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Baleine Béluga', 'Delphinapterus leucas', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Morse', 'Odobenus rosmarus', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Renard Arctique', 'Vulpes lagopus', 0);
+  INSERT INTO Espece VALUES (115, 'Ours Blanc', 'Ursus maritimus', 1);
+  INSERT INTO Espece VALUES (116, 'Phoque', 'Phoca vitulina', 0);
+  INSERT INTO Espece VALUES (117, 'Baleine Béluga', 'Delphinapterus leucas', 1);
+  INSERT INTO Espece VALUES (118, 'Morse', 'Odobenus rosmarus', 1);
+  INSERT INTO Espece VALUES (119, 'Renard Arctique', 'Vulpes lagopus', 0);
   
   -- Marin
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Requin Blanc', 'Carcharodon carcharias', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Dauphin', 'Tursiops truncatus', 0);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Tortue Marine', 'Chelonia mydas', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Raie Manta', 'Manta birostris', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Otarie', 'Zalophus californianus', 0);
+  INSERT INTO Espece VALUES (120, 'Requin Blanc', 'Carcharodon carcharias', 1);
+  INSERT INTO Espece VALUES (121, 'Dauphin', 'Tursiops truncatus', 0);
+  INSERT INTO Espece VALUES (122, 'Tortue Marine', 'Chelonia mydas', 1);
+  INSERT INTO Espece VALUES (123, 'Raie Manta', 'Manta birostris', 1);
+  INSERT INTO Espece VALUES (124, 'Otarie', 'Zalophus californianus', 0);
   
   -- Australie
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Kangourou', 'Macropus rufus', 0);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Koala', 'Phascolarctos cinereus', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Crocodile d''eau de mer', 'Crocodylus porosus', 1);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Ornithorynque', 'Ornithorhynchus anatinus', 0);
-  INSERT INTO Espece VALUES (seq_espece.NEXTVAL, 'Échidné', 'Tachyglossus aculeatus', 0);
+  INSERT INTO Espece VALUES (125, 'Kangourou', 'Macropus rufus', 0);
+  INSERT INTO Espece VALUES (126, 'Koala', 'Phascolarctos cinereus', 1);
+  INSERT INTO Espece VALUES (127, 'Crocodile d''eau de mer', 'Crocodylus porosus', 1);
+  INSERT INTO Espece VALUES (128, 'Ornithorynque', 'Ornithorhynchus anatinus', 0);
+  INSERT INTO Espece VALUES (129, 'Échidné', 'Tachyglossus aculeatus', 0);
   
   COMMIT;
 END;
@@ -213,28 +213,28 @@ END;
 -- =========================
 BEGIN
   -- Animaux nommés
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10, 20, 100, TO_DATE('2018-03-15', 'YYYY-MM-DD'), 'Simba', 180, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10, 20, 100, TO_DATE('2019-07-22', 'YYYY-MM-DD'), 'Mufasa', 190, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10, 21, 101, TO_DATE('2017-05-10', 'YYYY-MM-DD'), 'Dumbo', 5000, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10, 21, 101, TO_DATE('2019-11-08', 'YYYY-MM-DD'), 'Elmer', 4500, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 10, 22, 102, TO_DATE('2020-01-17', 'YYYY-MM-DD'), 'Gérald', 1200, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 11, 20, 103, TO_DATE('2019-02-14', 'YYYY-MM-DD'), 'Marty', 450, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 11, 21, 104, TO_DATE('2018-08-25', 'YYYY-MM-DD'), 'Hipo', 3500, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 20, 30, 105, TO_DATE('2016-11-29', 'YYYY-MM-DD'), 'Rajah', 200, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 20, 31, 106, TO_DATE('2018-06-12', 'YYYY-MM-DD'), 'Chandra', 1200, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 20, 32, 107, TO_DATE('2020-04-08', 'YYYY-MM-DD'), 'Po', 100, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 21, 30, 108, TO_DATE('2017-09-03', 'YYYY-MM-DD'), 'Rhino', 2200, 'Herbivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 21, 31, 105, TO_DATE('2019-01-20', 'YYYY-MM-DD'), 'Kanha', 180, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 30, 40, 110, TO_DATE('2019-05-14', 'YYYY-MM-DD'), 'Jaguar', 120, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 30, 41, 113, TO_DATE('2020-02-28', 'YYYY-MM-DD'), 'Macaw', 1.2, 'Frugivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 31, 40, 114, TO_DATE('2018-07-07', 'YYYY-MM-DD'), 'Crocy', 250, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 31, 41, 111, TO_DATE('2017-10-15', 'YYYY-MM-DD'), 'Snakey', 50, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 40, 50, 115, TO_DATE('2015-12-22', 'YYYY-MM-DD'), 'Nanook', 500, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 40, 51, 116, TO_DATE('2019-03-10', 'YYYY-MM-DD'), 'Foka', 150, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 41, 50, 117, TO_DATE('2018-06-05', 'YYYY-MM-DD'), 'Beluga', 1200, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 50, 60, 120, TO_DATE('2016-08-19', 'YYYY-MM-DD'), 'Bruce', 1800, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 50, 61, 121, TO_DATE('2019-11-12', 'YYYY-MM-DD'), 'Flipper', 300, 'Carnivore');
-  INSERT INTO Animal VALUES (seq_animal.NEXTVAL, 51, 60, 122, TO_DATE('2017-04-21', 'YYYY-MM-DD'), 'Shelly', 500, 'Omnivore');
+  INSERT INTO Animal VALUES (1000, 10, 20, 100, TO_DATE('2018-03-15', 'YYYY-MM-DD'), 'Simba', 180, 'Carnivore');
+  INSERT INTO Animal VALUES (1001, 10, 20, 100, TO_DATE('2019-07-22', 'YYYY-MM-DD'), 'Mufasa', 190, 'Carnivore');
+  INSERT INTO Animal VALUES (1002, 10, 21, 101, TO_DATE('2017-05-10', 'YYYY-MM-DD'), 'Dumbo', 5000, 'Herbivore');
+  INSERT INTO Animal VALUES (1003, 10, 21, 101, TO_DATE('2019-11-08', 'YYYY-MM-DD'), 'Elmer', 4500, 'Herbivore');
+  INSERT INTO Animal VALUES (1004, 10, 22, 102, TO_DATE('2020-01-17', 'YYYY-MM-DD'), 'Gérald', 1200, 'Herbivore');
+  INSERT INTO Animal VALUES (1005, 11, 20, 103, TO_DATE('2019-02-14', 'YYYY-MM-DD'), 'Marty', 450, 'Herbivore');
+  INSERT INTO Animal VALUES (1006, 11, 21, 104, TO_DATE('2018-08-25', 'YYYY-MM-DD'), 'Hipo', 3500, 'Herbivore');
+  INSERT INTO Animal VALUES (1007, 20, 30, 105, TO_DATE('2016-11-29', 'YYYY-MM-DD'), 'Rajah', 200, 'Carnivore');
+  INSERT INTO Animal VALUES (1008, 20, 31, 106, TO_DATE('2018-06-12', 'YYYY-MM-DD'), 'Chandra', 1200, 'Herbivore');
+  INSERT INTO Animal VALUES (1009, 20, 32, 107, TO_DATE('2020-04-08', 'YYYY-MM-DD'), 'Po', 100, 'Herbivore');
+  INSERT INTO Animal VALUES (1010, 21, 30, 108, TO_DATE('2017-09-03', 'YYYY-MM-DD'), 'Rhino', 2200, 'Herbivore');
+  INSERT INTO Animal VALUES (1011, 21, 31, 105, TO_DATE('2019-01-20', 'YYYY-MM-DD'), 'Kanha', 180, 'Carnivore');
+  INSERT INTO Animal VALUES (1012, 30, 40, 110, TO_DATE('2019-05-14', 'YYYY-MM-DD'), 'Jaguar', 120, 'Carnivore');
+  INSERT INTO Animal VALUES (1013, 30, 41, 113, TO_DATE('2020-02-28', 'YYYY-MM-DD'), 'Macaw', 1.2, 'Frugivore');
+  INSERT INTO Animal VALUES (1014, 31, 40, 114, TO_DATE('2018-07-07', 'YYYY-MM-DD'), 'Crocy', 250, 'Carnivore');
+  INSERT INTO Animal VALUES (1015, 31, 41, 111, TO_DATE('2017-10-15', 'YYYY-MM-DD'), 'Snakey', 50, 'Carnivore');
+  INSERT INTO Animal VALUES (1016, 40, 50, 115, TO_DATE('2015-12-22', 'YYYY-MM-DD'), 'Nanook', 500, 'Carnivore');
+  INSERT INTO Animal VALUES (1017, 40, 51, 116, TO_DATE('2019-03-10', 'YYYY-MM-DD'), 'Foka', 150, 'Carnivore');
+  INSERT INTO Animal VALUES (1018, 41, 50, 117, TO_DATE('2018-06-05', 'YYYY-MM-DD'), 'Beluga', 1200, 'Carnivore');
+  INSERT INTO Animal VALUES (1019, 50, 60, 120, TO_DATE('2016-08-19', 'YYYY-MM-DD'), 'Bruce', 1800, 'Carnivore');
+  INSERT INTO Animal VALUES (1020, 50, 61, 121, TO_DATE('2019-11-12', 'YYYY-MM-DD'), 'Flipper', 300, 'Carnivore');
+  INSERT INTO Animal VALUES (1021, 51, 60, 122, TO_DATE('2017-04-21', 'YYYY-MM-DD'), 'Shelly', 500, 'Omnivore');
   
   COMMIT;
 END;
@@ -248,7 +248,9 @@ BEGIN
       lng NUMBER;
       zone_id NUMBER;
       espece_id NUMBER;
+      v_animal_id NUMBER;
     BEGIN
+      v_animal_id := 1021 + i;
       zone_id := MOD(i - 1, 6) + 1;
       espece_id := MOD(i - 1, 30) + 100;
       
@@ -263,7 +265,7 @@ BEGIN
       END CASE;
       
       INSERT INTO Animal VALUES (
-        seq_animal.NEXTVAL,
+        v_animal_id,
         lat,
         lng,
         espece_id,
@@ -285,7 +287,7 @@ END;
 -- =========================
 BEGIN
   FOR i IN 1..10 LOOP
-    INSERT INTO Boutique VALUES (seq_boutique.NEXTVAL, 128 + MOD(i-1, 5), 10 + MOD(i-1, 6),
+    INSERT INTO Boutique VALUES (9 + i, 128 + MOD(i-1, 5), 10 + MOD(i-1, 6),
       'Boutique '||i, 'Boutique touristique '||i);
   END LOOP;
   COMMIT;
@@ -297,7 +299,7 @@ END;
 -- =========================
 BEGIN
   FOR i IN 1..15 LOOP
-    INSERT INTO Prestataire VALUES (seq_prestataire.NEXTVAL, 'Entreprise'||i, 'Contact'||i);
+    INSERT INTO Prestataire VALUES (9 + i, 'Entreprise'||i, 'Contact'||i);
   END LOOP;
   COMMIT;
 END;
@@ -306,11 +308,11 @@ END;
 -- =========================
 -- 9. INSERTION DES PARRAINAGES
 -- =========================
-INSERT INTO Parrainage VALUES (seq_parrainage.NEXTVAL, 'Bronze');
-INSERT INTO Parrainage VALUES (seq_parrainage.NEXTVAL, 'Argent');
-INSERT INTO Parrainage VALUES (seq_parrainage.NEXTVAL, 'Or');
-INSERT INTO Parrainage VALUES (seq_parrainage.NEXTVAL, 'Platine');
-INSERT INTO Parrainage VALUES (seq_parrainage.NEXTVAL, 'Diamant');
+INSERT INTO Parrainage VALUES (10, 'Bronze');
+INSERT INTO Parrainage VALUES (11, 'Argent');
+INSERT INTO Parrainage VALUES (12, 'Or');
+INSERT INTO Parrainage VALUES (13, 'Platine');
+INSERT INTO Parrainage VALUES (14, 'Diamant');
 COMMIT;
 
 -- =========================
@@ -318,7 +320,7 @@ COMMIT;
 -- =========================
 BEGIN
   FOR i IN 1..500 LOOP
-    INSERT INTO Visiteur VALUES (seq_visiteur.NEXTVAL, 10 + MOD(i, 5), 'Visiteur_'||i);
+    INSERT INTO Visiteur VALUES (999 + i, 10 + MOD(i, 5), 'Visiteur_'||i);
   END LOOP;
   COMMIT;
 END;
@@ -329,7 +331,7 @@ END;
 -- =========================
 BEGIN
   FOR i IN 1..10 LOOP
-    INSERT INTO Prestation VALUES (seq_prestation.NEXTVAL, 'Prestation '||i);
+    INSERT INTO Prestation VALUES (9 + i, 'Prestation '||i);
   END LOOP;
   COMMIT;
 END;
@@ -341,7 +343,7 @@ END;
 BEGIN
   FOR i IN 100..142 LOOP
     BEGIN
-      INSERT INTO Contrat_Travail VALUES (seq_contrat.NEXTVAL, i,
+      INSERT INTO Contrat_Travail VALUES (i, i,
         CASE WHEN MOD(i, 7) = 0 THEN 'CDI' ELSE 'CDD' END,
         TO_DATE('2020-01-01', 'YYYY-MM-DD') + ((i-100)*10),
         TO_DATE('2026-12-31', 'YYYY-MM-DD'));

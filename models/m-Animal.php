@@ -55,8 +55,6 @@ class Animal
         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;
     }
-
-
     public static function recupParCoordonnees($latitude, $longitude)
     {
         $db = Database::getConnection();
@@ -76,7 +74,6 @@ class Animal
         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;
     }
-
     public static function recupTousParSoigneurs($id_soigneur)
     {
         /* Récupère tous les animaux de la zone ou le soigneur $id_soigneur travaille */
@@ -129,12 +126,11 @@ class Animal
         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;
     }
-
     public static function creer($data)
     {
         $db = Database::getConnection();
         $sql = "INSERT INTO Animal (ID_ANIMAL, NOM_ANIMAL, DATE_NAISSANCE, POIDS, REGIME_ALIMENTAIRE, ID_ESPECE, LATITUDE_ENCLOS, LONGITUDE_ENCLOS) 
-                VALUES (SEQ_Animal.NEXTVAL, :nom_animal, TO_DATE(:date_naissance, 'YYYY-MM-DD'), :poids, :regime_alimentaire, :id_espece, :latitude_enclos, :longitude_enclos)";
+                VALUES ((SELECT NVL(MAX(ID_ANIMAL), 0) + 1 FROM Animal), :nom_animal, TO_DATE(:date_naissance, 'YYYY-MM-DD'), :poids, :regime_alimentaire, :id_espece, :latitude_enclos, :longitude_enclos)";
 
         $stid = oci_parse($db, $sql);
 
@@ -154,7 +150,6 @@ class Animal
 
         return $r;
     }
-
     public static function maj($id, $data)
     {
         $db = Database::getConnection();
@@ -187,7 +182,6 @@ class Animal
         }
         return $r;
     }
-
     public static function suppr($id)
     {
         $db = Database::getConnection();
@@ -204,7 +198,6 @@ class Animal
 
         return $r;
     }
-
     public static function moteurRechercheRecup($searchTerm)
     {
         $db = Database::getConnection();

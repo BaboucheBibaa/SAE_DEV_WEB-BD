@@ -1,12 +1,46 @@
 <?php
 
-class ServiceEmployee {
-    public function recupTousEmployes()
+class ServiceEmployee
+{
+    //Getters
+    public function getTousEmployees()
     {
         //Récupère tous les employés de la base de données pour les retourner sous forme de tableau pour les afficher dans le dashboard admin
         return User::toutRecup();
     }
+    public function getEmployeeParID($id)
+    {
+        //Récupère un employé de la base de données en fonction de l'id passé en paramètre
+        return User::recupParID($id);
+    }
+    public function getEmployeeParLogs($login)
+    {
+        //Récupère un employé de la base de données en fonction du login passé en paramètre
+        return User::recupParLogs($login);
+    }
 
+    //Ajout/MAJ/Suppression d'un employé + vérification dans l'ajout/modification d'un employé avec regex
+
+    public function verificationForm($champ)
+    {
+        //ne doit pas retourner 1 car on peut confondre avec le retour du boolean de la fonction de création ou de modification d'un employé, c'est pour ça que les codes d'erreur commencent à 2
+        if (!preg_match('/^[a-zA-Z-\'éèêëç ]+$/', $_POST['nom_' . $champ] ?? '')) {
+            return 2; // valeur de retour 2 = erreur du nom
+        }
+        if (!preg_match('/^[a-zA-Z-\'éèêëç ]+$/', $_POST['prenom_' . $champ] ?? '')) {
+            return 3; // valeur de retour 3 = erreur du prénom
+        }
+        if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $_POST['mail_' . $champ] ?? '')) {
+            return 4; // valeur de retour 4 = erreur du mail
+        }
+        if (!preg_match('/^\d+(?:[\.,]\d{2})?$/', $_POST['salaire_' . $champ] ?? '')) {
+            return 5; // valeur de retour 5 = erreur du salaire
+        }
+        if (!preg_match('/^[a-zA-Z0-9._-]+$/', $_POST['login_' . $champ] ?? '')) {
+            return 6; // valeur de retour 6 = erreur du login
+        }
+        return 0;
+    }
     public function supprEmployee($id)
     {
         //Supprime un employé de la base de données en fonction de l'id passé en paramètre
@@ -23,6 +57,11 @@ class ServiceEmployee {
             $id_fonction = !empty($fonctions) ? $fonctions[0]['ID_FONCTION'] : null;
         }
 
+        $validationCode = $this->verificationForm('cree');
+        if ($validationCode != 0) {
+            return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
+        }
+
         $data = [
             'nom' => $_POST['nom_cree'] ?? null,
             'prenom' => $_POST['prenom_cree'] ?? null,
@@ -37,7 +76,55 @@ class ServiceEmployee {
         ];
         return User::creer($data);
     }
+    public function majEmployee($id)
+    {
+        //Met à jour les données d'un employé dans la base de données en fonction de l'id passé en paramètre
 
+        // récup les données de l'employé via son ID
+        $employee = User::recupParID($id);
+
+        //on modifie le champ id_fonction_modif pour qu'il contienne l'id de la fonction correspondant au nom de la fonction sélectionnée dans le form
+        $nom_fonction = $_POST['role_modif'] ?? null;
+        $id_fonction_final = $employee['ID_FONCTION']; // Par défaut, garder la fonction actuelle
+
+        if (!empty($nom_fonction)) {
+            $id_fonction = Fonction::recupIDFonctionParNom($nom_fonction);
+            $id_fonction_final = $id_fonction['ID_FONCTION'];
+        }
+
+        // Si le champ mot de passe n'est pas vide on prend le nouveau mot de passe hashé sinon on garde l'ancien mot de passe
+        $password = !empty($_POST['MDP_modif']) ? password_hash($_POST['MDP_modif'], PASSWORD_DEFAULT) : $employee['MDP'];
+
+        // Si aucun remplaçant n'est spécifié, l'employé est son propre remplaçant
+        $id_remplacant = !empty($_POST['id_remplacant_modif']) ? $_POST['id_remplacant_modif'] : $id;
+
+        $validationCode = $this->verificationForm('modif');
+        if ($validationCode != 0) {
+            return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
+        }
+        $data = [
+            'nom' => $_POST['nom_modif'] ?? null,
+            'prenom' => $_POST['prenom_modif'] ?? null,
+            'mail' => $_POST['mail_modif'] ?? null,
+            'MDP' => $password,
+            'date_entree' => $_POST['date_entree_modif'] ?? null,
+            'salaire' => $_POST['salaire_modif'] ?? null,
+            'id_fonction' => $id_fonction_final,
+            'login' => $_POST['login_modif'] ?? null,
+            'id_remplacant' => $id_remplacant,
+            'id_superieur' => !empty($_POST['id_superieur_modif']) ? $_POST['id_superieur_modif'] : null
+        ];
+
+        return User::maj($id, $data);
+    }
+
+    public function majPassword($id,$MDP)
+    {
+        //Met à jour le mot de passe d'un employé dans la base de données en fonction de l'id passé en paramètre
+        return User::majPassword($id, $MDP);
+    }
+
+    //Fonctions retournant des données nécessaires pour des affichages de formulaires
     public function dataEditionEmployee($id)
     {
         //Retourne les données nécessaires à l'affichage du formulaire d'édition d'un employé en fonction de l'id passé en paramètre
@@ -64,46 +151,6 @@ class ServiceEmployee {
             'job' => $job
         ];
     }
-
-
-    public function majEmployee($id)
-    {
-        //Met à jour les données d'un employé dans la base de données en fonction de l'id passé en paramètre
-
-        // récup les données de l'employé via son ID
-        $employee = User::recupParID($id);
-
-        //on modifie le champ id_fonction_modif pour qu'il contienne l'id de la fonction correspondant au nom de la fonction sélectionnée dans le form
-        $nom_fonction = $_POST['role_modif'] ?? null;
-        $id_fonction_final = $employee['ID_FONCTION']; // Par défaut, garder la fonction actuelle
-
-        if (!empty($nom_fonction)) {
-            $id_fonction = Fonction::recupIDFonctionParNom($nom_fonction);
-            $id_fonction_final = $id_fonction['ID_FONCTION'];
-        }
-
-        // Si le champ mot de passe n'est pas vide on prend le nouveau mot de passe hashé sinon on garde l'ancien mot de passe
-        $password = !empty($_POST['MDP_modif']) ? password_hash($_POST['MDP_modif'], PASSWORD_DEFAULT) : $employee['MDP'];
-
-        // Si aucun remplaçant n'est spécifié, l'employé est son propre remplaçant
-        $id_remplacant = !empty($_POST['id_remplacant_modif']) ? $_POST['id_remplacant_modif'] : $id;
-
-        $data = [
-            'nom' => $_POST['nom_modif'] ?? null,
-            'prenom' => $_POST['prenom_modif'] ?? null,
-            'mail' => $_POST['mail_modif'] ?? null,
-            'MDP' => $password,
-            'date_entree' => $_POST['date_entree_modif'] ?? null,
-            'salaire' => $_POST['salaire_modif'] ?? null,
-            'id_fonction' => $id_fonction_final,
-            'login' => $_POST['login_modif'] ?? null,
-            'id_remplacant' => $id_remplacant,
-            'id_superieur' => !empty($_POST['id_superieur_modif']) ? $_POST['id_superieur_modif'] : null
-        ];
-
-        return User::maj($id, $data);
-    }
-
     public function dataCreationEmployee()
     {
         //Retourne les données nécessaires à l'affichage du formulaire de création d'un employé
@@ -113,7 +160,7 @@ class ServiceEmployee {
         if (!$liste_fonctions || !$liste_employes) {
             return null; // Erreur lors de la récupération des données nécessaires à la création d'un employé
         }
-                    $title = 'Création d\'un employé';
+        $title = 'Création d\'un employé';
 
         return [
             'title' => $title,

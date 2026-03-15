@@ -12,8 +12,8 @@ CREATE TABLE Fonction (
 -- =========================
 CREATE TABLE Personnel (
     ID_Personnel NUMBER PRIMARY KEY,
-    ID_Remplacant NUMBER NOT NULL, -- Référence à lui-même si aucun remplaçant attitré
-    ID_Superieur NUMBER NOT NULL, -- Référence à lui-même si aucun supérieur hiérarchique
+    ID_Remplacant NUMBER, -- Référence à lui-même si aucun remplaçant attitré
+    ID_Superieur NUMBER, -- Référence à lui-même si aucun supérieur hiérarchique
     ID_Fonction NUMBER NOT NULL,
     Nom VARCHAR2(50),
     Prenom VARCHAR2(50),
@@ -154,10 +154,10 @@ CREATE TABLE Prestation (
 -- =========================
 CREATE TABLE Est_Parraine (
     ID_Animal NUMBER NOT NULL,
-    ID_Parrainage NUMBER NOT NULL,
-    PRIMARY KEY (ID_Animal, ID_Parrainage),
+    ID_Visiteur NUMBER NOT NULL,
+    PRIMARY KEY (ID_Animal, ID_Visiteur),
     FOREIGN KEY (ID_Animal) REFERENCES Animal(ID_Animal) ON DELETE CASCADE,
-    FOREIGN KEY (ID_Parrainage) REFERENCES Parrainage(ID_Parrainage) ON DELETE CASCADE
+    FOREIGN KEY (ID_Visiteur) REFERENCES Visiteur(ID_Visiteur) ON DELETE CASCADE
 );
 
 -- =========================

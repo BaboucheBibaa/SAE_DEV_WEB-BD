@@ -14,39 +14,25 @@ class AdminController extends BaseController
         $this->serviceBoutique = new ServiceBoutique();
         $this->serviceAnimal = new ServiceAnimal();
     }
-    
-    /**
-     * Vérifie que l'utilisateur est connecté et admin.
-     * Redirige si ce n'est pas le cas.
-     */
-    private function checkAdmin()
-    {
-        if (empty($_SESSION['user'])) {
-            $this->redirectWithMessage('home', 'Vous n\'êtes pas connecté.', 'error');
-        }
-        if (!isset($_SESSION['user']['ID_FONCTION']) || $_SESSION['user']['ID_FONCTION'] != ADMINID) {
-            $this->redirectWithMessage('home', 'Vous n\'êtes pas autorisé à accéder à cette page.', 'error');
-        }
-    }
 
     //  Dashboard admin
 
     public function profilAdmin()
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
 
         $title = "Profil Administrateur";
-        $employees = $this->serviceEmployee->recupTousEmployes();
-        $zones = $this->serviceZone->recupToutesLesZones();
-        $boutiques = Boutique::toutRecup();
-        $animals = Animal::toutRecup();
+        $employees = $this->serviceEmployee->getTousEmployees();
+        $zones = $this->serviceZone->getToutesLesZones();
+        $boutiques = $this->serviceBoutique->getToutesLesBoutiques();
+        $animals = $this->serviceAnimal->getTousAnimaux();
         if ($employees === null || $zones === null || $boutiques === null || $animals === null) {
             $this->redirectWithMessage('home', 'Erreur lors de la récupération des données pour le dashboard admin.', 'error');
         } else {
             //Ajouter le nom de l'espèce à chaque animal (passage par référence pour modifier directement le tableau)
             foreach ($animals as &$animal) {
                 if (!empty($animal['ID_ESPECE'])) {
-                    $espece = Espece::recupParID($animal['ID_ESPECE']);
+                    $espece = $this->serviceAnimal->getEspeceAnimalParID($animal['ID_ESPECE']);
                     $animal['NOM_ESPECE'] = $espece['NOM_ESPECE'] ?? 'N/A';
                 } else {
                     $animal['NOM_ESPECE'] = 'N/A';
@@ -56,7 +42,7 @@ class AdminController extends BaseController
             // Ajouter le nom du manager à chaque zone
             foreach ($zones as &$zone) {
                 if (!empty($zone['ID_MANAGER'])) {
-                    $manager = Zone::recupNomManager($zone['ID_ZONE']);
+                    $manager = $this->serviceZone->getManagerParZone($zone['ID_ZONE']);
                     $zone['NOM_MANAGER'] = ($manager['PRENOM'] ?? '') . ' ' . ($manager['NOM'] ?? '');
                 } else {
                     $zone['NOM_MANAGER'] = null;
@@ -76,7 +62,7 @@ class AdminController extends BaseController
 
     public function formCreationEmployee()
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         $data = $this->serviceEmployee->dataCreationEmployee();
         if ($data === null) {
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation de la création de l\'employé.', 'error');
@@ -95,17 +81,40 @@ class AdminController extends BaseController
 
     public function ajoutEmployee()
     {
-        $this->checkAdmin();
-        if ($this->serviceEmployee->ajoutEmployee()) {
-            $this->redirectWithMessage('adminDashboard', 'Employé ajouté avec succès.', 'success');
-        } else {
-            $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout de l\'employé.', 'error');
+        $this->requireRole(ADMINID);
+        switch ($this->serviceEmployee->ajoutEmployee()) {
+            //valeurs de retour de la fonction ajoutEmployee: 0 ou 1 car retourne un boolean
+            case 1:
+                $this->redirectWithMessage('adminDashboard', 'Employé ajouté avec succès.', 'success');
+                break;
+            case 0:
+                $this->redirectWithMessage('creationEmployee', 'Erreur lors de l\'ajout de l\'employé.', 'error');
+                break;
+            //autres cas ici : valeurs de retour de la validation de formulaire
+            case 2:
+                $this->redirectWithMessage('creationEmployee', 'Erreur : Nom invalide.', 'error');
+                break;
+            case 3:
+                $this->redirectWithMessage('creationEmployee', 'Erreur : Prénom invalide.', 'error');
+                break;
+            case 4:
+                $this->redirectWithMessage('creationEmployee', 'Erreur: Email invalide.', 'error');
+                break;
+            case 5:
+                $this->redirectWithMessage('creationEmployee', 'Erreur: Salaire invalide.', 'error');
+                break;
+            case 6:
+                $this->redirectWithMessage('creationEmployee', 'Erreur: Login invalide.', 'error');
+                break;
+            default:
+                $this->redirectWithMessage('creationEmployee', 'Erreur inconnue lors de l\'ajout de l\'employé.', 'error');
+                break;
         }
     }
 
     public function formEditionEmployee($id)
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         $data = $this->serviceEmployee->dataEditionEmployee($id);
         if ($data === null) {
             $this->redirectWithMessage('adminDashboard', 'Employé non trouvé.', 'error');
@@ -119,17 +128,47 @@ class AdminController extends BaseController
 
     public function majEmployee($id)
     {
-        $this->checkAdmin();
-        if ($this->serviceEmployee->majEmployee($id)) {
-            $this->redirectWithMessage('adminDashboard', 'Employé mis à jour avec succès.', 'success');
-        } else {
-            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de l\'employé.', 'error');
+        $this->requireRole(ADMINID);
+        switch ($this->serviceEmployee->majEmployee($id)) {
+            //valeurs de retour de la fonction majEmployee: 0 ou 1 car retourne un boolean
+            case 1:
+                $this->redirectWithMessage('adminDashboard', 'Employé mis à jour avec succès.', 'success');
+                break;
+            case 0:
+                $this->redirectWithMessage('editionEmployee', 'Erreur lors de la mise à jour de l\'employé.', 'error');
+                break;
+            //autres cas ici : valeurs de retour de la validation de formulaire
+
+            case 2:
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Nom invalide.'];
+                $this->redirect('editionEmployee', $id);
+                break;
+            case 3:
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Prénom invalide.'];
+                $this->redirect('editionEmployee', $id);
+                break;
+            case 4:
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur: Email invalide.'];
+                $this->redirect('editionEmployee', $id);
+                break;
+            case 5:
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur: Salaire invalide.'];
+                $this->redirect('editionEmployee', $id);
+                break;
+            case 6:
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur: Login invalide.'];
+                $this->redirect('editionEmployee', $id);
+                break;
+            default:
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur inconnue lors de la mise à jour de l\'employé.'];
+                $this->redirect('editionEmployee', $id);
+                break;
         }
     }
 
     public function supprEmployee($id)
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         if ($this->serviceEmployee->supprEmployee($id)) {
             $this->redirectWithMessage('adminDashboard', 'Employé supprimé avec succès.', 'success');
         } else {
@@ -141,7 +180,7 @@ class AdminController extends BaseController
 
     public function formCreationBoutique()
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         $data = $this->serviceBoutique->dataCreationBoutique();
         if ($data === null) {
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation de la création de la boutique.', 'error');
@@ -152,7 +191,7 @@ class AdminController extends BaseController
 
     public function ajoutBoutique()
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         if ($this->serviceBoutique->ajoutBoutique()) {
             $this->redirectWithMessage('adminDashboard', 'Boutique ajoutée avec succès.', 'success');
         } else {
@@ -162,7 +201,7 @@ class AdminController extends BaseController
 
     public function formEditionBoutique($id)
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         $data = $this->serviceBoutique->dataEditionBoutique($id);
         if ($data === null) {
             $this->redirectWithMessage('adminDashboard', 'Boutique non trouvée.', 'error');
@@ -173,7 +212,7 @@ class AdminController extends BaseController
 
     public function majBoutique($id)
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         if ($this->serviceBoutique->majBoutique($id)) {
             $this->redirectWithMessage('adminDashboard', 'Boutique mise à jour avec succès.', 'success');
         } else {
@@ -183,7 +222,7 @@ class AdminController extends BaseController
 
     public function supprBoutique($id)
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         if ($this->serviceBoutique->supprBoutique($id)) {
             $this->redirectWithMessage('adminDashboard', 'Boutique supprimée avec succès.', 'success');
         } else {
@@ -195,7 +234,7 @@ class AdminController extends BaseController
 
     public function formCreationZone()
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         $data = $this->serviceZone->dataCreationZone();
         if ($data === null) {
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation de la création de la zone.', 'error');
@@ -206,7 +245,7 @@ class AdminController extends BaseController
 
     public function ajoutZone()
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         if ($this->serviceZone->ajoutZone()) {
             $this->redirectWithMessage('adminDashboard', 'Zone ajoutée avec succès.', 'success');
         } else {
@@ -216,7 +255,7 @@ class AdminController extends BaseController
 
     public function formEditionZone($id)
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         $data = $this->serviceZone->dataEditionZone($id);
         if ($data === null) {
             $this->redirectWithMessage('adminDashboard', 'Zone non trouvée.', 'error');
@@ -227,7 +266,7 @@ class AdminController extends BaseController
 
     public function majZone($id)
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         if ($this->serviceZone->majZone($id)) {
             $this->redirectWithMessage('adminDashboard', 'Zone mise à jour avec succès.', 'success');
         } else {
@@ -237,7 +276,7 @@ class AdminController extends BaseController
 
     public function supprZone($id)
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         if ($this->serviceZone->supprZone($id)) {
             $this->redirectWithMessage('adminDashboard', 'Zone supprimée avec succès.', 'success');
         } else {
@@ -251,7 +290,7 @@ class AdminController extends BaseController
 
     public function formCreationAnimal()
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         $data = $this->serviceAnimal->dataCreationAnimal();
         if ($data === null) {
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation de la création de l\'animal.', 'error');
@@ -262,17 +301,23 @@ class AdminController extends BaseController
 
     public function ajoutAnimal()
     {
-        $this->checkAdmin();
-        if ($this->serviceAnimal->ajoutAnimal()) {
+        $this->requireRole(ADMINID);
+        $result = $this->serviceAnimal->ajoutAnimal();
+
+        if ($result === 2) {
+            $this->redirectWithMessage('creationAnimal', 'Erreur : Nom invalide.', 'error');
+        } elseif ($result === 3) {
+            $this->redirectWithMessage('creationAnimal', 'Erreur : Poids invalide.', 'error');
+        } elseif ($result === true) {
             $this->redirectWithMessage('adminDashboard', 'Animal ajouté avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout de l\'animal.', 'error');
+            $this->redirectWithMessage('creationAnimal', 'Erreur lors de l\'ajout de l\'animal.', 'error');
         }
     }
 
     public function formEditionAnimal($id)
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         $data = $this->serviceAnimal->dataEditionAnimal($id);
         if ($data === null) {
             $this->redirectWithMessage('adminDashboard', 'Animal non trouvé.', 'error');
@@ -286,17 +331,27 @@ class AdminController extends BaseController
 
     public function majAnimal($id)
     {
-        $this->checkAdmin();
-        if ($this->serviceAnimal->majAnimal($id)) {
+        $this->requireRole(ADMINID);
+        $result = $this->serviceAnimal->majAnimal($id);
+
+        //si la maj a pas fonctionnée on retourne sur le formulaire avec msg d'erreur sinon dashboard avec msg de succès
+        if ($result === 2) {
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Nom invalide.'];
+            $this->redirect('editionAnimal', $id);
+        } elseif ($result === 3) {
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Poids invalide.'];
+            $this->redirect('editionAnimal', $id);
+        } elseif ($result === true) {
             $this->redirectWithMessage('adminDashboard', 'Animal mis à jour avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de l\'animal.', 'error');
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur lors de la mise à jour de l\'animal.'];
+            $this->redirect('editionAnimal', $id);
         }
     }
 
     public function supprAnimal($id)
     {
-        $this->checkAdmin();
+        $this->requireRole(ADMINID);
         if ($this->serviceAnimal->supprAnimal($id)) {
             $this->redirectWithMessage('adminDashboard', 'Animal supprimé avec succès.', 'success');
         } else {

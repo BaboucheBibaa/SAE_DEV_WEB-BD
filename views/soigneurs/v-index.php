@@ -14,24 +14,6 @@
 
         <!-- Options Cards -->
         <div class="row g-4">
-            <!-- Card 1 : Mes Animaux -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="mb-3">
-                            <i class="bi bi-heart-pulse" style="font-size: 2rem; color: #28a745;"></i>
-                        </div>
-                        <h5 class="card-title">Mes Animaux</h5>
-                        <p class="card-text text-muted small flex-grow-1">
-                            Consultez la liste des animaux sous votre responsabilité et suivez leur état de santé.
-                        </p>
-                        <a href="index.php?action=soigneurs_animaux" class="btn btn-sm btn-primary mt-auto">
-                            Accéder <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
             <!-- Card 2 : Historique des Soins -->
             <div class="col-md-6 col-lg-4">
                 <div class="card border-0 shadow-sm h-100">
@@ -44,24 +26,6 @@
                             Consultez l'historique complet des soins apportés aux animaux.
                         </p>
                         <a href="index.php?action=listerSoins" class="btn btn-sm btn-primary mt-auto">
-                            Accéder <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 3 : Enclos -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="mb-3">
-                            <i class="bi bi-tree" style="font-size: 2rem; color: #6f42c1;"></i>
-                        </div>
-                        <h5 class="card-title">Enclos</h5>
-                        <p class="card-text text-muted small flex-grow-1">
-                            Gérez les enclos et consultez les informations de chaque zone.
-                        </p>
-                        <a href="index.php?action=soigneurs_enclos" class="btn btn-sm btn-primary mt-auto">
                             Accéder <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>

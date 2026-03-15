@@ -1,7 +1,11 @@
 <?php
 
 class ConnexionController extends BaseController{
-
+    private $serviceEmployee;
+    public function __construct()
+    {
+        $this->serviceEmployee = new ServiceEmployee();
+    }
     public function home() {
         $title = "Accueil - Zoo'land";
         $this->render('v-home', ['title' => $title]);
@@ -18,7 +22,7 @@ class ConnexionController extends BaseController{
         $login = $_POST['login'] ?? '';
         $password = $_POST['password'] ?? '';
         
-        $user = User::recupParLogs($login);
+        $user = $this->serviceEmployee->getEmployeeParLogs($login);
         
         // si l'utilisateur existe, vérifier le mot de passe
         $loginValide = Utils::verifyPassword($password, $user['MDP'] ?? '');

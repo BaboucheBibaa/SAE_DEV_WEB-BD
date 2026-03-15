@@ -74,8 +74,8 @@ class User
     {
         $db = Database::getConnection();
         
-        // Récupérer le prochain ID de la séquence
-        $sql_seq = "SELECT seq_personnel.NEXTVAL AS new_id FROM DUAL";
+        // Récupérer le prochain ID
+        $sql_seq = "SELECT NVL(MAX(ID_PERSONNEL), 0) + 1 AS new_id FROM Personnel";
         $stid_seq = oci_parse($db, $sql_seq);
         oci_execute($stid_seq);
         $row = oci_fetch_assoc($stid_seq);
@@ -117,6 +117,24 @@ class User
         return $r;
     }
 
+
+    public static function majPassword($id, $newPasswordHashed)
+    {
+        $db = Database::getConnection();
+        $sql = "UPDATE Personnel SET MDP = :MDP WHERE ID_Personnel = :id";
+        $stid = oci_parse($db, $sql);
+
+        oci_bind_by_name($stid, ':id', $id);
+        oci_bind_by_name($stid, ':MDP', $newPasswordHashed);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        return $r;
+    }
     /**
      * Met à jour un employé
      */

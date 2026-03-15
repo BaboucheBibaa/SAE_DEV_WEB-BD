@@ -11,6 +11,7 @@ require_once 'config/myparams.inc.php';
 
 require_once 'config/database.php';
 
+require_once 'models/m-Parrainage.php';
 require_once 'models/m-Compatibilite.php';
 require_once 'models/m-Enclos.php';
 require_once 'models/m-Reparation.php';
@@ -30,6 +31,7 @@ require_once 'services/ServiceBoutique.php';
 require_once 'services/ServiceEmployee.php';
 require_once 'services/ServiceZone.php';
 require_once 'services/ServiceSearch.php';
+require_once 'services/ServiceSoin.php';
 
 require_once 'controllers/c-base.php';
 require_once 'controllers/c-soigneurs.php';
@@ -42,6 +44,7 @@ require_once 'controllers/c-profilAnimal.php';
 require_once 'controllers/c-profilEnclos.php';
 require_once 'controllers/c-profilAdmin.php';
 require_once 'controllers/c-search.php';
+require_once 'controllers/c-profilZone.php';
 
 
 //toutes les pages se chargeront par index.php via la méthode GET action, une seule page sera affichée
@@ -90,6 +93,8 @@ switch ($action){
         $controller = new RespBoutiqueController();
         break;
     case 'profilAnimal':
+    case 'ajouterParrainage':
+    case 'supprimerParrainage':
         $controller = new ProfilAnimalController();
         break;
     case 'profilEnclos':
@@ -98,10 +103,14 @@ switch ($action){
     case 'search':
         $controller = new SearchController();
         break;
+    case 'profilZone':
+        $controller = new ProfilZone();
+        break;
     case 'soigneursDashboard':
     case 'formAjoutSoin':
-    case 'addSoin':
+    case 'ajoutSoin':
     case 'formAjoutNourriture':
+    case 'ajoutNourriture':
     case 'addNourriture':
     case 'listerSoins':
         $controller = new Soigneurs();
@@ -238,6 +247,14 @@ switch ($action) {
         $controller->profilAnimal($_GET['id']);
         break;
 
+    case 'ajouterParrainage':
+        $controller->ajouterParrainage();
+        break;
+
+    case 'supprimerParrainage':
+        $controller->supprimerParrainage();
+        break;
+
     case 'soigneursDashboard':
         $controller->index();
         break;
@@ -255,6 +272,9 @@ switch ($action) {
         break;
     case 'listerSoins':
         $controller->listerSoins();
+        break;
+    case 'profilZone':
+        $controller->profileZone($_GET['id']);
         break;
 
     case 'search':

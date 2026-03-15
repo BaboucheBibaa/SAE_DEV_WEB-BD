@@ -25,4 +25,14 @@ class BaseController
         $_SESSION['flash'] = ['type' => $type, 'message' => $message];
         $this->redirect($action);
     }
+
+    protected function requireRole(int $role): void
+    {
+        if (empty($_SESSION['user'])) {
+            $this->redirectWithMessage('afficheConnexion', 'Vous devez être connecté.', 'error');
+        }
+        if ($_SESSION['user']['ID_FONCTION'] != $role) {
+            $this->redirectWithMessage('home', 'Accès refusé.', 'error');
+        }
+    }
 }

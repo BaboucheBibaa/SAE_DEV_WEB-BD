@@ -1,8 +1,6 @@
 <?php
 class HistoriqueSoins
 {
-
-
     public static function toutRecup()
     {
         $db = Database::getConnection();

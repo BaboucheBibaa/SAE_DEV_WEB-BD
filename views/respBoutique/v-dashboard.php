@@ -18,85 +18,67 @@
             </div>
         </div>
 
-        <!-- Informations de la boutique -->
-        <div class="row g-4 mb-5">
-            <div class="col-lg-12">
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-shop"></i> Informations de la boutique
-                        </h5>
-                    </div>
-                    <div class="card-body">
+        <!-- Accordéon des sections -->
+        <div class="accordion mb-5" id="accordionDashboard">
+            <!-- Informations de la boutique -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBoutique">
+                        <i class="bi bi-shop me-2"></i> Informations de la boutique
+                    </button>
+                </h2>
+                <div id="collapseBoutique" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
                         <?php if ($boutique): ?>
                             <div class="row mb-3">
-                                <div class="col-sm-4">
-                                    <strong>Nom:</strong>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <strong style="min-width: 120px;">Nom:</strong>
+                                        <span class="ms-2"><?= htmlspecialchars($boutique['NOM_BOUTIQUE'] ?? 'Non spécifié') ?></span>
+                                    </div>
                                 </div>
-                                <div class="col-sm-8">
-                                    <?= htmlspecialchars($boutique['NOM_BOUTIQUE'] ?? 'Non spécifié') ?>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <div class="row mb-3">
-                                <div class="col-sm-4">
-                                    <strong>ID Boutique:</strong>
-                                </div>
-                                <div class="col-sm-8">
-                                    <span class="badge bg-primary">
-                                        <?= htmlspecialchars($boutique['ID_BOUTIQUE'] ?? '') ?>
-                                    </span>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <strong style="min-width: 120px;">Zone:</strong>
+                                        <span class="ms-2">
+                                            <span class="badge bg-warning text-dark">
+                                                <?= htmlspecialchars($boutique['NOM_ZONE'] ?? 'Non spécifiée') ?>
+                                            </span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-
-                            <hr>
-
-                            <div class="row mb-3">
-                                <div class="col-sm-4">
-                                    <strong>Zone:</strong>
-                                </div>
-                                <div class="col-sm-8">
-                                    <span class="badge bg-warning text-dark">
-                                        <?= htmlspecialchars($boutique['ID_ZONE'] ?? 'Non spécifiée') ?>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <div class="row mb-3">
-                                <div class="col-sm-4">
-                                    <strong>Description:</strong>
-                                </div>
-                                <div class="col-sm-8">
-                                    <?php
-                                    $description = htmlspecialchars($boutique['DESCRIPTION_BOUTIQUE'] ?? '');
-                                    echo !empty($description) ? $description : '<span class="text-muted">Non spécifiée</span>';
-                                    ?>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <div>
+                                        <strong>Description:</strong>
+                                        <p class="ms-0 mt-2">
+                                            <?php
+                                            $description = htmlspecialchars($boutique['DESCRIPTION_BOUTIQUE'] ?? '');
+                                            echo !empty($description) ? $description : '<span class="text-muted">Non spécifiée</span>';
+                                            ?>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         <?php else: ?>
-                            <div class="alert alert-warning" role="alert">
+                            <div class="alert alert-warning mb-0" role="alert">
                                 <i class="bi bi-exclamation-triangle"></i> Aucune boutique assignée.
                             </div>
                         <?php endif; ?>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Équipe de la boutique -->
-        <div class="row g-4">
-            <div class="col-lg-12">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-people-fill"></i> Équipe de la boutique
-                        </h5>
-                    </div>
-                    <div class="card-body">
+            <!-- Équipe de la boutique -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEquipe">
+                        <i class="bi bi-people-fill me-2"></i> Équipe de la boutique
+                    </button>
+                </h2>
+                <div id="collapseEquipe" class="accordion-collapse collapse">
+                    <div class="accordion-body">
                         <?php if (!empty($employes)): ?>
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover">
@@ -104,27 +86,23 @@
                                         <tr>
                                             <th>Nom</th>
                                             <th>Prénom</th>
-                                            <th>ID Personnel</th>
-                                            <th>Actions</th>
+                                            <th class="text-center">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
                                         if (is_array($employes)) {
-                                            // Vérifier si c'est un tableau de tableaux (format par lignes)
                                             foreach ($employes as $employe) {
                                                 if (is_array($employe)) {
                                                     $nom = htmlspecialchars($employe['NOM'] ?? '');
                                                     $prenom = htmlspecialchars($employe['PRENOM'] ?? '');
                                                     $id_personnel = htmlspecialchars($employe['ID_PERSONNEL'] ?? '');
-
                                                     echo "<tr>";
                                                     echo "<td><strong>{$nom}</strong></td>";
                                                     echo "<td>{$prenom}</td>";
-                                                    echo "<td><span class='badge bg-secondary'>{$id_personnel}</span></td>";
-                                                    echo "<td>";
+                                                    echo "<td class='text-center'>";
                                                     echo "<a href='index.php?action=profil&id={$id_personnel}' class='btn btn-sm btn-outline-primary' title='Voir le profil'>";
-                                                    echo "<i class='bi bi-eye'></i>";
+                                                    echo "<i class='bi bi-eye'></i> Profil";
                                                     echo "</a>";
                                                     echo "</td>";
                                                     echo "</tr>";
@@ -136,7 +114,7 @@
                                 </table>
                             </div>
                         <?php else: ?>
-                            <div class="alert alert-warning" role="alert">
+                            <div class="alert alert-warning mb-0" role="alert">
                                 <i class="bi bi-exclamation-triangle"></i> Aucun employé trouvé dans cette boutique.
                             </div>
                         <?php endif; ?>

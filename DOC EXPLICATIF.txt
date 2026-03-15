@@ -133,34 +133,6 @@ Cela signifie:
 
 ---
 
-## Conventions de Nommage
-
-### Modèles
-m-NomDeLaClasse.php
-Contient la classe NomDeLaClasse
-
-Exemple: m-User.php contient la classe User
-
-### Vues
-v-nomDeLaVue.php
-Noms en kebab-case généralement
-
-Exemple: v-profilAnimal.php
-
-### Contrôleurs
-c-nomDuControleur.php
-Contient la classe NomDuControleurController
-
-Exemple: c-respBoutique.php contient RespBoutiqueController
-
-### Services (optionnels)
-Service{NomDuService}.php
-Noms en PascalCase
-
-Exemple: ServiceAnimal.php
-
----
-
 ## Debugging et Erreurs Courantes
 
 ### Erreur: OCI8 execute failed

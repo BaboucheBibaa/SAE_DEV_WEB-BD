@@ -10,35 +10,23 @@ class RespBoutiqueController extends BaseController
         $this->serviceBoutique = new ServiceBoutique();
     }
 
-    private function checkRespBoutique(): void
-    {
-        if (empty($_SESSION['user'])) {
-            header('Location: index.php?action=afficheConnexion');
-            exit;
-        }
-        if (!isset($_SESSION['user']['ID_FONCTION']) || $_SESSION['user']['ID_FONCTION'] != RESPBOUTIQUE) {
-            header('Location: index.php?action=profil');
-            exit;
-        }
-    }
-
     public function afficherPage()
     {
-        $this->checkRespBoutique();
+        $this->requireRole(RESPBOUTIQUE);
 
         // Récupérer les informations de l'utilisateur connecté
-        $user = User::recupParID($_SESSION['user']['ID_PERSONNEL']);
+        $user = $this->serviceEmployee->getEmployeeParID($_SESSION['user']['ID_PERSONNEL']);
         // Récupérer la boutique dont l'utilisateur est le manager
-        $boutique = Boutique::recupParManager($user['ID_PERSONNEL']);
+        $boutique = $this->serviceBoutique->getBoutiqueParManager($_SESSION['user']['ID_PERSONNEL']);
 
         // Récupérer les employés de cette boutique
         $employes = [];
         if ($boutique) {
-            $employes = Boutique::recupEmployeesBoutique($boutique['ID_BOUTIQUE']);
+            $employes = $this->serviceBoutique->getEmployeesParBoutique($boutique['ID_BOUTIQUE']);
         }
 
         $title = "Dashboard Responsable de Boutique";
-        $this->render('resp_boutique/v-dashboard', [
+        $this->render('respBoutique/v-dashboard', [
             'user' => $user,
             'title' => $title,
             'boutique' => $boutique,
@@ -46,4 +34,3 @@ class RespBoutiqueController extends BaseController
         ]);
     }
 }
-?>

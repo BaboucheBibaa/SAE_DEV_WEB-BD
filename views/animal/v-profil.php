@@ -18,51 +18,46 @@
             </div>
         </div>
 
-        <!-- Cartes d'informations -->
-        <div class="row g-4">
-            <!-- Informations principales -->
-            <div class="col-lg-6">
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="card-title mb-0">
-                            Informations générales
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-sm-4">
-                                <strong>Espèce:</strong>
+        <!-- Accordéon des sections -->
+        <div class="accordion" id="accordionAnimal">
+            <!-- Informations générales -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfoGenerales">
+                        <i class="bi bi-info-circle me-2"></i> Informations générales
+                    </button>
+                </h2>
+                <div id="collapseInfoGenerales" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <strong style="min-width: 150px;">Espèce:</strong>
+                                    <span class="ms-2"><?= htmlspecialchars($animal['NOM_ESPECE'] ?? 'Non spécifiée') ?></span>
+                                </div>
                             </div>
-                            <div class="col-sm-8">
-                                <span><?= htmlspecialchars($animal['NOM_ESPECE'] ?? 'Non spécifiée') ?></span>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="row mb-3">
-                            <div class="col-sm-4">
-                                <strong>Date de naissance:</strong>
-                            </div>
-                            <div class="col-sm-8">
-                                <?php
-                                if (!empty($animal['DATE_NAISSANCE'])) {
-                                    $dateNaissance = htmlspecialchars($animal['DATE_NAISSANCE']);
-                                    $date = DateTime::createFromFormat('d-M-y', $dateNaissance) ?: DateTime::createFromFormat('Y-m-d', $dateNaissance);
-                                    if ($date) {
-                                        echo $date->format('d/m/Y');
-
-                                        // Calcul de l'âge
-                                        $maintenant = new DateTime();
-                                        $age = $maintenant->diff($date)->y;
-                                        echo " <span class='badge bg-success'>( $age ans )</span>";
-                                    } else {
-                                        echo htmlspecialchars($dateNaissance);
-                                    }
-                                } else {
-                                    echo '<span class="text-muted">Non spécifiée</span>';
-                                }
-                                ?>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <strong style="min-width: 150px;">Date de naissance:</strong>
+                                    <span class="ms-2">
+                                        <?php
+                                        if (!empty($animal['DATE_NAISSANCE'])) {
+                                            $dateNaissance = htmlspecialchars($animal['DATE_NAISSANCE']);
+                                            $date = DateTime::createFromFormat('d-M-y', $dateNaissance) ?: DateTime::createFromFormat('Y-m-d', $dateNaissance);
+                                            if ($date) {
+                                                echo $date->format('d/m/Y');
+                                                $maintenant = new DateTime();
+                                                $age = $maintenant->diff($date)->y;
+                                                echo " <span class='badge bg-success'>( $age ans )</span>";
+                                            } else {
+                                                echo htmlspecialchars($dateNaissance);
+                                            }
+                                        } else {
+                                            echo '<span class="text-muted">Non spécifiée</span>';
+                                        }
+                                        ?>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -70,69 +65,66 @@
             </div>
 
             <!-- Caractéristiques physiques -->
-            <div class="col-lg-6">
-                <div class="card h-100 shadow-sm border-0">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="card-title mb-0">
-                            Caractéristiques physiques
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-sm-4">
-                                <strong>Poids:</strong>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCaracteristiques">
+                        <i class="bi bi-heart-pulse me-2"></i> Caractéristiques physiques
+                    </button>
+                </h2>
+                <div id="collapseCaracteristiques" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <strong style="min-width: 150px;">Poids:</strong>
+                                    <span class="ms-2">
+                                        <?php
+                                        if (!empty($animal['POIDS'])) {
+                                            echo htmlspecialchars($animal['POIDS']) . ' kg';
+                                        } else {
+                                            echo '<span class="text-muted">Non spécifié</span>';
+                                        }
+                                        ?>
+                                    </span>
+                                </div>
                             </div>
-                            <div class="col-sm-8">
-                                <?php
-                                if (!empty($animal['POIDS'])) {
-                                    echo htmlspecialchars($animal['POIDS']) . ' kg';
-                                } else {
-                                    echo '<span class="text-muted">Non spécifié</span>';
-                                }
-                                ?>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-sm-4">
-                                <strong>Régime alimentaire:</strong>
-                            </div>
-                            <div class="col-sm-8">
-                                <?php
-                                $regime = htmlspecialchars($animal['REGIME_ALIMENTAIRE'] ?? 'Non spécifié');
-                                $badgeClass = 'bg-secondary';
-
-                                if (stripos($regime, 'carnivore') !== false) {
-                                    $badgeClass = 'bg-danger';
-                                } elseif (stripos($regime, 'herbivore') !== false) {
-                                    $badgeClass = 'bg-success';
-                                } elseif (stripos($regime, 'omnivore') !== false) {
-                                    $badgeClass = 'bg-warning text-dark';
-                                }
-
-                                echo "<span class='badge $badgeClass'>$regime</span>";
-                                ?>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <strong style="min-width: 150px;">Régime alimentaire:</strong>
+                                    <span class="ms-2">
+                                        <?php
+                                        $regime = htmlspecialchars($animal['REGIME_ALIMENTAIRE'] ?? 'Non spécifié');
+                                        $badgeClass = 'bg-secondary';
+                                        if (stripos($regime, 'carnivore') !== false) {
+                                            $badgeClass = 'bg-danger';
+                                        } elseif (stripos($regime, 'herbivore') !== false) {
+                                            $badgeClass = 'bg-success';
+                                        } elseif (stripos($regime, 'omnivore') !== false) {
+                                            $badgeClass = 'bg-warning text-dark';
+                                        }
+                                        echo "<span class='badge $badgeClass'>$regime</span>";
+                                        ?>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Localisation -->
-        <div class="row g-4 mt-2">
-            <div class="col-lg-12">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="card-title mb-0">
-                            Localisation
-                        </h5>
-                    </div>
-                    <div class="card-body">
+            <!-- Localisation -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLocalisation">
+                        <i class="bi bi-geo-alt me-2"></i> Localisation
+                    </button>
+                </h2>
+                <div id="collapseLocalisation" class="accordion-collapse collapse">
+                    <div class="accordion-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <div class="d-flex align-items-center">
-                                    <strong style="min-width: 120px;">Latitude:</strong>
+                                    <strong style="min-width: 150px;">Latitude:</strong>
                                     <span class="ms-2">
                                         <?= !empty($animal['LATITUDE_ENCLOS'])
                                             ? htmlspecialchars($animal['LATITUDE_ENCLOS'])
@@ -143,7 +135,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="d-flex align-items-center">
-                                    <strong style="min-width: 120px;">Longitude:</strong>
+                                    <strong style="min-width: 150px;">Longitude:</strong>
                                     <span class="ms-2">
                                         <?= !empty($animal['LONGITUDE_ENCLOS'])
                                             ? htmlspecialchars($animal['LONGITUDE_ENCLOS'])
@@ -156,18 +148,16 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Doses quotidiennes de nourriture -->
-        <div class="row g-4 mt-2">
-            <div class="col-lg-12">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-egg"></i> Doses de nourriture
-                        </h5>
-                    </div>
-                    <div class="card-body">
+            <!-- Doses de nourriture -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNourriture">
+                        <i class="bi bi-egg me-2"></i> Doses de nourriture
+                    </button>
+                </h2>
+                <div id="collapseNourriture" class="accordion-collapse collapse">
+                    <div class="accordion-body">
                         <?php if (!empty($nourriture) && isset($nourriture[0]) && is_array($nourriture[0])): ?>
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover">
@@ -198,25 +188,23 @@
                                 </table>
                             </div>
                         <?php else: ?>
-                            <div class="alert alert-warning" role="alert">
+                            <div class="alert alert-warning mb-0" role="alert">
                                 <i class="bi bi-exclamation-triangle"></i> Aucune dose de nourriture enregistrée pour cet animal.
                             </div>
                         <?php endif; ?>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Historique des soins -->
-        <div class="row g-4 mt-2">
-            <div class="col-lg-12">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="card-title mb-0">
-                            <i class="bi bi-heart-pulse"></i> Historique des soins
-                        </h5>
-                    </div>
-                    <div class="card-body">
+            <!-- Historique des soins -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSoins">
+                        <i class="bi bi-hospital me-2"></i> Historique des soins
+                    </button>
+                </h2>
+                <div id="collapseSoins" class="accordion-collapse collapse">
+                    <div class="accordion-body">
                         <?php if (!empty($soins) && isset($soins) && is_array($soins)): ?>
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover">
@@ -247,13 +235,147 @@
                                 </table>
                             </div>
                         <?php else: ?>
-                            <div class="alert alert-warning" role="alert">
+                            <div class="alert alert-warning mb-0" role="alert">
                                 <i class="bi bi-exclamation-triangle"></i> Aucun soin enregistré pour cet animal.
                             </div>
                         <?php endif; ?>
                     </div>
                 </div>
             </div>
+
+            <!-- Parrains -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseParrains">
+                        <i class="bi bi-people-fill me-2"></i> Parrains
+                    </button>
+                </h2>
+                <div id="collapseParrains" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <?php if (!empty($parrains) && is_array($parrains)): ?>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Nom du Visiteur</th>
+                                            <th>Niveau de Parrainage</th>
+                                            <?php if ($canEdit): ?>
+                                            <th class="text-center">Actions</th>
+                                            <?php endif; ?>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        foreach ($parrains as $parrain) {
+                                            $id_visiteur = htmlspecialchars($parrain['ID_VISITEUR'] ?? '');
+                                            $nomVisiteur = htmlspecialchars($parrain['NOM_VISITEUR'] ?? 'Non spécifié');
+                                            $niveau = htmlspecialchars($parrain['NIVEAU'] ?? 'Non spécifié');
+                                            
+                                            // Couleur du badge selon le niveau
+                                            $badgeClass = 'bg-secondary';
+                                            if (stripos($niveau, 'diamant') !== false) {
+                                                $badgeClass = 'bg-info';
+                                            } elseif (stripos($niveau, 'platine') !== false) {
+                                                $badgeClass = 'bg-warning text-dark';
+                                            } elseif (stripos($niveau, 'or') !== false) {
+                                                $badgeClass = 'bg-success';
+                                            } elseif (stripos($niveau, 'argent') !== false) {
+                                                $badgeClass = 'bg-dark';
+                                            } elseif (stripos($niveau, 'bronze') !== false) {
+                                                $badgeClass = 'bg-danger';
+                                            }
+                                            
+                                            echo "<tr>";
+                                            echo "<td><strong>{$nomVisiteur}</strong></td>";
+                                            echo "<td><span class='badge {$badgeClass}'>{$niveau}</span></td>";
+                                            
+                                            if (isset($_SESSION['user']['ID_FONCTION']) && ($_SESSION['user']['ID_FONCTION'] == RESPSOIG || $_SESSION['user']['ID_FONCTION'] == ADMINID)) {
+                                                echo "<td class='text-center'>";
+                                                echo "<form action='index.php?action=supprimerParrainage' method='POST' style='display:inline;'>";
+                                                echo "<input type='hidden' name='id_animal' value='" . htmlspecialchars($animal['ID_ANIMAL'] ?? '') . "'>";
+                                                echo "<input type='hidden' name='id_visiteur' value='{$id_visiteur}'>";
+                                                echo "<button type='submit' class='btn btn-sm btn-danger' onclick=\"return confirm('Êtes-vous sûr de vouloir supprimer ce parrainage ?');\">";
+                                                echo "<i class='bi bi-trash'></i> Supprimer";
+                                                echo "</button>";
+                                                echo "</form>";
+                                                echo "</td>";
+                                            }
+                                            
+                                            echo "</tr>";
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <div class="alert alert-warning mb-0" role="alert">
+                                <i class="bi bi-exclamation-triangle"></i> Aucun parrain enregistré pour cet animal.
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ajouter un parrain (Réservé RESPSOIG et ADMIN) -->
+            <?php if (isset($_SESSION['user']['ID_FONCTION']) && ($_SESSION['user']['ID_FONCTION'] == RESPSOIG || $_SESSION['user']['ID_FONCTION'] == ADMINID)): ?>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAjouterParrain">
+                        <i class="bi bi-person-plus me-2"></i> Ajouter un Parrain
+                    </button>
+                </h2>
+                <div id="collapseAjouterParrain" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <form action="index.php?action=ajouterParrainage" method="POST" class="needs-validation">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="id_visiteur" class="form-label">Sélectionner un Visiteur</label>
+                                        <select class="form-select" id="id_visiteur" name="id_visiteur" required>
+                                            <option value="">-- Choisir un visiteur --</option>
+                                            <?php 
+                                            if (!empty($visiteurs) && is_array($visiteurs)):
+                                                foreach ($visiteurs as $visiteur):
+                                                    $id_visiteur = htmlspecialchars($visiteur['ID_VISITEUR'] ?? '');
+                                                    $nom_visiteur = htmlspecialchars($visiteur['NOM_VISITEUR'] ?? 'Visiteur inconnu');
+                                                    echo "<option value=\"{$id_visiteur}\">{$nom_visiteur}</option>";
+                                                endforeach;
+                                            endif;
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <label for="id_parrainage" class="form-label">Type de Parrainage</label>
+                                        <select class="form-select" id="id_parrainage" name="id_parrainage" required>
+                                            <option value="">-- Choisir un type --</option>
+                                            <?php 
+                                            if (!empty($niveaux) && is_array($niveaux)):
+                                                foreach ($niveaux as $niveau):
+                                                    $id_parrainage = htmlspecialchars($niveau['ID_PARRAINAGE'] ?? '');
+                                                    $nom_niveau = htmlspecialchars($niveau['NIVEAU'] ?? 'Non spécifié');
+                                                    echo "<option value=\"{$id_parrainage}\">{$nom_niveau}</option>";
+                                                endforeach;
+                                            endif;
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="id_animal" value="<?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?>">
+                            <div class="row mt-3">
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-check-circle"></i> Ajouter le parrainage
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
 
         <!-- Actions -->

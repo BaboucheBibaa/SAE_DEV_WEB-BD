@@ -189,17 +189,14 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
   - [ ] Graphiques de tendances
 
 - [ ] Dashboard Responsable Zone:
-  - [ ] État général de la zone
   - [ ] Statistiques des soins effectués
-  - [ ] Alertes sanitaires
 
 ### Phase 4 - Pages Métier (Soigneur / Personnel entretien)
 
 - [ ] Affichage de la zone d'affectation personnelle
-- [ ] Soigneurs:
-  - [ ] Liste des parrainages sur les animaux qu'il soigne
-  - [ ] Historique complet des soins réalisés
-  - [ ] Alertes sur les animaux suivis
+- ✅ Soigneurs:
+  - ✅ Liste des parrainages sur les animaux qu'il soigne
+  - ✅ Historique complet des soins réalisés
 - [ ] Personnel entretien:
   - [ ] Liste des enclos de sa zone
   - [ ] Historique des entretiens des enclos
@@ -210,10 +207,10 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 - [ ] Gestion des animaux:
   - [ ] Possibilité de déplacer un animal d'un enclos à un autre
   - [ ] Historique des déplacements
-  - [ ] Suppression d'un animal du zoo
+  - ✅ Suppression d'un animal du zoo
 - [ ] Gestionnaire des parrainages:
-  - [ ] CRUD parrainages
-  - [ ] Affichage des visiteurs parrains
+  - ✅ CRUD parrainages
+  - ✅ Affichage des visiteurs parrains
   - [ ] Statistiques de parrainage
 
 ### Phase 6 - Améliorations Globales

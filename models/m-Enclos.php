@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class Enclos
 {
@@ -50,8 +50,8 @@ class Enclos
             $e = oci_error($stid);
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
-        return oci_fetch_assoc($stid);
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
     }
 }
-
-?>
