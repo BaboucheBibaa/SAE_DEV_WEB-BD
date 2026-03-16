@@ -150,6 +150,12 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 - ✅ Liste des enclos
 - ✅ Liste des animaux
 
+### Dashboard Soigneur
+
+- ✅ Historique des soins apportés sur les animaux qu'il gère
+- ✅ Ajouter un soin sur un animal
+- ✅ Ajouter la distribution de nourriture faite pour un animal
+
 ### Dashboard Responsable de Boutique
 
 - ✅ Informations de la boutique (nom, ID, zone, description)
