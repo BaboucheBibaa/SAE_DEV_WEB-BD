@@ -23,6 +23,8 @@ require_once 'models/m-Espece.php';
 require_once 'models/m-Enclos.php';
 require_once 'models/m-User.php';
 require_once 'models/m-Zone.php';
+require_once 'models/m-ContratTravail.php';
+require_once 'models/m-CA.php';
 
 require_once 'utilities/Utils.php';
 
@@ -32,6 +34,10 @@ require_once 'services/ServiceEmployee.php';
 require_once 'services/ServiceZone.php';
 require_once 'services/ServiceSearch.php';
 require_once 'services/ServiceSoin.php';
+require_once 'services/ServiceCA.php';
+require_once 'services/ServiceParrainage.php';
+require_once 'services/ServiceEnclos.php';
+require_once 'services/ServiceReparation.php';
 
 require_once 'controllers/c-base.php';
 require_once 'controllers/c-soigneurs.php';
@@ -65,6 +71,7 @@ switch ($action){
         break;
     case 'adminDashboard':    
     case 'supprEmployee':
+    case 'archiverEmployee':
     case 'creationEmployee':
     case 'ajoutEmployee':
     case 'editionEmployee':
@@ -90,6 +97,8 @@ switch ($action){
         $controller = new RespSoigneurController();
         break;
     case "respBoutiqueDashboard":
+    case "statsBoutique":
+    case "renderGraphiqueCA":
         $controller = new RespBoutiqueController();
         break;
     case 'profilAnimal':
@@ -152,6 +161,10 @@ switch ($action) {
 
     case 'supprEmployee':
         $controller->supprEmployee($_GET['id']);
+        break;
+
+    case 'archiverEmployee':
+        $controller->archiverEmployee($_GET['id']);
         break;
 
     case 'creationEmployee':
@@ -242,6 +255,12 @@ switch ($action) {
         break;
     case 'respBoutiqueDashboard':
         $controller->afficherPage();
+        break;
+    case 'statsBoutique':
+        $controller->afficherStatsBoutique();
+        break;
+    case 'renderGraphiqueCA':
+        //$controller->renderGraphiqueCA();
         break;
     case 'profilAnimal':
         $controller->profilAnimal($_GET['id']);

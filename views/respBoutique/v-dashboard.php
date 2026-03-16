@@ -121,6 +121,22 @@
                     </div>
                 </div>
             </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStats">
+                        <i class="bi bi-graph-up-arrow me-2"></i> Statistiques de la boutique
+                    </button>
+                </h2>
+                <div id="collapseStats" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <p class="text-muted mb-3">Consultez une vue dédiée pour explorer les statistiques de performance de votre boutique.</p>
+                        <a href="index.php?action=statsBoutique" class="btn btn-primary">
+                            <i class="bi bi-bar-chart-line me-1"></i> Voir les statistiques de la boutique
+                        </a>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- Actions -->

@@ -22,7 +22,12 @@ class AdminController extends BaseController
         $this->requireRole(ADMINID);
 
         $title = "Profil Administrateur";
-        $employees = $this->serviceEmployee->getTousEmployees();
+        $filtreArchive = $_GET['filtreArchive'] ?? 'tous';
+        if (!in_array($filtreArchive, ['tous', 'actifs', 'archives'], true)) {
+            $filtreArchive = 'tous';
+        }
+
+        $employees = $this->serviceEmployee->getTousEmployees($filtreArchive);
         $zones = $this->serviceZone->getToutesLesZones();
         $boutiques = $this->serviceBoutique->getToutesLesBoutiques();
         $animals = $this->serviceAnimal->getTousAnimaux();
@@ -51,6 +56,7 @@ class AdminController extends BaseController
             $this->render('administrateur/v-dashboard', [
                 'title' => $title,
                 'employees' => $employees,
+                'filtreArchive' => $filtreArchive,
                 'zones' => $zones,
                 'boutiques' => $boutiques,
                 'animals' => $animals
@@ -174,6 +180,50 @@ class AdminController extends BaseController
         } else {
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de l\'employé.', 'error');
         }
+    }
+
+    public function archiverEmployee($id)
+    {
+        $this->requireRole(ADMINID);
+
+        $employee = $this->serviceEmployee->getEmployeeParID($id);
+
+        // récupérer le filtre d'archivage et mettre par défaut si quelqu'un saisit une valeur non valide dans l'url
+        $filtreArchive = $_GET['filtreArchive'] ?? 'actifs';
+        if (!in_array($filtreArchive, ['tous', 'actifs', 'archives'], true)) {
+            $filtreArchive = 'actifs';
+        }
+
+        //si l'employé n'existe pas on met un msg d'erreur
+        if (!$employee) {
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Employé non trouvé.'];
+            header('Location: index.php?action=adminDashboard&filtreArchive=' . $filtreArchive);
+            exit;
+        }
+
+        //empêcher un admin d'archiver son propre compte
+        if (!empty($_SESSION['user']['ID_PERSONNEL']) && $_SESSION['user']['ID_PERSONNEL'] == $id) {
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Vous ne pouvez pas archiver votre propre compte.'];
+            header('Location: index.php?action=adminDashboard&filtreArchive=' . $filtreArchive);
+            exit;
+        }
+
+        $valeurDemandee = isset($_GET['valeur']) ? (int) $_GET['valeur'] : null;
+        $nouvelEtat = ($valeurDemandee === 0 || $valeurDemandee === 1)
+            ? $valeurDemandee
+            : ((int) ($employee['ESTARCHIVE'] ?? 1) === 1 ? 0 : 1);
+
+        if ($this->serviceEmployee->majArchiveEmployee($id, $nouvelEtat)) {
+            $message = $nouvelEtat === 0
+                ? 'Employé archivé avec succès.'
+                : 'Employé désarchivé avec succès.';
+            $_SESSION['flash'] = ['type' => 'success', 'message' => $message];
+        } else {
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur lors de la mise à jour du statut d\'archivage.'];
+        }
+
+        header('Location: index.php?action=adminDashboard&filtreArchive=' . $filtreArchive);
+        exit;
     }
 
     //  Boutiques

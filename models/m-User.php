@@ -45,8 +45,40 @@ class User
         return oci_fetch_assoc($stid);
     }
 
+    public static function toutRecupArchive()
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT * FROM Personnel WHERE estArchive = 0"; // 1 = actif, 0 = archivé
+        $stid = oci_parse($db, $sql);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
+    }
+    public static function toutRecupNonArchive()
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT * FROM Personnel WHERE estArchive = 1"; // 1 = actif, 0 = archivé
+        $stid = oci_parse($db, $sql);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
+    }
     /**
-     * Récupère tous les employés
+     * Récupère tous les employés archivés ou non
      */
     public static function toutRecup()
     {
@@ -65,6 +97,55 @@ class User
         //la première constante fait en sorte qu'elle soit sous la forme d'un seul tableau et la 2eme fait en sorte que les index soient associatifs (clé => valeur)
         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;
+    }
+
+    /**
+     * Récupère les employés selon le statut d'archivage
+        * $estArchive = null => tous, 1 => actifs, 0 => archivés
+     */
+    public static function toutRecupParArchive($estArchive = null)
+    {
+        $db = Database::getConnection();
+
+        if ($estArchive === null) {
+            $sql = "SELECT * FROM Personnel";
+            $stid = oci_parse($db, $sql);
+        } else {
+            $sql = "SELECT * FROM Personnel WHERE estArchive = :estArchive";
+            $stid = oci_parse($db, $sql);
+            oci_bind_by_name($stid, ':estArchive', $estArchive);
+        }
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
+    }
+
+    /**
+     * Met à jour le statut d'archivage d'un employé
+     */
+    public static function majArchive($id, $estArchive)
+    {
+        $db = Database::getConnection();
+        $sql = "UPDATE Personnel SET estArchive = :estArchive WHERE ID_Personnel = :id";
+        $stid = oci_parse($db, $sql);
+
+        oci_bind_by_name($stid, ':id', $id);
+        oci_bind_by_name($stid, ':estArchive', $estArchive);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        return $r;
     }
 
     /**

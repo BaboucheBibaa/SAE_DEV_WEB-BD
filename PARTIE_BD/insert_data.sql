@@ -25,15 +25,15 @@ COMMIT;
 -- =========================
 -- Admin principal
 INSERT INTO Personnel VALUES (100, 100, 100, 10, 'Dupont', 'Jean', 'admin@zoo.com', 
-  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-01-15', 'YYYY-MM-DD'), 3500, 'admin');
+  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-01-15', 'YYYY-MM-DD'), 3500, 'admin', 1);
 
 -- Responsables de zone (3)
 INSERT INTO Personnel VALUES (101, 101, 100, 11, 'Dupont', 'Marie', 'resp_zone1@zoo.com',
-  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-06-01', 'YYYY-MM-DD'), 2800, 'resp_zone1');
+  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-06-01', 'YYYY-MM-DD'), 2800, 'resp_zone1', 1);
 INSERT INTO Personnel VALUES (102, 102, 100, 11, 'Martin', 'Paul', 'resp_zone2@zoo.com',
-  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-06-15', 'YYYY-MM-DD'), 2800, 'resp_zone2');
+  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-06-15', 'YYYY-MM-DD'), 2800, 'resp_zone2', 1);
 INSERT INTO Personnel VALUES (103, 103, 100, 11, 'Durand', 'Sophie', 'resp_zone3@zoo.com',
-  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-07-01', 'YYYY-MM-DD'), 2800, 'resp_zone3');
+  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-07-01', 'YYYY-MM-DD'), 2800, 'resp_zone3', 1);
 
 -- Soigneurs (20)
 DECLARE
@@ -42,7 +42,7 @@ BEGIN
   FOR i IN 1..20 LOOP
     INSERT INTO Personnel VALUES (v_id, v_id, 101 + MOD(i, 3), 12, 'Soigneur', 'Pers'||i,
       'soigneur'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
-      TO_DATE('2021-01-01', 'YYYY-MM-DD') + (i*15), 2000 + (i*50), 'soigneur'||i);
+      TO_DATE('2021-01-01', 'YYYY-MM-DD') + (i*15), 2000 + (i*50), 'soigneur'||i, 1);
     v_id := v_id + 1;
   END LOOP;
   COMMIT;
@@ -56,7 +56,7 @@ BEGIN
   FOR i IN 1..4 LOOP
     INSERT INTO Personnel VALUES (v_id, v_id, 100, 13, 'Vétérinaire', 'Dr'||i,
       'vet'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
-      TO_DATE('2019-03-15', 'YYYY-MM-DD'), 2800 + (i*100), 'vet'||i);
+      TO_DATE('2019-03-15', 'YYYY-MM-DD'), 2800 + (i*100), 'vet'||i, 1);
     v_id := v_id + 1;
   END LOOP;
   COMMIT;
@@ -70,7 +70,7 @@ BEGIN
   FOR i IN 1..5 LOOP
     INSERT INTO Personnel VALUES (v_id, v_id, 100, 14, 'Manager', 'Boutique'||i,
       'manager_boutique'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
-      TO_DATE('2021-06-01', 'YYYY-MM-DD'), 2400, 'manager_boutique'||i);
+      TO_DATE('2021-06-01', 'YYYY-MM-DD'), 2400, 'manager_boutique'||i, 1);
     v_id := v_id + 1;
   END LOOP;
   COMMIT;
@@ -84,7 +84,7 @@ BEGIN
   FOR i IN 1..10 LOOP
     INSERT INTO Personnel VALUES (v_id, v_id, 128 + MOD(i, 5), 15, 'Caissier', 'Caisse'||i,
       'caissier'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
-      TO_DATE('2021-09-01', 'YYYY-MM-DD') + (i*7), 1800, 'caissier'||i);
+      TO_DATE('2021-09-01', 'YYYY-MM-DD') + (i*7), 1800, 'caissier'||i, 1);
     v_id := v_id + 1;
   END LOOP;
   COMMIT;
@@ -213,28 +213,28 @@ END;
 -- =========================
 BEGIN
   -- Animaux nommés
-  INSERT INTO Animal VALUES (1000, 10, 20, 100, TO_DATE('2018-03-15', 'YYYY-MM-DD'), 'Simba', 180, 'Carnivore');
-  INSERT INTO Animal VALUES (1001, 10, 20, 100, TO_DATE('2019-07-22', 'YYYY-MM-DD'), 'Mufasa', 190, 'Carnivore');
-  INSERT INTO Animal VALUES (1002, 10, 21, 101, TO_DATE('2017-05-10', 'YYYY-MM-DD'), 'Dumbo', 5000, 'Herbivore');
-  INSERT INTO Animal VALUES (1003, 10, 21, 101, TO_DATE('2019-11-08', 'YYYY-MM-DD'), 'Elmer', 4500, 'Herbivore');
-  INSERT INTO Animal VALUES (1004, 10, 22, 102, TO_DATE('2020-01-17', 'YYYY-MM-DD'), 'Gérald', 1200, 'Herbivore');
-  INSERT INTO Animal VALUES (1005, 11, 20, 103, TO_DATE('2019-02-14', 'YYYY-MM-DD'), 'Marty', 450, 'Herbivore');
-  INSERT INTO Animal VALUES (1006, 11, 21, 104, TO_DATE('2018-08-25', 'YYYY-MM-DD'), 'Hipo', 3500, 'Herbivore');
-  INSERT INTO Animal VALUES (1007, 20, 30, 105, TO_DATE('2016-11-29', 'YYYY-MM-DD'), 'Rajah', 200, 'Carnivore');
-  INSERT INTO Animal VALUES (1008, 20, 31, 106, TO_DATE('2018-06-12', 'YYYY-MM-DD'), 'Chandra', 1200, 'Herbivore');
-  INSERT INTO Animal VALUES (1009, 20, 32, 107, TO_DATE('2020-04-08', 'YYYY-MM-DD'), 'Po', 100, 'Herbivore');
-  INSERT INTO Animal VALUES (1010, 21, 30, 108, TO_DATE('2017-09-03', 'YYYY-MM-DD'), 'Rhino', 2200, 'Herbivore');
-  INSERT INTO Animal VALUES (1011, 21, 31, 105, TO_DATE('2019-01-20', 'YYYY-MM-DD'), 'Kanha', 180, 'Carnivore');
-  INSERT INTO Animal VALUES (1012, 30, 40, 110, TO_DATE('2019-05-14', 'YYYY-MM-DD'), 'Jaguar', 120, 'Carnivore');
-  INSERT INTO Animal VALUES (1013, 30, 41, 113, TO_DATE('2020-02-28', 'YYYY-MM-DD'), 'Macaw', 1.2, 'Frugivore');
-  INSERT INTO Animal VALUES (1014, 31, 40, 114, TO_DATE('2018-07-07', 'YYYY-MM-DD'), 'Crocy', 250, 'Carnivore');
-  INSERT INTO Animal VALUES (1015, 31, 41, 111, TO_DATE('2017-10-15', 'YYYY-MM-DD'), 'Snakey', 50, 'Carnivore');
-  INSERT INTO Animal VALUES (1016, 40, 50, 115, TO_DATE('2015-12-22', 'YYYY-MM-DD'), 'Nanook', 500, 'Carnivore');
-  INSERT INTO Animal VALUES (1017, 40, 51, 116, TO_DATE('2019-03-10', 'YYYY-MM-DD'), 'Foka', 150, 'Carnivore');
-  INSERT INTO Animal VALUES (1018, 41, 50, 117, TO_DATE('2018-06-05', 'YYYY-MM-DD'), 'Beluga', 1200, 'Carnivore');
-  INSERT INTO Animal VALUES (1019, 50, 60, 120, TO_DATE('2016-08-19', 'YYYY-MM-DD'), 'Bruce', 1800, 'Carnivore');
-  INSERT INTO Animal VALUES (1020, 50, 61, 121, TO_DATE('2019-11-12', 'YYYY-MM-DD'), 'Flipper', 300, 'Carnivore');
-  INSERT INTO Animal VALUES (1021, 51, 60, 122, TO_DATE('2017-04-21', 'YYYY-MM-DD'), 'Shelly', 500, 'Omnivore');
+  INSERT INTO Animal VALUES (1000, 10, 20, 100, TO_DATE('2018-03-15', 'YYYY-MM-DD'), 'Simba', 180, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1001, 10, 20, 100, TO_DATE('2019-07-22', 'YYYY-MM-DD'), 'Mufasa', 190, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1002, 10, 21, 101, TO_DATE('2017-05-10', 'YYYY-MM-DD'), 'Dumbo', 5000, 'Herbivore', 1);
+  INSERT INTO Animal VALUES (1003, 10, 21, 101, TO_DATE('2019-11-08', 'YYYY-MM-DD'), 'Elmer', 4500, 'Herbivore', 1);
+  INSERT INTO Animal VALUES (1004, 10, 22, 102, TO_DATE('2020-01-17', 'YYYY-MM-DD'), 'Gérald', 1200, 'Herbivore', 1);
+  INSERT INTO Animal VALUES (1005, 11, 20, 103, TO_DATE('2019-02-14', 'YYYY-MM-DD'), 'Marty', 450, 'Herbivore', 1);
+  INSERT INTO Animal VALUES (1006, 11, 21, 104, TO_DATE('2018-08-25', 'YYYY-MM-DD'), 'Hipo', 3500, 'Herbivore', 1);
+  INSERT INTO Animal VALUES (1007, 20, 30, 105, TO_DATE('2016-11-29', 'YYYY-MM-DD'), 'Rajah', 200, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1008, 20, 31, 106, TO_DATE('2018-06-12', 'YYYY-MM-DD'), 'Chandra', 1200, 'Herbivore', 1);
+  INSERT INTO Animal VALUES (1009, 20, 32, 107, TO_DATE('2020-04-08', 'YYYY-MM-DD'), 'Po', 100, 'Herbivore', 1);
+  INSERT INTO Animal VALUES (1010, 21, 30, 108, TO_DATE('2017-09-03', 'YYYY-MM-DD'), 'Rhino', 2200, 'Herbivore', 1);
+  INSERT INTO Animal VALUES (1011, 21, 31, 105, TO_DATE('2019-01-20', 'YYYY-MM-DD'), 'Kanha', 180, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1012, 30, 40, 110, TO_DATE('2019-05-14', 'YYYY-MM-DD'), 'Jaguar', 120, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1013, 30, 41, 113, TO_DATE('2020-02-28', 'YYYY-MM-DD'), 'Macaw', 1.2, 'Frugivore', 1);
+  INSERT INTO Animal VALUES (1014, 31, 40, 114, TO_DATE('2018-07-07', 'YYYY-MM-DD'), 'Crocy', 250, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1015, 31, 41, 111, TO_DATE('2017-10-15', 'YYYY-MM-DD'), 'Snakey', 50, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1016, 40, 50, 115, TO_DATE('2015-12-22', 'YYYY-MM-DD'), 'Nanook', 500, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1017, 40, 51, 116, TO_DATE('2019-03-10', 'YYYY-MM-DD'), 'Foka', 150, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1018, 41, 50, 117, TO_DATE('2018-06-05', 'YYYY-MM-DD'), 'Beluga', 1200, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1019, 50, 60, 120, TO_DATE('2016-08-19', 'YYYY-MM-DD'), 'Bruce', 1800, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1020, 50, 61, 121, TO_DATE('2019-11-12', 'YYYY-MM-DD'), 'Flipper', 300, 'Carnivore', 1);
+  INSERT INTO Animal VALUES (1021, 51, 60, 122, TO_DATE('2017-04-21', 'YYYY-MM-DD'), 'Shelly', 500, 'Omnivore', 1);
   
   COMMIT;
 END;
@@ -272,7 +272,8 @@ BEGIN
         TRUNC(SYSDATE) - ROUND(DBMS_RANDOM.VALUE(1, 3650)),
         'Animal_Generique_'||i,
         ROUND(DBMS_RANDOM.VALUE(5, 5000), 2),
-        CASE WHEN MOD(i, 3) = 0 THEN 'Herbivore' WHEN MOD(i, 3) = 1 THEN 'Carnivore' ELSE 'Omnivore' END
+        CASE WHEN MOD(i, 3) = 0 THEN 'Herbivore' WHEN MOD(i, 3) = 1 THEN 'Carnivore' ELSE 'Omnivore' END,
+        1
       );
     EXCEPTION WHEN OTHERS THEN
       NULL;
@@ -344,7 +345,7 @@ BEGIN
   FOR i IN 100..142 LOOP
     BEGIN
       INSERT INTO Contrat_Travail VALUES (i, i,
-        CASE WHEN MOD(i, 7) = 0 THEN 'CDI' ELSE 'CDD' END,
+        (SELECT ID_FONCTION FROM Personnel WHERE ID_PERSONNEL = i),
         TO_DATE('2020-01-01', 'YYYY-MM-DD') + ((i-100)*10),
         TO_DATE('2026-12-31', 'YYYY-MM-DD'));
     EXCEPTION WHEN OTHERS THEN NULL; END;

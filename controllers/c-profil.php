@@ -12,23 +12,29 @@ class ProfilController extends BaseController
     public function profil($id)
     {
         $id_user = $_GET['id'] ?? null;
+        if ($id_user === null) {
+            $id_user = $id;
+        }
         // Vérifier si l'utilisateur est connecté
         if (empty($_SESSION['user'])) {
             $this->redirectWithMessage('afficheConnexion', 'Vous devez être connecté pour accéder à votre profil.', 'error');
         }
 
-        $user = $this->serviceEmployee->getEmployeeParID($id);
+        $user = $this->serviceEmployee->getEmployeeParID($id_user);
 
         if (!$user) {
             $this->redirectWithMessage('home', 'Utilisateur introuvable.', 'error');
         }
 
+        $historique = ContratTravail::recupParPersonnel($id_user);
         $title = "Mon profil";
 
         $this->render('profil/v-profil', [
             'title' => $title,
             'user' => $user,
-            'id_user' => $id_user
+            'id_user' => $id_user,
+            'historique' => $historique
+
         ]);
     }
 

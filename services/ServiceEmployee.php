@@ -3,10 +3,17 @@
 class ServiceEmployee
 {
     //Getters
-    public function getTousEmployees()
+    public function getTousEmployees($filtreArchive = 'tous')
     {
-        //Récupère tous les employés de la base de données pour les retourner sous forme de tableau pour les afficher dans le dashboard admin
-        return User::toutRecup();
+        //Récupère les employés selon le filtre d'archivage
+        switch ($filtreArchive) {
+            case 'archives':
+                return User::toutRecupParArchive(0);
+            case 'actifs':
+                return User::toutRecupParArchive(1);
+            default:
+                return User::toutRecupParArchive(null);
+        }
     }
     public function getEmployeeParID($id)
     {
@@ -122,6 +129,12 @@ class ServiceEmployee
     {
         //Met à jour le mot de passe d'un employé dans la base de données en fonction de l'id passé en paramètre
         return User::majPassword($id, $MDP);
+    }
+
+    public function majArchiveEmployee($id, $estArchive)
+    {
+        //Met à jour le statut d'archivage d'un employé
+        return User::majArchive($id, $estArchive);
     }
 
     //Fonctions retournant des données nécessaires pour des affichages de formulaires

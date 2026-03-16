@@ -198,6 +198,7 @@ class Animal
 
         return $r;
     }
+
     public static function moteurRechercheRecup($searchTerm)
     {
         $db = Database::getConnection();

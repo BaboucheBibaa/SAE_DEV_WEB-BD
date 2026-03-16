@@ -65,10 +65,16 @@
                 </h2>
                 <div id="collapseEmployes" class="accordion-collapse collapse show">
                     <div class="accordion-body">
-                        <div class="mb-3">
+                        <?php $filtreArchive = $filtreArchive ?? 'tous'; ?>
+                        <div class="mb-3 d-flex flex-wrap gap-2 align-items-center">
                             <a href="index.php?action=creationEmployee" class="btn btn-success">
                                 <i class="bi bi-person-plus"></i> Ajouter un Employé
                             </a>
+                            <div class="btn-group" role="group" aria-label="Filtre archivage employés">
+                                <a href="index.php?action=adminDashboard&filtreArchive=tous" class="btn btn-outline-secondary <?= $filtreArchive === 'tous' ? 'active' : '' ?>">Tous</a>
+                                <a href="index.php?action=adminDashboard&filtreArchive=actifs" class="btn btn-outline-secondary <?= $filtreArchive === 'actifs' ? 'active' : '' ?>">Non archivés</a>
+                                <a href="index.php?action=adminDashboard&filtreArchive=archives" class="btn btn-outline-secondary <?= $filtreArchive === 'archives' ? 'active' : '' ?>">Archivés</a>
+                            </div>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-sm table-hover">
@@ -79,18 +85,27 @@
                                         <th>Prénom</th>
                                         <th>Login</th>
                                         <th>Salaire</th>
+                                        <th>Statut</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php if (!empty($employees)): ?>
                                         <?php foreach ($employees as $employee): ?>
+                                            <?php $estArchive = (int) ($employee['ESTARCHIVE'] ?? 1); ?>
                                             <tr>
                                                 <td><?= htmlspecialchars($employee['ID_PERSONNEL'] ?? '') ?></td>
                                                 <td><strong><?= htmlspecialchars($employee['NOM'] ?? '') ?></strong></td>
                                                 <td><?= htmlspecialchars($employee['PRENOM'] ?? '') ?></td>
                                                 <td><?= htmlspecialchars($employee['LOGIN'] ?? 'N/A') ?></td>
                                                 <td><span class="badge bg-success"><?= htmlspecialchars(number_format($employee['SALAIRE'] ?? 0, 2)) ?> €</span></td>
+                                                <td>
+                                                    <?php if ($estArchive === 1): ?>
+                                                        <span class="badge bg-primary">Actif</span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-secondary">Archivé</span>
+                                                    <?php endif; ?>
+                                                </td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
                                                         <a href="index.php?action=profil&id=<?= $employee['ID_PERSONNEL'] ?>" class="btn btn-outline-primary" title="Voir le profil">
@@ -99,6 +114,15 @@
                                                         <a href="index.php?action=editionEmployee&id=<?= $employee['ID_PERSONNEL'] ?>" class="btn btn-outline-warning" title="Modifier">
                                                             <i class="bi bi-pencil"></i>
                                                         </a>
+                                                        <?php if ($estArchive === 1): ?>
+                                                            <a href="index.php?action=archiverEmployee&id=<?= $employee['ID_PERSONNEL'] ?>&valeur=0&filtreArchive=<?= urlencode($filtreArchive) ?>" class="btn btn-outline-secondary" onclick="return confirm('Archiver cet employé ?')" title="Archiver">
+                                                                <i class="bi bi-archive"></i>
+                                                            </a>
+                                                        <?php else: ?>
+                                                            <a href="index.php?action=archiverEmployee&id=<?= $employee['ID_PERSONNEL'] ?>&valeur=1&filtreArchive=<?= urlencode($filtreArchive) ?>" class="btn btn-outline-success" title="Désarchiver">
+                                                                <i class="bi bi-arrow-counterclockwise"></i>
+                                                            </a>
+                                                        <?php endif; ?>
                                                         <a href="index.php?action=supprEmployee&id=<?= $employee['ID_PERSONNEL'] ?>" class="btn btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?')" title="Supprimer">
                                                             <i class="bi bi-trash"></i>
                                                         </a>
@@ -108,7 +132,7 @@
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="6" class="text-center text-muted">Aucun employé trouvé</td>
+                                            <td colspan="7" class="text-center text-muted">Aucun employé trouvé</td>
                                         </tr>
                                     <?php endif; ?>
                                 </tbody>
@@ -139,12 +163,14 @@
                                         <th>ID</th>
                                         <th>Nom</th>
                                         <th>Enclos</th>
+                                        <th>Statut</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php if (!empty($animals)): ?>
                                         <?php foreach ($animals as $animal): ?>
+                                            <?php $estArchiveAnimal = (int) ($animal['ESTARCHIVE'] ?? 1); ?>
                                             <tr>
                                                 <td><?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?></td>
                                                 <td><strong><?= htmlspecialchars($animal['NOM_ANIMAL'] ?? '') ?></strong></td>
@@ -153,6 +179,13 @@
                                                         <span class="badge bg-info"><?= htmlspecialchars($animal['LATITUDE_ENCLOS']) ?>, <?= htmlspecialchars($animal['LONGITUDE_ENCLOS']) ?></span>
                                                     <?php else: ?>
                                                         <span class="badge bg-secondary">Non assigné</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td>
+                                                    <?php if ($estArchiveAnimal === 1): ?>
+                                                        <span class="badge bg-primary">Actif</span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-secondary">Archivé</span>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="text-center">
@@ -172,7 +205,7 @@
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="4" class="text-center text-muted">Aucun animal trouvé</td>
+                                            <td colspan="5" class="text-center text-muted">Aucun animal trouvé</td>
                                         </tr>
                                     <?php endif; ?>
                                 </tbody>

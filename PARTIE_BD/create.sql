@@ -22,6 +22,7 @@ CREATE TABLE Personnel (
     Date_Entree DATE NOT NULL,
     Salaire NUMBER(10,2),
     LOGIN VARCHAR2(50) NOT NULL UNIQUE,
+    estArchive NUMBER(1) DEFAULT 1, -- 1 pour actif et 0 pour archivé
     FOREIGN KEY (ID_Remplacant) REFERENCES Personnel(ID_Personnel) ON DELETE SET NULL,
     FOREIGN KEY (ID_Superieur) REFERENCES Personnel(ID_Personnel) ON DELETE SET NULL,
     FOREIGN KEY (ID_Fonction) REFERENCES Fonction(ID_Fonction) ON DELETE CASCADE
@@ -33,10 +34,11 @@ CREATE TABLE Personnel (
 CREATE TABLE Contrat_Travail (
     ID_Contrat NUMBER PRIMARY KEY,
     ID_Personnel NUMBER NOT NULL,
-    Fonction VARCHAR2(50),
+    ID_Fonction NUMBER NOT NULL,
     Date_Debut DATE,
     Date_Fin DATE,
-    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
+    FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Fonction) REFERENCES Fonction(ID_Fonction) ON DELETE CASCADE
 );
 
 -- =========================
@@ -116,6 +118,7 @@ CREATE TABLE Animal (
     Nom_Animal VARCHAR2(50),
     Poids NUMBER(6,2),
     Regime_Alimentaire VARCHAR2(50),
+    estArchive NUMBER(1) DEFAULT 1, -- 1 pour actif et 0 pour archivé
     FOREIGN KEY (Latitude_Enclos, Longitude_Enclos)
         REFERENCES Enclos(Latitude, Longitude) ON DELETE CASCADE,
     FOREIGN KEY (ID_Espece) REFERENCES Espece(ID_Espece) ON DELETE CASCADE

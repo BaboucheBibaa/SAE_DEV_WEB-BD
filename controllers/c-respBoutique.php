@@ -3,11 +3,13 @@ class RespBoutiqueController extends BaseController
 {
     private $serviceEmployee;
     private $serviceBoutique;
+    private $serviceCA;
 
     public function __construct()
     {
         $this->serviceEmployee = new ServiceEmployee();
         $this->serviceBoutique = new ServiceBoutique();
+        $this->serviceCA = new ServiceCA();
     }
 
     public function afficherPage()
@@ -31,6 +33,24 @@ class RespBoutiqueController extends BaseController
             'title' => $title,
             'boutique' => $boutique,
             'employes' => $employes
+        ]);
+    }
+
+    public function afficherStatsBoutique()
+    {
+        $this->requireRole(RESPBOUTIQUE);
+
+        $user = $this->serviceEmployee->getEmployeeParID($_SESSION['user']['ID_PERSONNEL']);
+        $boutique = $this->serviceBoutique->getBoutiqueParManager($_SESSION['user']['ID_PERSONNEL']);
+        $caJournalier = $this->serviceCA->getCAJournalier($boutique['ID_BOUTIQUE']);
+        $caMensuel = $this->serviceCA->getCAMensuel($boutique['ID_BOUTIQUE']);
+        $title = "Statistiques de la boutique";
+        $this->render('respBoutique/v-statsBoutique', [
+            'user' => $user,
+            'title' => $title,
+            'boutique' => $boutique,
+            'caJournalier' => $caJournalier,
+            'caMensuel' => $caMensuel
         ]);
     }
 }

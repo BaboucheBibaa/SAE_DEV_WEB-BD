@@ -116,27 +116,33 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 ### Profil Utilisateur Individuel
 
 - ✅ Possibilité de changer de mot de passe
+- ✅ Profil utilisateur complet accessible pour tout le monde (informations filtrées : impossible pour un autre utilisateur d'avoir la page de changement de mdp d'un autre utilisateur)
+- ✅ Affichage de l'historique des emplois passés au sein du zoo
 
 ### Profil d'un Animal
 
-- ✅ Affichage des informations générales (espèce, date de naissance, âge)
+- ✅ Affichage des informations générales (espèce, date de naissance)
 - ✅ Affichage des caractéristiques physiques (poids, régime alimentaire)
 - ✅ Localisation (latitude, longitude)
 - ✅ Historique des **doses quotidiennes de nourriture** (table BIEN_ETRE_QUOTIDIEN)
 - ✅ Historique des **soins médicaux** (table PRATIQUE_SOIN) avec description du soin
+- ✅ Affichage de la liste des parrains de l'animal
 
 ### Profil d'un Enclos
 
-- ✅ Type d'enclos et zone assignée
+- ✅ Informations globales de l'enclos (Zone de l'enclos, type enclos)
 - ✅ Localisation géographique (latitude/longitude)
 - ✅ Liste des animaux présents
+- ✅ Historique des réparations appliquées sur l'enclos
+
 
 ### Dashboard Administrateur
 
-- ✅ Ajouter / Supprimer / Modifier un employé
-- ✅ Ajouter / Supprimer / Modifier une zone
-- ✅ Ajouter / Supprimer / Modifier une boutique
-- ✅ Statistiques globales (employés, zones, boutiques, animaux)
+- ✅ Lister / Ajouter / Supprimer / Modifier un employé
+- ✅ Archiver / Désarchiver un employé + afficher ou non les employés archivés
+- ✅ Lister / Ajouter / Supprimer / Modifier une zone
+- ✅ Lister / Ajouter / Supprimer / Modifier une boutique
+- ✅ Lister / Ajouter / Supprimer / Modifier / Aller sur le profil d'un animal
 
 ### Dashboard Responsable de Zone (Soigneurs)
 
@@ -152,78 +158,25 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 ### Moteur de Recherche
 
 - ✅ Recherche globale (animaux, employés, zones, boutiques, enclos)
-- ✅ Recherche avancée avec filtres par catégorie
-
-### Base de Données
-
-- ✅ **ON DELETE CASCADE** ajouté à toutes les clés étrangères pertinentes
-- ✅ Intégrité référentielle complète avec suppression en cascade
 
 ---
 
 ## TODO List
 
-### Phase 1 ✅ - Implémentations Complétées
-
-- ✅ Affichage des soins et nourriture dans le profil animal
-- ✅ Création de la vue profil enclos
-- ✅ Création du dashboard responsable boutique
-- ✅ Correction du bug Boutique::recupParManager()
-- ✅ Ajout de ON DELETE CASCADE à la base de données
-- ✅ Moteur de recherche global et avancée
-
-### Phase 2 - Unification des Dashboards (À implémenter)
-
-- [ ] **[EN COURS]** Créer un seul Dashboard unifié (v-dashboard.php racine)
-  - [ ] Créer DashboardController.php
-  - [ ] Créer vues partielles pour Admin, RespBoutique, RespSoigneur
-  - [ ] Intégrer la logique de détection du rôle
-  - [ ] Mettre à jour les routes
-  - [ ] Supprimer les anciens contrôleurs/vues
-
-### Phase 3 - Améliorations Dashboard
+### Phase 1 - Améliorations Dashboard
 
 - [ ] Dashboard Responsable Boutique:
   - [ ] Chiffre d'affaires journalier, mensuel et annuel
-  - [ ] Statistiques de ventes par employé
+  - [ ] Statistiques
   - [ ] Graphiques de tendances
+- [ ] Dashboard Administrateur:
+  - [ ] Statistiques globales
 
-- [ ] Dashboard Responsable Zone:
-  - [ ] Statistiques des soins effectués
+### Phase 2 - Pages Métier (Soigneur / Personnel entretien)
 
-### Phase 4 - Pages Métier (Soigneur / Personnel entretien)
-
-- [ ] Affichage de la zone d'affectation personnelle
-- ✅ Soigneurs:
-  - ✅ Liste des parrainages sur les animaux qu'il soigne
-  - ✅ Historique complet des soins réalisés
 - [ ] Personnel entretien:
   - [ ] Liste des enclos de sa zone
   - [ ] Historique des entretiens des enclos
-  - [ ] Calendrier de maintenance
-
-### Phase 5 - Gestion Avancée
-
-- [ ] Gestion des animaux:
-  - [ ] Possibilité de déplacer un animal d'un enclos à un autre
-  - [ ] Historique des déplacements
-  - ✅ Suppression d'un animal du zoo
-- [ ] Gestionnaire des parrainages:
-  - ✅ CRUD parrainages
-  - ✅ Affichage des visiteurs parrains
-  - [ ] Statistiques de parrainage
-
-### Phase 6 - Améliorations Globales
-
-- [ ] Profil Utilisateur (amélioration):
-  - [ ] **[BONUS]** Contrat de travail en PDF (FPDF)
-  - [ ] Historique d'accès
-  
-- [ ] Dashboard Admin (amélioration):
-  - [ ] Archivage des employés
-  - [ ] Filtre employés archivés/actifs
-  - [ ] Rapports d'activité globaux
-  - [ ] Gestion des rôles et droits d'accès
 
 ---
 
@@ -240,3 +193,7 @@ sqlplus SAE_USER/sae2026@localhost:1521/FREEPDB1
 - **Admin**: `admin`,mot de passe: `MDP`
 - **Responsable Zone**: `resp_zone1`, mot de passe: `MDP`
 - **Responsable Boutique**: `manager_boutique1`, mot de passe: `MDP`
+
+
+Mettre les stats pour chaque boutique dans le dashboard du resp boutique
+stats globales dans dashboard admin
