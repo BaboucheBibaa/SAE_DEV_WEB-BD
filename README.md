@@ -187,6 +187,7 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 ### Améliorations
 
 - [ ] Gérer l'affichage des données d'un genre d'employé par une vue
+- [ ] Ajouter des opérations +/- complexes en faisant des statistiques diverses et variées dans la BD (divisions / agrégats / jointures complexes)
 
 ---
 
