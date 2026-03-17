@@ -14,7 +14,7 @@
                     <i class="bi bi-graph-up-arrow me-2"></i>Statistiques de la boutique
                 </h1>
                 <p class="lead text-muted mb-0">
-                    Apercu visuel des indicateurs de performance de
+                    Statistiques détaillées de la boutique 
                     <strong><?= htmlspecialchars($boutique['NOM_BOUTIQUE'] ?? 'votre boutique') ?></strong>
                 </p>
             </div>
@@ -52,18 +52,16 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-md-6 col-xl-3">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h6 class="text-muted mb-2">Classement interne</h6>
-                                <h3 class="mb-0">#2</h3>
+                                <h6 class="text-muted mb-2">CA annuel</h6>
+                                <h3 class="mb-0"><?= empty($caAnnuel['TOTAL_CA'])    ? '0' : htmlspecialchars($caAnnuel['TOTAL_CA']) ?> EUR</h3>
                             </div>
-                            <span class="badge bg-warning text-dark">Top 3</span>
                         </div>
-                        <small class="text-muted">Par rapport aux autres boutiques</small>
+                        <small class="text-muted">Année en cours</small>
                     </div>
                 </div>
             </div>

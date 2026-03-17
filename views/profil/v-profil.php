@@ -68,40 +68,40 @@
                     </form>
                 </div>
             </div>
-        <?php endif; ?>
 
-        <div class="card border-0 shadow-sm mt-4">
-            <div class="card-body p-4">
-                <h3 class="card-title mb-4">Historique des contrats</h3>
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">Historique des contrats</h3>
 
-                <?php if (!empty($historique)): ?>
-                    <div class="table-responsive">
-                        <table class="table table-sm table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>ID Contrat</th>
-                                    <th>Fonction</th>
-                                    <th>Date début</th>
-                                    <th>Date fin</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($historique as $contrat): ?>
+                    <?php if (!empty($historique)): ?>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="table-light">
                                     <tr>
-                                        <td><?= htmlspecialchars($contrat['ID_CONTRAT'] ?? '') ?></td>
-                                        <td><?= htmlspecialchars($contrat['NOM_FONCTION'] ?? '') ?></td>
-                                        <td><?= htmlspecialchars($contrat['DATE_DEBUT'] ?? '') ?></td>
-                                        <td><?= htmlspecialchars($contrat['DATE_FIN'] ?? '') ?></td>
+                                        <th>ID Contrat</th>
+                                        <th>Fonction</th>
+                                        <th>Date début</th>
+                                        <th>Date fin</th>
                                     </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php else: ?>
-                    <p class="text-muted mb-0">Aucun historique de contrat trouvé pour cet employé.</p>
-                <?php endif; ?>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($historique as $contrat): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($contrat['ID_CONTRAT'] ?? '') ?></td>
+                                            <td><?= htmlspecialchars($contrat['NOM_FONCTION'] ?? '') ?></td>
+                                            <td><?= htmlspecialchars($contrat['DATE_DEBUT'] ?? '') ?></td>
+                                            <td><?= htmlspecialchars($contrat['DATE_FIN'] ?? '') ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <p class="text-muted mb-0">Aucun historique de contrat trouvé pour cet employé.</p>
+                    <?php endif; ?>
+                </div>
             </div>
-        </div>
+        <?php endif; ?>
 
     </div>
 </div>

@@ -183,6 +183,8 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 - [ ] Personnel entretien:
   - [ ] Liste des enclos de sa zone
   - ✅ Historique des entretiens des enclos
+- [ ] Responsable boutique
+  - [ ] Page d'ajout de CA Journalier
 
 ### Améliorations
 

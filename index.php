@@ -101,6 +101,8 @@ switch ($action){
     case "respBoutiqueDashboard":
     case "statsBoutique":
     case "renderGraphiqueCA":
+    case 'creationCA':
+    case 'ajoutCA':
         $controller = new RespBoutiqueController();
         break;
     case 'profilAnimal':
@@ -319,7 +321,12 @@ switch ($action) {
     case 'profilZone':
         $controller->profileZone($_GET['id']);
         break;
-
+    case 'creationCA':
+        $controller->afficherFormCA();
+        break;
+    case 'ajoutCA':
+        $controller->ajoutCA();
+        break;
     case 'search':
         $controller->gererRequete();
         break;

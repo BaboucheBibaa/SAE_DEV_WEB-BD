@@ -7,7 +7,6 @@
                 <li class="breadcrumb-item active">Dashboard Responsable de Boutique</li>
             </ol>
         </nav>
-
         <!-- En-tête du dashboard -->
         <div class="row mb-5">
             <div class="col-lg-8">
@@ -17,6 +16,9 @@
                 <p class="lead text-muted">Bienvenue, <?= htmlspecialchars($user['PRENOM'] ?? '') ?> <?= htmlspecialchars($user['NOM'] ?? '') ?></p>
             </div>
         </div>
+        <a href="index.php?action=creationCA" class="btn btn-success mb-5">
+            <i class="bi bi-currency-dollar"></i> Ajouter le chiffre d'affaires d'aujourd'hui
+        </a>
 
         <!-- Accordéon des sections -->
         <div class="accordion mb-5" id="accordionDashboard">

@@ -1,8 +1,4 @@
 <?php
-
-require_once __DIR__ . '/../lib/jpgraph-4.4.3/src/jpgraph.php';
-require_once __DIR__ . '/../lib/jpgraph-4.4.3/src/jpgraph_line.php';
-
 class ServiceCA
 {
     private $CA;
@@ -10,6 +6,14 @@ class ServiceCA
     public function __construct()
     {
         $this->CA = new CA();
+    }
+    public function ajoutCA($data)
+    {
+        return $this->CA->creerCA($data);
+    }
+    public function existeCA($idBoutique, $date)
+    {
+        return $this->CA->existeCA($idBoutique, $date);
     }
 
     public function getCAByBoutique($idBoutique, $annee = null)

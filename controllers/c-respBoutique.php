@@ -44,13 +44,66 @@ class RespBoutiqueController extends BaseController
         $boutique = $this->serviceBoutique->getBoutiqueParManager($_SESSION['user']['ID_PERSONNEL']);
         $caJournalier = $this->serviceCA->getCAJournalier($boutique['ID_BOUTIQUE']);
         $caMensuel = $this->serviceCA->getCAMensuel($boutique['ID_BOUTIQUE']);
+        $caAnnuel = $this->serviceCA->sommeCA($boutique['ID_BOUTIQUE'], date('Y'));
         $title = "Statistiques de la boutique";
         $this->render('respBoutique/v-statsBoutique', [
             'user' => $user,
             'title' => $title,
             'boutique' => $boutique,
             'caJournalier' => $caJournalier,
-            'caMensuel' => $caMensuel
+            'caMensuel' => $caMensuel,
+            'caAnnuel' => $caAnnuel
+
         ]);
+    }
+
+    public function afficherFormCA(){
+        $this->requireRole(RESPBOUTIQUE);
+
+        $user = $this->serviceEmployee->getEmployeeParID($_SESSION['user']['ID_PERSONNEL']);
+        $boutique = $this->serviceBoutique->getBoutiqueParManager($_SESSION['user']['ID_PERSONNEL']);
+        $title = "Ajouter le chiffre d'affaires du jour";
+        $this->render('respBoutique/v-creationCA', [
+            'user' => $user,
+            'title' => $title,
+            'boutique' => $boutique
+        ]);
+    }
+
+    public function ajoutCA()
+    {
+        $this->requireRole(RESPBOUTIQUE);
+
+        $boutique = $this->serviceBoutique->getBoutiqueParManager($_SESSION['user']['ID_PERSONNEL']);
+        if (empty($boutique['ID_BOUTIQUE'])) {
+            $this->redirectWithMessage('respBoutiqueDashboard', 'Aucune boutique n\'est associée à votre compte.', 'error');
+        }
+
+        $date = $_POST['date_ca'] ?? '';
+        $montant = $_POST['montant_ca'] ?? '';
+
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            $this->redirectWithMessage('creationCA', 'Date invalide.', 'error');
+        }
+
+        if (!is_numeric($montant) || (float) $montant < 0) {
+            $this->redirectWithMessage('creationCA', 'Le montant doit être un nombre positif ou nul.', 'error');
+        }
+
+        if ($this->serviceCA->existeCA($boutique['ID_BOUTIQUE'], $date)) {
+            $this->redirectWithMessage('creationCA', 'Un chiffre d\'affaires existe déjà pour cette date.', 'error');
+        }
+
+        $data = [
+            'id_boutique' => $boutique['ID_BOUTIQUE'],
+            'date' => $date,
+            'montant' => (float) $montant
+        ];
+
+        if ($this->serviceCA->ajoutCA($data)) {
+            $this->redirectWithMessage('respBoutiqueDashboard', 'Chiffre d\'affaires journalier ajouté avec succès.', 'success');
+        }
+
+        $this->redirectWithMessage('creationCA', 'Erreur lors de l\'ajout du chiffre d\'affaires.', 'error');
     }
 }

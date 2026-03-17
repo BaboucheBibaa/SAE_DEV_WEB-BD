@@ -2,8 +2,30 @@
 
 class CA
 {
+    public function existeCA($idBoutique, $date)
+    {
+        //Vérifie si un CA existe déjà pour une boutique à une date donnée afin d'éviter les doublons et les erreurs de saisie
+        $db = Database::getConnection();
+
+        $sql = "SELECT COUNT(*) AS NB FROM CHIFFRE_AFFAIRES WHERE ID_BOUTIQUE = :id_boutique AND DATE_CA_JOURNALIER = TO_DATE(:date_jour, 'YYYY-MM-DD')";
+
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid, ':id_boutique', $idBoutique);
+        oci_bind_by_name($stid, ':date_jour', $date);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        $row = oci_fetch_assoc($stid);
+        return isset($row['NB']) && (int) $row['NB'] > 0;
+    }
+
     public function getCAJournee($idBoutique)
     {
+        //Quel est le CA du jour pour une boutique donnée ? (CA journalier)
         $db = Database::getConnection();
 
         $sql = "SELECT MONTANT AS total_ca FROM CHIFFRE_AFFAIRES WHERE ID_BOUTIQUE = :id_boutique AND DATE_CA_JOURNALIER = TRUNC(SYSDATE-1)";
@@ -22,6 +44,7 @@ class CA
 
     public function getCAMensuel($idBoutique)
     {
+        //Quel est le CA du mois en cours pour une boutique donnée ? (CA mensuel)
         $db = Database::getConnection();
 
         $sql = "SELECT SUM(MONTANT) AS total_ca FROM CHIFFRE_AFFAIRES WHERE ID_BOUTIQUE = :id_boutique AND EXTRACT(MONTH FROM DATE_CA_JOURNALIER) = EXTRACT(MONTH FROM SYSDATE) AND EXTRACT(YEAR FROM DATE_CA_JOURNALIER) = EXTRACT(YEAR FROM SYSDATE)";
@@ -39,6 +62,7 @@ class CA
     }
     public function getCASeriesByBoutique($idBoutique, $annee = null)
     {
+        //On liste, par année ou non, tous les CA d'une boutique (utile dans un potentiel affichage graphique non implémenté pour l'instant)
         $db = Database::getConnection();
 
         $sql = "SELECT DATE_CA_JOURNALIER AS DATE_CA, MONTANT AS TOTAL_CA FROM CHIFFRE_AFFAIRES WHERE ID_BOUTIQUE = :id_boutique";
@@ -65,8 +89,8 @@ class CA
     }
 
     public function getCAByBoutique($idBoutique, $annee = null)
-    //Par année ou non, on liste tous les CA d'une boutique.
     {
+        //Par année ou non, on liste tous les CA d'une boutique. (utile pour de l'affichage de graphiques)
         $db = Database::getConnection();
 
         $sql = "SELECT MONTANT AS total_ca, DATE_CA_JOURNALIER as DATE_CA FROM CHIFFRE_AFFAIRES WHERE ID_BOUTIQUE = :id_boutique";
@@ -160,6 +184,27 @@ class CA
         }
 
         return oci_fetch_assoc($stid);
+    }
+
+    public function creerCA($data)
+    {
+        //Créer un CA pour une boutique à une date donnée
+        $db = Database::getConnection();
+
+        $sql = "INSERT INTO CHIFFRE_AFFAIRES (ID_BOUTIQUE, MONTANT, DATE_CA_JOURNALIER) VALUES (:id_boutique, :montant, TO_DATE(:date_jour, 'YYYY-MM-DD'))";
+
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid, ':id_boutique', $data['id_boutique']);
+        oci_bind_by_name($stid, ':montant', $data['montant']);
+        oci_bind_by_name($stid, ':date_jour', $data['date']);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        return true;
     }
     public function caTotalParBoutique()
     {
