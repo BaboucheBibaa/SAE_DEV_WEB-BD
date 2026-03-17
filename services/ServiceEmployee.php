@@ -55,7 +55,7 @@ class ServiceEmployee
     }
     public function ajoutEmployee()
     {
-        //Ajoute un nouvel employé à la base de données en récupérant les données du formulaire de création d'employé
+        //Ajoute un nouvel employé à la base de données en récupérant les données du formulaire de création d'employé + création de son contrat de travail
 
         // Vérifier que la fonction est bien définie, sinon utiliser une fonction par défaut (ne devrait jamais arriver avec required)
         $id_fonction = $_POST['id_fonction_cree'] ?? null;
@@ -81,7 +81,29 @@ class ServiceEmployee
             'id_remplacant' => !empty($_POST['id_remplacant_cree']) ? $_POST['id_remplacant_cree'] : null,
             'id_superieur' => !empty($_POST['id_superieur_cree']) ? $_POST['id_superieur_cree'] : null
         ];
-        return User::creer($data);
+
+
+        //Création + récupération de son ID pour pouvoir créer son contrat de travail
+        $newEmployeeId = User::creerEtRetournerId($data);
+        if (!$newEmployeeId) {
+            return 0;
+        }
+
+        //Date de début de contrat dans le formulaire de création de contrat, sinon date du jour ou date d'entrée de l'employé dans le formulaire
+        $dateDebutContrat = $_POST['date_debut_contrat_cree'] ?? null;
+        if (empty($dateDebutContrat)) {
+            $dateDebutContrat = $_POST['date_entree_cree'] ?? date('Y-m-d');
+        }
+
+        //création du contrat de travail de l'employé
+        $contratData = [
+            'ID_PERSONNEL' => $newEmployeeId,
+            'ID_FONCTION' => $id_fonction,
+            'DATE_DEBUT' => $dateDebutContrat,
+            'DATE_FIN' => $_POST['date_fin_contrat_cree'] ?? null
+        ];
+
+        return ContratTravail::creer($contratData);
     }
     public function majEmployee($id)
     {
@@ -94,6 +116,7 @@ class ServiceEmployee
         $nom_fonction = $_POST['role_modif'] ?? null;
         $id_fonction_final = $employee['ID_FONCTION']; // Par défaut, garder la fonction actuelle
 
+        // Si un nom de fonction est fourni, récupérer son ID
         if (!empty($nom_fonction)) {
             $id_fonction = Fonction::recupIDFonctionParNom($nom_fonction);
             $id_fonction_final = $id_fonction['ID_FONCTION'];

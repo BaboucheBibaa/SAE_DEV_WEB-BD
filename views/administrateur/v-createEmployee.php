@@ -25,7 +25,7 @@
                         <div class="mb-3">
                             <label for="MDP_cree" class="form-label">Mot de passe <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="MDP_cree" name="MDP_cree" value="<?=htmlspecialchars($generatedPassword ?? '') ?>" readonly required>
+                                <input type="text" class="form-control" id="MDP_cree" name="MDP_cree" value="<?= htmlspecialchars($generatedPassword ?? '') ?>" readonly required>
                                 <button class="btn btn-outline-secondary" type="button" onclick="location.reload()">
                                     <i class="fas fa-sync-alt"></i> Régénérer
                                 </button>
@@ -96,6 +96,26 @@
                         <div class="mb-3">
                             <label for="login_cree" class="form-label">Login</label>
                             <input type="text" class="form-control" id="login_cree" name="login_cree" placeholder="">
+                        </div>
+
+                        <div class="card mt-4 border-start border-4 border-primary">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Contrat de travail</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="bloc_contrat_fields">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="date_debut_contrat_cree" class="form-label">Date debut contrat <span class="text-danger">*</span></label>
+                                            <input type="date" class="form-control" id="date_debut_contrat_cree" name="date_debut_contrat_cree" value="<?= date('Y-m-d') ?>" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="date_fin_contrat_cree" class="form-label">Date fin contrat</label>
+                                            <input type="date" class="form-control" id="date_fin_contrat_cree" name="date_fin_contrat_cree">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="d-flex gap-2">

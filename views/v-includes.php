@@ -48,6 +48,12 @@
                             </li>
 
                         <?php }
+                        if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ENTRETIEN) { ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?action=personnelEntretienDashboard">Dashboard Personnel d'entretien</a>
+                            </li>
+
+                        <?php }
                         if (!empty($_SESSION['user'])): ?>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

@@ -2,6 +2,15 @@
 class User
 {
 
+    private static function getNextIdPersonnel($db)
+    {
+        $sqlSeq = "SELECT NVL(MAX(ID_PERSONNEL), 0) + 1 AS NEW_ID FROM Personnel";
+        $stidSeq = oci_parse($db, $sqlSeq);
+        oci_execute($stidSeq);
+        $row = oci_fetch_assoc($stidSeq);
+        return $row['NEW_ID'];
+    }
+
     /**
      * Récupère un utilisateur par son login (pour l'authentification)
      */
@@ -45,38 +54,6 @@ class User
         return oci_fetch_assoc($stid);
     }
 
-    public static function toutRecupArchive()
-    {
-        $db = Database::getConnection();
-        $sql = "SELECT * FROM Personnel WHERE estArchive = 0"; // 1 = actif, 0 = archivé
-        $stid = oci_parse($db, $sql);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        $result = [];
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
-    }
-    public static function toutRecupNonArchive()
-    {
-        $db = Database::getConnection();
-        $sql = "SELECT * FROM Personnel WHERE estArchive = 1"; // 1 = actif, 0 = archivé
-        $stid = oci_parse($db, $sql);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        $result = [];
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
-    }
     /**
      * Récupère tous les employés archivés ou non
      */
@@ -154,13 +131,8 @@ class User
     public static function creer($data)
     {
         $db = Database::getConnection();
-        
-        // Récupérer le prochain ID
-        $sql_seq = "SELECT NVL(MAX(ID_PERSONNEL), 0) + 1 AS new_id FROM Personnel";
-        $stid_seq = oci_parse($db, $sql_seq);
-        oci_execute($stid_seq);
-        $row = oci_fetch_assoc($stid_seq);
-        $new_id = $row['NEW_ID'];
+
+        $new_id = self::getNextIdPersonnel($db);
         
         $sql = "INSERT INTO Personnel (ID_Personnel, Nom, Prenom, Mail, MDP, Date_Entree, Salaire, ID_Fonction, LOGIN, ID_Remplacant, ID_Superieur) 
             VALUES (:id_personnel, :nom, :prenom, :mail, :MDP, TO_DATE(:date_entree, 'YYYY-MM-DD'), :salaire, :ID_Fonction, :login, :ID_Remplacant, :ID_Superieur)";
@@ -196,6 +168,48 @@ class User
         }
 
         return $r;
+    }
+
+    public static function creerEtRetournerId($data)
+    {
+        $db = Database::getConnection();
+        $new_id = self::getNextIdPersonnel($db);
+
+        $sql = "INSERT INTO Personnel (ID_Personnel, Nom, Prenom, Mail, MDP, Date_Entree, Salaire, ID_Fonction, LOGIN, ID_Remplacant, ID_Superieur)
+            VALUES (:id_personnel, :nom, :prenom, :mail, :MDP, TO_DATE(:date_entree, 'YYYY-MM-DD'), :salaire, :ID_Fonction, :login, :ID_Remplacant, :ID_Superieur)";
+        $stid = oci_parse($db, $sql);
+
+        $nom = $data['nom'] ?? null;
+        $prenom = $data['prenom'] ?? null;
+        $mail = $data['mail'] ?? null;
+        $mdp = $data['MDP'];
+        $date_entree = $data['date_entree'] ?? null;
+        $salaire = $data['salaire'] ?? null;
+        $ID_Fonction = $data['id_fonction'] ?? null;
+        $login = $data['login'] ?? null;
+        $ID_Remplacant = $data['id_remplacant'] ?? null;
+        $ID_Superieur = $data['id_superieur'] ?? null;
+
+        oci_bind_by_name($stid, ':id_personnel', $new_id);
+        oci_bind_by_name($stid, ':nom', $nom);
+        oci_bind_by_name($stid, ':prenom', $prenom);
+        oci_bind_by_name($stid, ':mail', $mail);
+        oci_bind_by_name($stid, ':MDP', $mdp);
+        oci_bind_by_name($stid, ':date_entree', $date_entree);
+        oci_bind_by_name($stid, ':salaire', $salaire);
+        oci_bind_by_name($stid, ':ID_Fonction', $ID_Fonction);
+        oci_bind_by_name($stid, ':login', $login);
+        oci_bind_by_name($stid, ':ID_Remplacant', $ID_Remplacant);
+        oci_bind_by_name($stid, ':ID_Superieur', $ID_Superieur);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+            return null;
+        }
+
+        return (int) $new_id;
     }
 
 

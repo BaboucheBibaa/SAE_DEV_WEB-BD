@@ -2,7 +2,8 @@
 
 class CA
 {
-    public function getCAJournee($idBoutique){
+    public function getCAJournee($idBoutique)
+    {
         $db = Database::getConnection();
 
         $sql = "SELECT MONTANT AS total_ca FROM CHIFFRE_AFFAIRES WHERE ID_BOUTIQUE = :id_boutique AND DATE_CA_JOURNALIER = TRUNC(SYSDATE-1)";
@@ -19,7 +20,8 @@ class CA
         return oci_fetch_assoc($stid);
     }
 
-    public function getCAMensuel($idBoutique){
+    public function getCAMensuel($idBoutique)
+    {
         $db = Database::getConnection();
 
         $sql = "SELECT SUM(MONTANT) AS total_ca FROM CHIFFRE_AFFAIRES WHERE ID_BOUTIQUE = :id_boutique AND EXTRACT(MONTH FROM DATE_CA_JOURNALIER) = EXTRACT(MONTH FROM SYSDATE) AND EXTRACT(YEAR FROM DATE_CA_JOURNALIER) = EXTRACT(YEAR FROM SYSDATE)";
@@ -71,7 +73,7 @@ class CA
         if ($annee) {
             $sql .= " AND EXTRACT(YEAR FROM DATE_CA_JOURNALIER) = :annee";
         }
-        $sql.= " ORDER BY DATE_CA_JOURNALIER DESC";
+        $sql .= " ORDER BY DATE_CA_JOURNALIER DESC";
 
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ':id_boutique', $idBoutique);

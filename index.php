@@ -2,8 +2,9 @@
 define("ADMINID",10);
 define("RESPSOIG",11);
 define("SOIGNEUR",12);
-define("EMPLOYEE_BOUTIQUE",15);
 define("RESPBOUTIQUE",14);
+define("EMPLOYEE_BOUTIQUE",15);
+define("ENTRETIEN",16);
 
 session_start();
 
@@ -51,6 +52,7 @@ require_once 'controllers/c-profilEnclos.php';
 require_once 'controllers/c-profilAdmin.php';
 require_once 'controllers/c-search.php';
 require_once 'controllers/c-profilZone.php';
+require_once 'controllers/c-personnelEntretien.php';
 
 
 //toutes les pages se chargeront par index.php via la méthode GET action, une seule page sera affichée
@@ -123,6 +125,13 @@ switch ($action){
     case 'addNourriture':
     case 'listerSoins':
         $controller = new Soigneurs();
+        break;
+    case 'personnelEntretienDashboard':
+    case 'formAjoutEntretien':
+    case 'ajoutEntretien':
+    case 'listerEntretiens':
+    case 'supprimerEntretien':
+        $controller = new PersonnelEntretienController();
         break;
     default:
         echo "Page introuvable";
@@ -291,6 +300,21 @@ switch ($action) {
         break;
     case 'listerSoins':
         $controller->listerSoins();
+        break;
+    case 'personnelEntretienDashboard':
+        $controller->dashboard();
+        break;
+    case 'formAjoutEntretien':
+        $controller->formAjoutEntretien();
+        break;
+    case 'ajoutEntretien':
+        $controller->ajoutEntretien();
+        break;
+    case 'listerEntretiens':
+        $controller->listerEntretiens();
+        break;
+    case 'supprimerEntretien':
+        $controller->supprimerEntretien();
         break;
     case 'profilZone':
         $controller->profileZone($_GET['id']);

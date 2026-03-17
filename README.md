@@ -138,7 +138,7 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 
 ### Dashboard Administrateur
 
-- ✅ Lister / Ajouter / Supprimer / Modifier un employé
+- ✅ Lister / Ajouter / Supprimer / Modifier un employé + formulaire de création de contrat en plus de la création de l'employé
 - ✅ Archiver / Désarchiver un employé + afficher ou non les employés archivés
 - ✅ Lister / Ajouter / Supprimer / Modifier une zone
 - ✅ Lister / Ajouter / Supprimer / Modifier une boutique
@@ -182,7 +182,11 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 
 - [ ] Personnel entretien:
   - [ ] Liste des enclos de sa zone
-  - [ ] Historique des entretiens des enclos
+  - ✅ Historique des entretiens des enclos
+
+### Améliorations
+
+- [ ] Gérer l'affichage des données d'un genre d'employé par une vue
 
 ---
 
@@ -199,7 +203,3 @@ sqlplus SAE_USER/sae2026@localhost:1521/FREEPDB1
 - **Admin**: `admin`,mot de passe: `MDP`
 - **Responsable Zone**: `resp_zone1`, mot de passe: `MDP`
 - **Responsable Boutique**: `manager_boutique1`, mot de passe: `MDP`
-
-
-Mettre les stats pour chaque boutique dans le dashboard du resp boutique
-stats globales dans dashboard admin

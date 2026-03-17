@@ -1,5 +1,0 @@
--- =========================
--- Ce fichier n'est plus utilisé.
--- Les séquences ont été supprimées.
--- Les IDs sont maintenant générés via SELECT NVL(MAX(ID), 0) + 1.
--- =========================
