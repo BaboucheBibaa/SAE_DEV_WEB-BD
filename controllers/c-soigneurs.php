@@ -57,4 +57,11 @@ class Soigneurs extends BaseController
         $soins = $this->serviceSoin->getSoinsParSoigneur($_SESSION['user']['ID_PERSONNEL']);
         $this->render('soigneurs/v-listeSoins', ['title' => $title, 'soins' => $soins]);
     }
+
+    public function statsSoigneurs(){
+        $this->requireRole(SOIGNEUR);
+        $title = "Statistiques des Soigneurs - Zoo'land";
+        $stats = $this->serviceSoin->getStatsSoigneurs();
+        $this->render('soigneurs/v-statsSoigneurs', ['title' => $title, 'stats' => $stats]);
+    }
 }

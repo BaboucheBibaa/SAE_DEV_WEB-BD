@@ -2,23 +2,36 @@
 
 class ServiceBoutique
 {
+    private $Boutique;
+    private $Zone;
+    private $User;
+    public function __construct()
+    {
+        $this->Boutique = new Boutique();
+        $this->Zone = new Zone();
+        $this->User = new User();
+    }
 
     //Getters
     public function getBoutiqueParID($id)
     {
-        return Boutique::recupParID($id);
+        return $this->Boutique->recupParID($id);
     }
     public function getBoutiqueParManager($id_manager)
     {
-        return Boutique::recupParManager($id_manager);
+        return $this->Boutique->recupParManager($id_manager);
+    }
+    public function getManagerParBoutique($id_boutique)
+    {
+        return $this->Boutique->recupNomManagerParBoutique($id_boutique);
     }
     public function getEmployeesParBoutique($id_boutique)
     {
-        return Boutique::recupEmployeesBoutique($id_boutique);
+        return $this->Boutique->recupEmployeesBoutique($id_boutique);
     }
     public function getToutesLesBoutiques()
     {
-        return Boutique::toutRecup();
+        return $this->Boutique->toutRecup();
     }
 
     //Ajout/MAJ/Suppression d'une boutique
@@ -32,7 +45,7 @@ class ServiceBoutique
             'description_boutique' => $_POST['description_boutique_cree'] ?? null
         ];
 
-        return Boutique::creer($data);
+        return $this->Boutique->creer($data);
     }
     public function majBoutique($id)
     {
@@ -44,20 +57,19 @@ class ServiceBoutique
             'description_boutique' => $_POST['description_boutique_modif'] ?? null
         ];
 
-        return Boutique::maj($id, $data);
+        return $this->Boutique->maj($id, $data);
     }
     public function supprBoutique($id)
     {
         //Supprime une boutique de la base de données
-        return Boutique::suppr($id);
+        return $this->Boutique->suppr($id);
     }
-
     //Retourne les données nécessaires à des affichages de formulaires
     public function dataCreationBoutique()
     {
         //Retourne les données nécessaires à la création du formulaire de création de boutique
-        $zones = Zone::toutRecup();
-        $employees = User::toutRecup();
+        $zones = $this->Zone->toutRecup();
+        $employees = $this->User->toutRecup();
         if (!$zones || !$employees) {
             return null; // Erreur lors de la récupération des données nécessaires
         }
@@ -75,13 +87,13 @@ class ServiceBoutique
             return null; //id inexistant
         }
 
-        $boutique = Boutique::recupParID($id);
+        $boutique = $this->Boutique->recupParID($id);
         if (!$boutique) {
             return null; // Boutique non trouvée
         }
 
-        $zones = Zone::toutRecup();
-        $employees = User::toutRecup();
+        $zones = $this->Zone->toutRecup();
+        $employees = $this->User->toutRecup();
         $title = "Modifier une Boutique";
         return [
             'title' => $title,

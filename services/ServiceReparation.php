@@ -2,10 +2,15 @@
 
 class ServiceReparation
 {
+    private $Reparation;
+    public function __construct()
+    {
+        $this->Reparation = new Reparation();
+    }
 
     public function getReparationsParPersonnel($idPersonnel)
     {
-        $reparations = Reparation::recupReparationParPersonnel($idPersonnel);
+        $reparations = $this->Reparation->recupReparationParPersonnel($idPersonnel);
         if (!$reparations) {
             return null;
         }
@@ -13,7 +18,7 @@ class ServiceReparation
     }
     public function getReparationsParEnclos($latitude, $longitude)
     {
-        $reparations = Reparation::recupReparationsParEnclos($latitude, $longitude);
+        $reparations = $this->Reparation->recupReparationsParEnclos($latitude, $longitude);
         if (!$reparations) {
             return null;
         }
@@ -42,6 +47,6 @@ class ServiceReparation
             'COUT_REPARATION' => $_POST['COUT_REPARATION'] ?? ''
         ];
 
-        return Reparation::creer($data);
+        return $this->Reparation->creer($data);
     }
 }

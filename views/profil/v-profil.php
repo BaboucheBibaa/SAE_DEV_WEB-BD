@@ -78,7 +78,6 @@
                             <table class="table table-sm table-hover">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>ID Contrat</th>
                                         <th>Fonction</th>
                                         <th>Date début</th>
                                         <th>Date fin</th>
@@ -87,7 +86,6 @@
                                 <tbody>
                                     <?php foreach ($historique as $contrat): ?>
                                         <tr>
-                                            <td><?= htmlspecialchars($contrat['ID_CONTRAT'] ?? '') ?></td>
                                             <td><?= htmlspecialchars($contrat['NOM_FONCTION'] ?? '') ?></td>
                                             <td><?= htmlspecialchars($contrat['DATE_DEBUT'] ?? '') ?></td>
                                             <td><?= htmlspecialchars($contrat['DATE_FIN'] ?? '') ?></td>

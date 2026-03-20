@@ -45,6 +45,10 @@ class RespBoutiqueController extends BaseController
         $caJournalier = $this->serviceCA->getCAJournalier($boutique['ID_BOUTIQUE']);
         $caMensuel = $this->serviceCA->getCAMensuel($boutique['ID_BOUTIQUE']);
         $caAnnuel = $this->serviceCA->sommeCA($boutique['ID_BOUTIQUE'], date('Y'));
+        $caMoyenAnnuel = $this->serviceCA->moyenneCA($boutique['ID_BOUTIQUE'],date('Y'));
+        $caMoyenGlobal = $this->serviceCA->moyenneCA($boutique['ID_BOUTIQUE']);
+        $minMaxAnnuel = $this->serviceCA->minMaxCA($boutique['ID_BOUTIQUE']);
+        $minMaxGlobal = $this->serviceCA->minMaxCA($boutique['ID_BOUTIQUE']);
         $title = "Statistiques de la boutique";
         $this->render('respBoutique/v-statsBoutique', [
             'user' => $user,
@@ -52,7 +56,11 @@ class RespBoutiqueController extends BaseController
             'boutique' => $boutique,
             'caJournalier' => $caJournalier,
             'caMensuel' => $caMensuel,
-            'caAnnuel' => $caAnnuel
+            'caAnnuel' => $caAnnuel,
+            'caMoyenAnnuel' => $caMoyenAnnuel,
+            'minMaxAnnuel' => $minMaxAnnuel,
+            'caMoyenGlobal' => $caMoyenGlobal,
+            'minMaxGlobal' => $minMaxGlobal
 
         ]);
     }

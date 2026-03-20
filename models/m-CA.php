@@ -142,10 +142,11 @@ class CA
         //Par année ou non, quel est le CA moyen d'une boutique ?
         $db = Database::getConnection();
 
-        $sql = "SELECT AVG(MONTANT) AS moyenne_ca FROM CHIFFRE_AFFAIRES GROUP BY ID_BOUTIQUE HAVING ID_BOUTIQUE = :id_boutique";
+        $sql = "SELECT ROUND(AVG(MONTANT), 2) AS moyenne_ca FROM CHIFFRE_AFFAIRES";
         if ($annee) {
-            $sql .= " AND EXTRACT(YEAR FROM DATE_CA_JOURNALIER) = :annee";
+            $sql .= " WHERE EXTRACT(YEAR FROM DATE_CA_JOURNALIER) = :annee";
         }
+        $sql.= " GROUP BY ID_BOUTIQUE HAVING ID_BOUTIQUE = :id_boutique";
 
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ':id_boutique', $idBoutique);

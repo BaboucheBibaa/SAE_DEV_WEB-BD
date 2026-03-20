@@ -1,7 +1,7 @@
 <?php
 class HistoriqueSoins
 {
-    public static function toutRecup()
+    public function toutRecup()
     {
         $db = Database::getConnection();
         $sql = "SELECT * FROM BIEN_ETRE_QUOTIDIEN";
@@ -17,7 +17,7 @@ class HistoriqueSoins
         return $result;
     }
 
-    public static function recupNourritureParPersonne($id_personnel)
+    public function recupNourritureParPersonne($id_personnel)
     {
         $db = Database::getConnection();
         $sql = "SELECT * FROM BIEN_ETRE_QUOTIDIEN WHERE ID_PERSONNEL = :id_personnel";
@@ -34,7 +34,7 @@ class HistoriqueSoins
         return $result;
     }
 
-    public static function recupNourritureParAnimal($id_animal): mixed
+    public function recupNourritureParAnimal($id_animal): mixed
     {
         $db = Database::getConnection();
         $sql = "SELECT B.*, P.NOM,P.PRENOM FROM BIEN_ETRE_QUOTIDIEN B JOIN PERSONNEL P ON B.ID_PERSONNEL = P.ID_PERSONNEL WHERE B.ID_ANIMAL = :id_animal ORDER BY B.DATE_NOURRIT DESC";
@@ -51,7 +51,7 @@ class HistoriqueSoins
         return $result;
     }
 
-    public static function recupSoinsParAnimal($id_animal): mixed
+    public function recupSoinsParAnimal($id_animal): mixed
     {
         $db = Database::getConnection();
         $sql = "SELECT PS.*, P.NOM,P.PRENOM FROM PRATIQUE_SOINS PS JOIN PERSONNEL P ON PS.ID_PERSONNEL = P.ID_PERSONNEL WHERE PS.ID_ANIMAL = :id_animal ORDER BY PS.DATE_SOIN DESC";
@@ -64,11 +64,11 @@ class HistoriqueSoins
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
         $result = [];
-        oci_fetch_all($stid, $result, 0,-1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;
     }
 
-    public static function recupSoinsParPersonne($id_personnel): mixed
+    public function recupSoinsParPersonne($id_personnel): mixed
     {
         $db = Database::getConnection();
         $sql = "SELECT PS.*, A.NOM_ANIMAL FROM PRATIQUE_SOINS PS JOIN ANIMAL A ON PS.ID_ANIMAL = A.ID_ANIMAL WHERE PS.ID_PERSONNEL = :id_personnel ORDER BY PS.DATE_SOIN DESC";
@@ -81,11 +81,12 @@ class HistoriqueSoins
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
         $result = [];
-        oci_fetch_all($stid, $result, 0,-1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;
     }
-    
-    public static function creer($data){
+
+    public function creer($data)
+    {
         $db = Database::getConnection();
         $sql = "INSERT INTO PRATIQUE_SOINS (ID_PERSONNEL, ID_ANIMAL, DATE_SOIN, DESCRIPTION_SOIN) VALUES (:id_personnel, :id_animal, TO_DATE(:date_soin, 'YYYY-MM-DD'), :description_soin)";
         $stid = oci_parse($db, $sql);
@@ -102,7 +103,8 @@ class HistoriqueSoins
         return $r;
     }
 
-    public static function creerNourriture($data){
+    public function creerNourriture($data)
+    {
         $db = Database::getConnection();
         $sql = "INSERT INTO BIEN_ETRE_QUOTIDIEN (ID_ANIMAL, ID_PERSONNEL, DATE_NOURRIT, DOSE_NOURRITURE) VALUES (:id_animal, :id_personnel, TO_DATE(:date_nourrit, 'YYYY-MM-DD'), TO_NUMBER(:dose_nourriture, '9999.99'))";
         $stid = oci_parse($db, $sql);
@@ -117,5 +119,11 @@ class HistoriqueSoins
             trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
         return $r;
+    }
+
+    public function recupStatsSoigneurs()
+    {
+        //en cours de conception    
+        return 0;
     }
 }

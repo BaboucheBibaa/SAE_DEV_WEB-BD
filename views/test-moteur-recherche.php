@@ -141,10 +141,12 @@ $message = $message ?? '';
                                     <div class="list-group">
                                         <?php foreach ($results['boutiques'] as $boutique): ?>
                                             <div class="list-group-item">
-                                                <h6 class="mb-1"><?= htmlspecialchars($boutique['NOM_BOUTIQUE'] ?? 'N/A') ?></h6>
-                                                <p class="mb-0 text-muted">
-                                                    <small><?= htmlspecialchars($boutique['DESCRIPTION_BOUTIQUE'] ?? 'N/A') ?></small>
-                                                </p>
+                                                <a href="index.php?action=profilBoutique&id=<?= htmlspecialchars($boutique['ID_BOUTIQUE'] ?? '') ?>" class="text-decoration-none">
+                                                    <h6 class="mb-1"><?= htmlspecialchars($boutique['NOM_BOUTIQUE'] ?? 'N/A') ?></h6>
+                                                    <p class="mb-0 text-muted">
+                                                        <small><?= htmlspecialchars($boutique['DESCRIPTION_BOUTIQUE'] ?? 'N/A') ?></small>
+                                                    </p>
+                                                </a>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>

@@ -1,10 +1,10 @@
 <?php
-define("ADMINID",10);
-define("RESPSOIG",11);
-define("SOIGNEUR",12);
-define("RESPBOUTIQUE",14);
-define("EMPLOYEE_BOUTIQUE",15);
-define("ENTRETIEN",16);
+define("ADMINID",1);
+define("RESPSOIG",2);
+define("SOIGNEUR",3);
+define("RESPBOUTIQUE",5);
+define("EMPLOYEE_BOUTIQUE",6);
+define("ENTRETIEN",7);
 
 session_start();
 
@@ -53,6 +53,7 @@ require_once 'controllers/c-profilAdmin.php';
 require_once 'controllers/c-search.php';
 require_once 'controllers/c-profilZone.php';
 require_once 'controllers/c-personnelEntretien.php';
+require_once 'controllers/c-profilBoutique.php';
 
 
 //toutes les pages se chargeront par index.php via la méthode GET action, une seule page sera affichée
@@ -126,6 +127,7 @@ switch ($action){
     case 'ajoutNourriture':
     case 'addNourriture':
     case 'listerSoins':
+    case 'statsSoigneurs':
         $controller = new Soigneurs();
         break;
     case 'personnelEntretienDashboard':
@@ -134,6 +136,9 @@ switch ($action){
     case 'listerEntretiens':
     case 'supprimerEntretien':
         $controller = new PersonnelEntretienController();
+        break;
+    case 'profilBoutique':
+        $controller = new BoutiqueProfilController();
         break;
     default:
         echo "Page introuvable";
@@ -326,6 +331,13 @@ switch ($action) {
         break;
     case 'ajoutCA':
         $controller->ajoutCA();
+        break;
+    case 'profilBoutique':
+        $controller->profilBoutique($_GET['id']);
+        break;
+
+    case 'statsSoigneurs':
+        $controller->statsSoigneurs();
         break;
     case 'search':
         $controller->gererRequete();

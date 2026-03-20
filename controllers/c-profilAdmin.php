@@ -17,10 +17,24 @@ class AdminController extends BaseController
 
     //  Dashboard admin
 
+
+    public function popUpsAdmins()
+    {
+        $this->requireRole(ADMINID);
+        $finsDeContrats = $this->serviceEmployee->getFinsDeContrats();
+        $nbFins = count($finsDeContrats);
+        if ($nbFins == 1) {
+            $message = "Il y a $nbFins contrat de travail qui se termine dans les 30 prochains jours.";
+            $_SESSION['flash'] = ['type' => 'warning', 'message' => $message];
+        } elseif ($nbFins > 1) {
+            $message = "Il y a $nbFins contrats de travail qui se terminent dans les 30 prochains jours.";
+            $_SESSION['flash'] = ['type' => 'warning', 'message' => $message];
+        }
+    }
     public function profilAdmin()
     {
         $this->requireRole(ADMINID);
-
+        $this->popUpsAdmins();
         $title = "Profil Administrateur";
         $filtreArchive = $_GET['filtreArchive'] ?? 'tous';
         if (!in_array($filtreArchive, ['tous', 'actifs', 'archives'], true)) {
@@ -33,35 +47,15 @@ class AdminController extends BaseController
         $animals = $this->serviceAnimal->getTousAnimaux();
         if ($employees === null || $zones === null || $boutiques === null || $animals === null) {
             $this->redirectWithMessage('home', 'Erreur lors de la récupération des données pour le dashboard admin.', 'error');
-        } else {
-            //Ajouter le nom de l'espèce à chaque animal (passage par référence pour modifier directement le tableau)
-            foreach ($animals as &$animal) {
-                if (!empty($animal['ID_ESPECE'])) {
-                    $espece = $this->serviceAnimal->getEspeceAnimalParID($animal['ID_ESPECE']);
-                    $animal['NOM_ESPECE'] = $espece['NOM_ESPECE'] ?? 'N/A';
-                } else {
-                    $animal['NOM_ESPECE'] = 'N/A';
-                }
-            }
-
-            // Ajouter le nom du manager à chaque zone
-            foreach ($zones as &$zone) {
-                if (!empty($zone['ID_MANAGER'])) {
-                    $manager = $this->serviceZone->getManagerParZone($zone['ID_ZONE']);
-                    $zone['NOM_MANAGER'] = ($manager['PRENOM'] ?? '') . ' ' . ($manager['NOM'] ?? '');
-                } else {
-                    $zone['NOM_MANAGER'] = null;
-                }
-            }
-            $this->render('administrateur/v-dashboard', [
-                'title' => $title,
-                'employees' => $employees,
-                'filtreArchive' => $filtreArchive,
-                'zones' => $zones,
-                'boutiques' => $boutiques,
-                'animals' => $animals
-            ]);
         }
+        $this->render('administrateur/v-dashboard', [
+            'title' => $title,
+            'employees' => $employees,
+            'filtreArchive' => $filtreArchive,
+            'zones' => $zones,
+            'boutiques' => $boutiques,
+            'animals' => $animals
+        ]);
     }
 
     //  Employés

@@ -1,7 +1,7 @@
 <?php
 class Espece
 {
-    public static function toutRecup()
+    public function toutRecup()
     {
         $db = Database::getConnection();
         $sql = "SELECT * FROM Espece ORDER BY NOM_ESPECE";
@@ -18,7 +18,7 @@ class Espece
         return $result;
     }
 
-    public static function recupParID($id)
+    public function recupParID($id)
     {
         $db = Database::getConnection();
 
@@ -37,7 +37,7 @@ class Espece
 
 
 
-    public static function moteurRechercheRecup($searchTerm)
+    public function moteurRechercheRecup($searchTerm)
     {
         $db = Database::getConnection();
 

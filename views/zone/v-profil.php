@@ -36,14 +36,6 @@
                                     <span class="ms-2"><?= htmlspecialchars($zone['NOM_ZONE'] ?? 'Non spécifié') ?></span>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="d-flex align-items-center">
-                                    <strong style="min-width: 150px;">ID Zone :</strong>
-                                    <span class="ms-2">
-                                        <span class="badge bg-secondary"><?= htmlspecialchars($zone['ID_ZONE'] ?? 'N/A') ?></span>
-                                    </span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

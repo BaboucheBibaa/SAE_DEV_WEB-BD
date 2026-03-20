@@ -3,7 +3,7 @@
 class Enclos
 {
 
-    public static function recupParCoordonnees($latitude, $longitude)
+    public function recupParCoordonnees($latitude, $longitude)
     {
         $db = Database::getConnection();
         $sql = "SELECT E.*,Z.NOM_ZONE FROM ENCLOS E LEFT JOIN ZONE Z ON E.ID_ZONE = Z.ID_ZONE WHERE E.LATITUDE = :latitude AND E.LONGITUDE = :longitude";
@@ -17,7 +17,7 @@ class Enclos
         }
         return oci_fetch_assoc($stid);
     }
-    public static function recupEnclosZone($id_zone)
+    public function recupEnclosZone($id_zone)
     {
         /*Récupère les enclos dans la zone
         */
@@ -37,7 +37,7 @@ class Enclos
         return $enclos;
     }
 
-    public static function moteurRechercheRecup($searchTerm)
+    public function moteurRechercheRecup($searchTerm)
     {
         $db = Database::getConnection();
 

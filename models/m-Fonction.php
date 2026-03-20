@@ -5,7 +5,7 @@ class Fonction
     /**
      * Récupère tous les rôles (pour les listes déroulantes)
      */
-    public static function recupToutesLesFonctions()
+    public function recupToutesLesFonctions()
     {
         $db = Database::getConnection();
 
@@ -26,7 +26,7 @@ class Fonction
     /**
      * Récupère l'ID d'un rôle par son nom
      */
-    public static function recupIDFonctionParNom($nom_fonction)
+    public function recupIDFonctionParNom($nom_fonction)
     {
         $db = Database::getConnection();
 
@@ -46,7 +46,7 @@ class Fonction
     /**
      * Récupère le nom d'un rôle par son ID
      */
-    public static function recupNomFonctionParID($id_fonction)
+    public function recupNomFonctionParID($id_fonction)
     {
         $db = Database::getConnection();
 
@@ -66,7 +66,7 @@ class Fonction
     }
 
 
-    public static function moteurRechercheRecup($searchTerm)
+    public function moteurRechercheRecup($searchTerm)
     {
         $db = Database::getConnection();
 

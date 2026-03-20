@@ -161,6 +161,14 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 - ✅ Informations de la boutique (nom, ID, zone, description)
 - ✅ Liste des employés de la boutique
 
+### Pages Métier (Soigneur / Personnel entretien)
+
+- ✅ Personnel entretien:
+  - ✅ Liste des enclos de sa zone
+  - ✅ Historique des entretiens des enclos
+- ✅ Responsable boutique
+  - ✅ Page d'ajout de CA Journalier
+
 ### Moteur de Recherche
 
 - ✅ Recherche globale (animaux, employés, zones, boutiques, enclos)
@@ -178,18 +186,13 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 - [ ] Dashboard Administrateur:
   - [ ] Statistiques globales
 
-### Phase 2 - Pages Métier (Soigneur / Personnel entretien)
 
-- [ ] Personnel entretien:
-  - [ ] Liste des enclos de sa zone
-  - ✅ Historique des entretiens des enclos
-- [ ] Responsable boutique
-  - [ ] Page d'ajout de CA Journalier
 
 ### Améliorations
 
 - [ ] Gérer l'affichage des données d'un genre d'employé par une vue
 - [ ] Ajouter des opérations +/- complexes en faisant des statistiques diverses et variées dans la BD (divisions / agrégats / jointures complexes)
+- [ ] Ajout d'un fichier de gestion des logs (Connexion / Déconnexion au sein du site et Ajout / Maj / Suppression au sein de la BD)
 
 ---
 

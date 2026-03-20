@@ -1,7 +1,7 @@
 <?php
 class ContratTravail
 {
-    public static function recupParPersonnel($id_personnel)
+    public function recupParPersonnel($id_personnel)
     {
         $db = Database::getConnection();
         $query = "SELECT CT.*, F.NOM_FONCTION
@@ -23,7 +23,7 @@ class ContratTravail
         return $result;
     }
 
-    public static function creer($data)
+    public function creer($data)
     {
         $db = Database::getConnection();
 
@@ -53,5 +53,26 @@ class ContratTravail
         }
 
         return $r;
+    }
+    public function finDeContrats(){
+        // Récupère les contrats de travail qui se terminent dans les 30 prochains jours
+        $db = Database::getConnection();
+        $query = "SELECT CT.*, P.NOM, P.PRENOM, F.NOM_FONCTION
+                  FROM Contrat_Travail CT
+                  JOIN Personnel P ON CT.ID_PERSONNEL = P.ID_PERSONNEL
+                  JOIN Fonction F ON CT.ID_FONCTION = F.ID_FONCTION
+                  WHERE CT.DATE_FIN <= SYSDATE + 30
+                  ORDER BY CT.DATE_FIN ASC";
+        $stid = oci_parse($db, $query);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        $result = [];
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
     }
 }

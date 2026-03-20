@@ -2,15 +2,15 @@
 class Reparation
 {
 
-    public static function recupReparationParPersonnel($idPersonnel)
+    public function recupReparationParPersonnel($idPersonnel)
     {
+        //Retourne toutes les réparations effectuées par un personnel donné (avec les détails de l'enclos réparé)
         $db = Database::getConnection();
         $sql = "SELECT R.*, E.ID_ZONE, E.TYPE_ENCLOS 
                 FROM REPARATION R 
-            JOIN ENCLOS E ON R.LATITUDE_ENCLOS = E.LATITUDE AND R.LONGITUDE_ENCLOS = E.LONGITUDE 
-                WHERE R.ID_PERSONNEL = :idPersonnel 
+            JOIN ENCLOS E ON R.LATITUDE_ENCLOS = E.LATITUDE AND R.LONGITUDE_ENCLOS = E.LONGITUDE
+                WHERE R.ID_PERSONNEL = :idPersonnel
                 ORDER BY R.DATE_DEBUT_REPARATION DESC";
-
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ":idPersonnel", $idPersonnel);
 
@@ -23,8 +23,9 @@ class Reparation
         oci_fetch_all($stid, $result,0,-1,OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;
     }
-    public static function recupReparationsParEnclos($latitude, $longitude)
+    public function recupReparationsParEnclos($latitude, $longitude)
     {
+        //Retourne toutes les réparations effectuées sur un enclos donné (avec les détails du personnel et du prestataire s'il y en a eu un)
         $db = Database::getConnection();
         $sql = "SELECT R.*, P.NOM, P.PRENOM,PR.NOM_PRESTATAIRE 
         FROM REPARATION R 
@@ -47,7 +48,7 @@ class Reparation
         return $result;
     }
 
-    public static function creer($data)
+    public function creer($data)
     {
         $db = Database::getConnection();
         $sql = "INSERT INTO REPARATION (

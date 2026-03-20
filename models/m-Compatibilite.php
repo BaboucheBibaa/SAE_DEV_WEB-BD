@@ -1,6 +1,6 @@
 <?php
 class Compatibilité {
-    public static function verifierCompatibilite($id_espece1, $id_espece2) {
+    public function verifierCompatibilite($id_espece1, $id_espece2) {
         // Vérifie si les deux espèces sont compatibles
         $db = Database::getConnection();
 
@@ -20,7 +20,7 @@ class Compatibilité {
         return oci_fetch_assoc($stid) !== false;
     }
 
-    public static function getEspecesCompatibles($id_espece) {
+    public function getEspecesCompatibles($id_espece) {
         // Récupère les espèces compatibles avec l'espèce donnée
         $db = Database::getConnection();
 
@@ -42,7 +42,7 @@ class Compatibilité {
     }
 
 
-    public static function ajouterCompatibilite($id_espece1, $id_espece2) {
+    public function ajouterCompatibilite($id_espece1, $id_espece2) {
         // Ajoute une compatibilité entre deux espèces
         $db = Database::getConnection();
 

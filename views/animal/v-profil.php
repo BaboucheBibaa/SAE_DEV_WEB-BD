@@ -385,11 +385,13 @@
                     <i class="bi bi-arrow-left"></i> Retour
                 </a>
             </div>
+            <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
             <div class="col-auto">
                 <a href="index.php?action=editionAnimal&id=<?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?>&edit=1" class="btn btn-primary">
                     <i class="bi bi-pencil"></i> Modifier
                 </a>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </main>

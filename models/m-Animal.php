@@ -3,7 +3,7 @@ class Animal
 {
 
 
-    public static function recupNomParID($id)
+    public  function recupNomParID($id)
     {
         $db = Database::getConnection();
 
@@ -20,7 +20,7 @@ class Animal
         $result = oci_fetch_assoc($stid);
         return $result ? $result['NOM_ANIMAL'] : null;
     }
-    public static function recupParID($id)
+    public function recupParID($id)
     {
         $db = Database::getConnection();
 
@@ -37,7 +37,7 @@ class Animal
         return oci_fetch_assoc($stid);
     }
 
-    public static function toutRecup()
+    public function toutRecup()
     {
         $db = Database::getConnection();
         $sql = "SELECT A.*,E.NOM_ESPECE FROM Animal A LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE";
@@ -55,7 +55,7 @@ class Animal
         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;
     }
-    public static function recupParCoordonnees($latitude, $longitude)
+    public function recupParCoordonnees($latitude, $longitude)
     {
         $db = Database::getConnection();
 
@@ -74,7 +74,7 @@ class Animal
         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;
     }
-    public static function recupTousParSoigneurs($id_soigneur)
+    public function recupTousParSoigneurs($id_soigneur)
     {
         /* Récupère tous les animaux de la zone ou le soigneur $id_soigneur travaille */
         $db = Database::getConnection();
@@ -102,7 +102,7 @@ class Animal
         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;
     }
-    public static function recupParZone($id_zone)
+    public function recupParZone($id_zone)
     {
         $db = Database::getConnection();
 
@@ -126,7 +126,7 @@ class Animal
         oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
         return $result;
     }
-    public static function creer($data)
+    public function creer($data)
     {
         $db = Database::getConnection();
         $sql = "INSERT INTO Animal (ID_ANIMAL, NOM_ANIMAL, DATE_NAISSANCE, POIDS, REGIME_ALIMENTAIRE, ID_ESPECE, LATITUDE_ENCLOS, LONGITUDE_ENCLOS) 
@@ -150,7 +150,7 @@ class Animal
 
         return $r;
     }
-    public static function maj($id, $data)
+    public function maj($id, $data)
     {
         $db = Database::getConnection();
 
@@ -182,7 +182,7 @@ class Animal
         }
         return $r;
     }
-    public static function suppr($id)
+    public function suppr($id)
     {
         $db = Database::getConnection();
 
@@ -199,7 +199,7 @@ class Animal
         return $r;
     }
 
-    public static function moteurRechercheRecup($searchTerm)
+    public function moteurRechercheRecup($searchTerm)
     {
         $db = Database::getConnection();
 

@@ -82,10 +82,25 @@
         <div class="container">
 
             <?php if (!empty($_SESSION['flash'])): ?>
-                <div class="alert alert-<?= htmlspecialchars($_SESSION['flash']['type']) ?> alert-dismissible fade show" role="alert">
-                    <?= htmlspecialchars($_SESSION['flash']['message']) ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
+                <?php if ($_SESSION['flash']['type'] === 'error'): ?>
+                    <div class="alert alert-danger border border-danger alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+                        <i class="bi bi-exclamation-circle-fill flex-shrink-0"></i>
+                        <div><strong>Erreur : </strong><?= htmlspecialchars($_SESSION['flash']['message']); ?></div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php elseif ($_SESSION['flash']['type'] === 'warning'): ?>
+                    <div class="alert alert-warning border border-warning alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+                        <div><strong>Attention : </strong><?= htmlspecialchars($_SESSION['flash']['message']); ?></div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert-success border border-success alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+                        <i class="bi bi-check-circle-fill flex-shrink-0"></i>
+                        <div><strong>Succès : </strong><?= htmlspecialchars($_SESSION['flash']['message']); ?></div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?>
                 <?php unset($_SESSION['flash']); ?>
             <?php endif; ?>
 

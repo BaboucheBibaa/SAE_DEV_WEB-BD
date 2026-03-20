@@ -31,7 +31,7 @@ class BaseController
         if (empty($_SESSION['user'])) {
             $this->redirectWithMessage('afficheConnexion', 'Vous devez être connecté.', 'error');
         }
-        if ($_SESSION['user']['ID_FONCTION'] != $role) {
+        if ($_SESSION['user']['ID_FONCTION'] != $role && $_SESSION['user']['ID_FONCTION'] != ADMINID) {
             $this->redirectWithMessage('home', 'Accès refusé.', 'error');
         }
     }

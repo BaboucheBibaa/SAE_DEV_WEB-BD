@@ -2,7 +2,7 @@
 class User
 {
 
-    private static function getNextIdPersonnel($db)
+    private function getNextIdPersonnel($db)
     {
         $sqlSeq = "SELECT NVL(MAX(ID_PERSONNEL), 0) + 1 AS NEW_ID FROM Personnel";
         $stidSeq = oci_parse($db, $sqlSeq);
@@ -14,11 +14,11 @@ class User
     /**
      * Récupère un utilisateur par son login (pour l'authentification)
      */
-    public static function recupParLogs($login)
+    public function recupParLogs($login)
     {
         $db = Database::getConnection();
 
-        $query = "SELECT Personnel.*, Fonction.ID_Fonction FROM Personnel LEFT JOIN Fonction ON Personnel.ID_Fonction = Fonction.ID_Fonction WHERE LOGIN = :login";
+        $query = "SELECT Personnel.*, Fonction.ID_Fonction FROM Personnel LEFT JOIN Fonction ON Personnel.ID_Fonction = Fonction.ID_Fonction WHERE LOGIN = :login AND estArchive = 1";
         $stid = oci_parse($db, $query);
         oci_bind_by_name($stid, ':login', $login);
 
@@ -30,18 +30,18 @@ class User
 
         return oci_fetch_assoc($stid);
     }
-
     /**
      * Récupère un utilisateur par son ID
      */
-    public static function recupParID($id)
+    public function recupParID($id)
     {
         $db = Database::getConnection();
 
         $sql = "SELECT Personnel.*, Fonction.ID_Fonction, Fonction.Nom_Fonction
             FROM Personnel 
             LEFT JOIN Fonction ON Personnel.ID_Fonction = Fonction.ID_Fonction 
-            WHERE ID_Personnel = :id";
+            WHERE ID_Personnel = :id
+            AND estArchive = 1";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ':id', $id);
 
@@ -57,7 +57,7 @@ class User
     /**
      * Récupère tous les employés archivés ou non
      */
-    public static function toutRecup()
+    public function toutRecup()
     {
         $db = Database::getConnection();
         $sql = "SELECT * FROM Personnel";
@@ -80,7 +80,7 @@ class User
      * Récupère les employés selon le statut d'archivage
         * $estArchive = null => tous, 1 => actifs, 0 => archivés
      */
-    public static function toutRecupParArchive($estArchive = null)
+    public function toutRecupParArchive($estArchive = null)
     {
         $db = Database::getConnection();
 
@@ -107,7 +107,7 @@ class User
     /**
      * Met à jour le statut d'archivage d'un employé
      */
-    public static function majArchive($id, $estArchive)
+    public function majArchive($id, $estArchive)
     {
         $db = Database::getConnection();
         $sql = "UPDATE Personnel SET estArchive = :estArchive WHERE ID_Personnel = :id";
@@ -128,11 +128,11 @@ class User
     /**
      * Crée un nouvel employé
      */
-    public static function creer($data)
+    public function creer($data)
     {
         $db = Database::getConnection();
 
-        $new_id = self::getNextIdPersonnel($db);
+        $new_id = $this->getNextIdPersonnel($db);
         
         $sql = "INSERT INTO Personnel (ID_Personnel, Nom, Prenom, Mail, MDP, Date_Entree, Salaire, ID_Fonction, LOGIN, ID_Remplacant, ID_Superieur) 
             VALUES (:id_personnel, :nom, :prenom, :mail, :MDP, TO_DATE(:date_entree, 'YYYY-MM-DD'), :salaire, :ID_Fonction, :login, :ID_Remplacant, :ID_Superieur)";
@@ -170,10 +170,10 @@ class User
         return $r;
     }
 
-    public static function creerEtRetournerId($data)
+    public function creerEtRetournerId($data)
     {
         $db = Database::getConnection();
-        $new_id = self::getNextIdPersonnel($db);
+        $new_id = $this->getNextIdPersonnel($db);
 
         $sql = "INSERT INTO Personnel (ID_Personnel, Nom, Prenom, Mail, MDP, Date_Entree, Salaire, ID_Fonction, LOGIN, ID_Remplacant, ID_Superieur)
             VALUES (:id_personnel, :nom, :prenom, :mail, :MDP, TO_DATE(:date_entree, 'YYYY-MM-DD'), :salaire, :ID_Fonction, :login, :ID_Remplacant, :ID_Superieur)";
@@ -213,7 +213,7 @@ class User
     }
 
 
-    public static function majPassword($id, $newPasswordHashed)
+    public function majPassword($id, $newPasswordHashed)
     {
         $db = Database::getConnection();
         $sql = "UPDATE Personnel SET MDP = :MDP WHERE ID_Personnel = :id";
@@ -233,7 +233,7 @@ class User
     /**
      * Met à jour un employé
      */
-    public static function maj($id, $data)
+    public function maj($id, $data)
     {
         $db = Database::getConnection();
         $sql = 'UPDATE Personnel 
@@ -278,7 +278,7 @@ class User
     /**
      * Supprime un employé
      */
-    public static function suppr($id)
+    public function suppr($id)
     {
         $db = Database::getConnection();
         $sql = "DELETE FROM Personnel WHERE ID_Personnel = :id";
@@ -294,52 +294,12 @@ class User
         return $r;
     }
 
-
-    public static function recupTousLesEmployeesMetier($id_fonction)
-    {
-        /*Récupère tous les employés d'une fonction donnée (ex: tous les responsables de zone)
-        */
-        $db = Database::getConnection();
-        $sql = "SELECT * FROM Personnel WHERE ID_Fonction = :id_fonction";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id_fonction', $id_fonction);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        $result = [];
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
-    }
-
-    public static function recupPersonnelDeZone($id_zone)
-    {
-        /*Récupère tous les employés d'une zone donnée via la table Est_Affectee_A
-        */
-        $db = Database::getConnection();
-        $sql = "SELECT Personnel.* 
-                FROM Personnel
-                JOIN Est_Affectee_A ON Personnel.ID_Personnel = Est_Affectee_A.ID_Personnel 
-                WHERE Est_Affectee_A.ID_Zone = :id_zone";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id_zone', $id_zone);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        $result = [];
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
-    }
-
-    public static function moteurRechercheRecup($searchTerm)
+    public function moteurRechercheRecup($searchTerm)
     {
         /*Récupère tous les employés correspondant à un terme de recherche dans leur nom ou prénom
         */
         $db = Database::getConnection();
-        $sql = "SELECT * FROM Personnel WHERE LOWER(Nom) LIKE LOWER(:searchTerm) OR LOWER(Prenom) LIKE LOWER(:searchTerm)";
+        $sql = "SELECT * FROM Personnel WHERE LOWER(Nom) LIKE LOWER(:searchTerm) OR LOWER(Prenom) LIKE LOWER(:searchTerm) AND estArchive = 1";
         $stid = oci_parse($db, $sql);
         $likeTerm = '%' . $searchTerm . '%';
         oci_bind_by_name($stid, ':searchTerm', $likeTerm);

@@ -1,7 +1,7 @@
 <?php
 class Zone
 {
-    public static function toutRecup()
+    public function toutRecup()
     {
         /*Récupère toutes les zones du zoo
         */
@@ -19,7 +19,7 @@ class Zone
         return $zones;
     }
 
-    public static function recupNomManager($id_zone)
+    public function recupNomManager($id_zone)
     {
         /*Récupère la zone dont l'employé est le manager
         */
@@ -38,7 +38,7 @@ class Zone
         return oci_fetch_assoc($stid);
     }
 
-    public static function recupZoneDuManager($id_manager)
+    public function recupZoneDuManager($id_manager)
     {
         /*Récupère la zone dont l'employé est le manager
         */
@@ -59,7 +59,7 @@ class Zone
     /**
      * Récupère une zone par son ID
      */
-    public static function recupParID($id)
+    public function recupParID($id)
     {
         $db = Database::getConnection();
         $sql = "SELECT * FROM ZONE WHERE ID_ZONE = :id";
@@ -76,7 +76,7 @@ class Zone
     /**
      * Crée une nouvelle zone
      */
-    public static function creer($data)
+    public function creer($data)
     {
         $db = Database::getConnection();
         $sql = "INSERT INTO ZONE (ID_ZONE, NOM_ZONE, ID_MANAGER) 
@@ -101,7 +101,7 @@ class Zone
     /**
      * Met à jour une zone
      */
-    public static function maj($id, $data)
+    public function maj($id, $data)
     {
         $db = Database::getConnection();
         $sql = 'UPDATE ZONE 
@@ -128,7 +128,7 @@ class Zone
     /**
      * Supprime une zone
      */
-    public static function suppr($id)
+    public function suppr($id)
     {
         $db = Database::getConnection();
         $sql = "DELETE FROM ZONE WHERE ID_ZONE = :id";
@@ -145,7 +145,7 @@ class Zone
     }
 
 
-    public static function moteurRechercheRecup($searchTerm)
+    public function moteurRechercheRecup($searchTerm)
     {
         /* Récupère les zones correspondant au terme de recherche pour le moteur de recherche
          */

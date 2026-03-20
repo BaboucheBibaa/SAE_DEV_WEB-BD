@@ -3,9 +3,16 @@
 
 class ServiceSoin
 {
+    private $Animal;
+    private $HistoriqueSoins;
+    public function __construct()
+    {
+        $this->Animal = new Animal();
+        $this->HistoriqueSoins = new HistoriqueSoins();
+    }
     public function getAnimauxParSoigneur($id_soigneur)
     {
-        $animaux = Animal::recupTousParSoigneurs($id_soigneur);
+        $animaux = $this->Animal->recupTousParSoigneurs($id_soigneur);
         if (!$animaux) {
             return null;
         }
@@ -13,7 +20,7 @@ class ServiceSoin
     }
 
     public function getSoinsParSoigneur($id_soigneur){
-        $soins = HistoriqueSoins::recupSoinsParPersonne($id_soigneur);
+        $soins = $this->HistoriqueSoins->recupSoinsParPersonne($id_soigneur);
         if (!$soins) {
             return null;
         }
@@ -21,14 +28,14 @@ class ServiceSoin
     }
 
     public function getSoinsParAnimal($id_animal){
-        $soins = HistoriqueSoins::recupSoinsParAnimal($id_animal);
+        $soins = $this->HistoriqueSoins->recupSoinsParAnimal($id_animal);
         if (!$soins) {
             return null;
         }
         return $soins;
     }
     public function getNourritureParAnimal($id_animal){
-        $nourriture = HistoriqueSoins::recupNourritureParAnimal($id_animal);
+        $nourriture = $this->HistoriqueSoins->recupNourritureParAnimal($id_animal);
         if (!$nourriture) {
             return null;
         }
@@ -52,7 +59,7 @@ class ServiceSoin
             'DESCRIPTION_SOIN' => $descriptionSoin,
             'ID_PERSONNEL' => $idPersonnel
         ];
-        return HistoriqueSoins::creer($data);
+        return $this->HistoriqueSoins->creer($data);
     }
     public function ajoutNourriture()
     {
@@ -72,6 +79,10 @@ class ServiceSoin
             'DOSE_NOURRITURE' => $doseNourriture,
             'ID_PERSONNEL' => $idPersonnel
         ];
-        return HistoriqueSoins::creerNourriture($data);
+        return $this->HistoriqueSoins->creerNourriture($data);
+    }
+
+    public function getStatsSoigneurs(){
+        return $this->HistoriqueSoins->recupStatsSoigneurs();
     }
 }

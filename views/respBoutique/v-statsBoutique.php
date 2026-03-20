@@ -14,7 +14,7 @@
                     <i class="bi bi-graph-up-arrow me-2"></i>Statistiques de la boutique
                 </h1>
                 <p class="lead text-muted mb-0">
-                    Statistiques détaillées de la boutique 
+                    Statistiques détaillées de la boutique
                     <strong><?= htmlspecialchars($boutique['NOM_BOUTIQUE'] ?? 'votre boutique') ?></strong>
                 </p>
             </div>
@@ -65,6 +65,47 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted mb-2">CA Moyen Annuel</h6>
+                                <h3 class="mb-0"><?= empty($caMoyenAnnuel['MOYENNE_CA'])    ? '0' : htmlspecialchars($caMoyenAnnuel['MOYENNE_CA']) ?> EUR</h3>
+                            </div>
+                        </div>
+                        <small class="text-muted">En comparaison avec le CA Moyen Global <?php echo htmlspecialchars($caMoyenGlobal['MOYENNE_CA']); ?> EUR</small>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted mb-2">CA Maximum Annuel</h6>
+                                <h3 class="mb-0"><?= empty($minMaxAnnuel['MAX_CA'])    ? '0' : htmlspecialchars($minMaxAnnuel['MAX_CA']) ?> EUR</h3>
+                            </div>
+                        </div>
+                        <small class="text-muted">En comparaison avec le CA Minimum Global <?php echo htmlspecialchars($minMaxGlobal['MAX_CA']); ?> EUR</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="text-muted mb-2">CA Minimum Annuel</h6>
+                                <h3 class="mb-0"><?= empty($minMaxAnnuel['MIN_CA'])    ? '0' : htmlspecialchars($minMaxAnnuel['MIN_CA']) ?> EUR</h3>
+                            </div>
+                        </div>
+                        <small class="text-muted">En comparaison avec le CA Minimum Global <?php echo htmlspecialchars($minMaxGlobal['MIN_CA']); ?> EUR</small>
+
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="col">
@@ -89,10 +130,6 @@
         </div>
         <div class="card border-0 shadow-sm">
             <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-                <div>
-                    <h6 class="mb-1">Prochaine etape: branchement des donnees reelles</h6>
-                    <p class="text-muted mb-0">Cette page est prete a accueillir les requetes SQL et graphiques dynamiques.</p>
-                </div>
                 <a href="index.php?action=respBoutiqueDashboard" class="btn btn-outline-primary">
                     <i class="bi bi-grid"></i> Retour au dashboard
                 </a>

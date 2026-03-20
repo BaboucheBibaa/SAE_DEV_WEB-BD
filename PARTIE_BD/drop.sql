@@ -1,34 +1,36 @@
--- =========================
--- TABLES D'ASSOCIATION
--- =========================
-DROP TABLE Reparation CASCADE CONSTRAINTS;
-DROP TABLE Travaille_Dans_La_Boutique CASCADE CONSTRAINTS;
-DROP TABLE Est_Affectee_A CASCADE CONSTRAINTS;
-DROP TABLE Pratique_Soins CASCADE CONSTRAINTS;
-DROP TABLE Bien_Etre_Quotidien CASCADE CONSTRAINTS;
-DROP TABLE Est_Le_Parent_De CASCADE CONSTRAINTS;
-DROP TABLE Est_Compatible_Avec CASCADE CONSTRAINTS;
-DROP TABLE A_Acces_A CASCADE CONSTRAINTS;
-DROP TABLE Est_Parraine CASCADE CONSTRAINTS;
-DROP TABLE Chiffre_Affaires CASCADE CONSTRAINTS;
+-- =============================================
+-- SCRIPT DE SUPPRESSION DE TOUTES LES TABLES
+-- =============================================
+-- Ordre respectant les contraintes de clés étrangères
+-- (du plus dépendant au moins dépendant)
+-- =============================================
 
--- =========================
--- TABLES PRINCIPALES DEPENDANTES
--- =========================
-DROP TABLE Animal CASCADE CONSTRAINTS;
-DROP TABLE Enclos CASCADE CONSTRAINTS;
-DROP TABLE Boutique CASCADE CONSTRAINTS;
-DROP TABLE Zone CASCADE CONSTRAINTS;
-DROP TABLE Contrat_Travail CASCADE CONSTRAINTS;
-DROP TABLE Visiteur CASCADE CONSTRAINTS;
+-- Supprimer les tables avec dépendances (feuilles de l'arbre FK)
+DROP TABLE Reparation;
+DROP TABLE Travaille_Dans_La_Boutique;
+DROP TABLE Est_Affectee_A;
+DROP TABLE Pratique_Soins;
+DROP TABLE Bien_Etre_Quotidien;
+DROP TABLE Est_Le_Parent_De;
+DROP TABLE Est_Compatible_Avec;
+DROP TABLE Est_Parraine;
+DROP TABLE Chiffre_Affaires;
 
--- =========================
--- TABLES PRINCIPALES
--- =========================
-DROP TABLE Prestataire CASCADE CONSTRAINTS;
-DROP TABLE Prestation CASCADE CONSTRAINTS;
-DROP TABLE Parrainage CASCADE CONSTRAINTS;
-DROP TABLE Espece CASCADE CONSTRAINTS;
-DROP TABLE Personnel CASCADE CONSTRAINTS;
-DROP TABLE Fonction CASCADE CONSTRAINTS;
+-- Supprimer les tables intermédiaires
+DROP TABLE Animal;
+DROP TABLE Contrat_Travail;
+DROP TABLE Boutique;
+
+-- Supprimer les tables de structure
+DROP TABLE Enclos;
+DROP TABLE Visiteur;
+DROP TABLE Zone;
+DROP TABLE Personnel;
+
+-- Supprimer les tables de base
+DROP TABLE Prestataire;
+DROP TABLE Espece;
+DROP TABLE Fonction;
+
+COMMIT;
 

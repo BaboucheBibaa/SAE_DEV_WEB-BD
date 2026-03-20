@@ -23,7 +23,7 @@ class ProfilAnimalController extends BaseController {
         $soins = $this->serviceSoin->getSoinsParAnimal($id);
         $listeParrains = $this->serviceParrainage->getParrainsParAnimal($id);
         $visiteurs = $this->serviceParrainage->getTousVisiteurs();
-        $niveaux = $this->serviceParrainage->getNiveauxParrainage();
+        $niveaux = $this->serviceParrainage->getNiveauxParrainages();
         $canEdit = false;
         if (isset($_SESSION['user']['ID_FONCTION']) && ($_SESSION['user']['ID_FONCTION'] == RESPSOIG || $_SESSION['user']['ID_FONCTION'] == ADMINID)) {
             $canEdit = true;
@@ -44,10 +44,8 @@ class ProfilAnimalController extends BaseController {
         }
 
         $id_animal = $_POST['id_animal'];
-        $id_visiteur = $_POST['id_visiteur'];
-        $id_parrainage = $_POST['id_parrainage'];
 
-        $result = $this->serviceParrainage->creerParrainage($id_animal, $id_visiteur, $id_parrainage);
+        $result = $this->serviceParrainage->creerParrainage();
         
         if ($result) {
             $this->redirectWithMessage('profilAnimal&id='.$id_animal, 'Parrainage ajouté avec succès.', 'success');

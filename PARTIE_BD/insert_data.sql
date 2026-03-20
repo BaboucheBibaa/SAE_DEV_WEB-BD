@@ -1,525 +1,496 @@
--- =========================
--- SCRIPT D'INSERTION DE DONNÉES EN VOLUME - ZOO'LAND
--- Les IDs sont générés manuellement (sans séquences)
--- Respecte toutes les contraintes de clés étrangères
--- =========================
+-- =============================================
+-- SCRIPT D'INSERTION DE DONNÉES - ZOO'LAND
+-- =============================================
+-- Respecte toutes les contraintes de clés étrangères et CHECK
+-- Données complètes et cohérentes
+-- =============================================
 
--- Activation du mode COMMIT implicite
 SET AUTOCOMMIT OFF;
 
--- =========================
+-- =============================================
 -- 1. INSERTION DES FONCTIONS
--- =========================
-INSERT INTO Fonction VALUES (10, 'Administrateur', 'Gestion globale du zoo');
-INSERT INTO Fonction VALUES (11, 'Responsable de Zone', 'Gestion d''une zone');
-INSERT INTO Fonction VALUES (12, 'Soigneur', 'Soin et alimentation des animaux');
-INSERT INTO Fonction VALUES (13, 'Vétérinaire', 'Soins médicaux des animaux');
-INSERT INTO Fonction VALUES (14, 'Manager Boutique', 'Gestion d''une boutique');
-INSERT INTO Fonction VALUES (15, 'Caissier', 'Gestion des ventes');
-INSERT INTO Fonction VALUES (16, 'Nettoyeur', 'Entretien des installations');
-INSERT INTO Fonction VALUES (17, 'Guide Touristique', 'Accompagnement des visiteurs');
+-- =============================================
+INSERT INTO Fonction VALUES (1, 'Administrateur', 'Gestion globale du zoo et accès système');
+INSERT INTO Fonction VALUES (2, 'Responsable de Zone', 'Gestion et supervision d''une zone');
+INSERT INTO Fonction VALUES (3, 'Soigneur', 'Soin et alimentation quotidienne des animaux');
+INSERT INTO Fonction VALUES (4, 'Vétérinaire', 'Soins médicaux et consultations des animaux');
+INSERT INTO Fonction VALUES (5, 'Manager Boutique', 'Gestion commerciale d''une boutique');
+INSERT INTO Fonction VALUES (6, 'Caissier', 'Gestion des ventes et commerçage');
+INSERT INTO Fonction VALUES (7, 'Technicien Entretien', 'Maintenance des installations et enclos');
+INSERT INTO Fonction VALUES (8, 'Guide Touristique', 'Accompagnement des visiteurs et animations');
 COMMIT;
 
--- =========================
+-- =============================================
 -- 2. INSERTION DES PERSONNELS
--- =========================
--- Admin principal
-INSERT INTO Personnel VALUES (100, 100, 100, 10, 'Dupont', 'Jean', 'admin@zoo.com', 
-  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-01-15', 'YYYY-MM-DD'), 3500, 'admin', 1);
+-- =============================================
+-- Admin principal (point de départ, référence à lui-même)
+INSERT INTO Personnel VALUES (100, 100, 100, 1, 'Dupont', 'Jean', 'jean.dupont@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2015-01-15', 'YYYY-MM-DD'), 4500.00, 'admin_main', 1);
 
--- Responsables de zone (3)
-INSERT INTO Personnel VALUES (101, 101, 100, 11, 'Dupont', 'Marie', 'resp_zone1@zoo.com',
-  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-06-01', 'YYYY-MM-DD'), 2800, 'resp_zone1', 1);
-INSERT INTO Personnel VALUES (102, 102, 100, 11, 'Martin', 'Paul', 'resp_zone2@zoo.com',
-  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-06-15', 'YYYY-MM-DD'), 2800, 'resp_zone2', 1);
-INSERT INTO Personnel VALUES (103, 103, 100, 11, 'Durand', 'Sophie', 'resp_zone3@zoo.com',
-  '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S', TO_DATE('2020-07-01', 'YYYY-MM-DD'), 2800, 'resp_zone3', 1);
+-- Responsables de zone (supervision entre eux)
+INSERT INTO Personnel VALUES (101, 101, 100, 2, 'Moulin', 'Sophie', 'sophie.moulin@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2016-06-01', 'YYYY-MM-DD'), 3200.00, 'resp_zone_africaine', 1);
+INSERT INTO Personnel VALUES (102, 102, 100, 2, 'Martin', 'Paul', 'paul.martin@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2016-06-15', 'YYYY-MM-DD'), 3200.00, 'resp_zone_asiatique', 1);
+INSERT INTO Personnel VALUES (103, 103, 100, 2, 'Durand', 'Caroline', 'caroline.durand@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2016-07-01', 'YYYY-MM-DD'), 3200.00, 'resp_zone_amazonie', 1);
+INSERT INTO Personnel VALUES (104, 104, 100, 2, 'Blanc', 'Michel', 'michel.blanc@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2017-03-10', 'YYYY-MM-DD'), 3200.00, 'resp_zone_arctique', 1);
+INSERT INTO Personnel VALUES (105, 105, 100, 2, 'Leclerc', 'Anne', 'anne.leclerc@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2017-04-01', 'YYYY-MM-DD'), 3200.00, 'resp_zone_marine', 1);
 
--- Soigneurs (20)
-DECLARE
-  v_id NUMBER := 104;
-BEGIN
-  FOR i IN 1..20 LOOP
-    INSERT INTO Personnel VALUES (v_id, v_id, 101 + MOD(i, 3), 12, 'Soigneur', 'Pers'||i,
-      'soigneur'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
-      TO_DATE('2021-01-01', 'YYYY-MM-DD') + (i*15), 2000 + (i*50), 'soigneur'||i, 1);
-    v_id := v_id + 1;
-  END LOOP;
-  COMMIT;
-END;
-/
+-- Soigneurs (avec chaîne de remplaçants réaliste)
+-- Zone Africaine: chaque soigneur remplace le précédent, le premier remplace le manager
+INSERT INTO Personnel VALUES (110, 101, 101, 3, 'Garcia', 'Carlos', 'carlos.garcia@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-01-15', 'YYYY-MM-DD'), 2400.00, 'soigneur_001', 1);
+INSERT INTO Personnel VALUES (111, 110, 101, 3, 'Rossi', 'Marco', 'marco.rossi@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-02-01', 'YYYY-MM-DD'), 2400.00, 'soigneur_002', 1);
+INSERT INTO Personnel VALUES (112, 111, 101, 3, 'Bianchi', 'Luigi', 'luigi.bianchi@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-03-15', 'YYYY-MM-DD'), 2400.00, 'soigneur_003', 1);
+INSERT INTO Personnel VALUES (113, 112, 101, 3, 'Rossi', 'Lucia', 'lucia.rossi@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-04-01', 'YYYY-MM-DD'), 2400.00, 'soigneur_004', 1);
 
--- Vétérinaires (4)
-DECLARE
-  v_id NUMBER := 124;
-BEGIN
-  FOR i IN 1..4 LOOP
-    INSERT INTO Personnel VALUES (v_id, v_id, 100, 13, 'Vétérinaire', 'Dr'||i,
-      'vet'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
-      TO_DATE('2019-03-15', 'YYYY-MM-DD'), 2800 + (i*100), 'vet'||i, 1);
-    v_id := v_id + 1;
-  END LOOP;
-  COMMIT;
-END;
-/
+-- Zone Asiatique: même logique
+INSERT INTO Personnel VALUES (120, 102, 102, 3, 'Tanaka', 'Hiroshi', 'hiroshi.tanaka@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-05-10', 'YYYY-MM-DD'), 2400.00, 'soigneur_005', 1);
+INSERT INTO Personnel VALUES (121, 120, 102, 3, 'Yamamoto', 'Yuki', 'yuki.yamamoto@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-06-01', 'YYYY-MM-DD'), 2400.00, 'soigneur_006', 1);
+INSERT INTO Personnel VALUES (122, 121, 102, 3, 'Nakamura', 'Takeshi', 'takeshi.nakamura@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-07-15', 'YYYY-MM-DD'), 2400.00, 'soigneur_007', 1);
+INSERT INTO Personnel VALUES (123, 122, 102, 3, 'Suzuki', 'Keiko', 'keiko.suzuki@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-08-01', 'YYYY-MM-DD'), 2400.00, 'soigneur_008', 1);
 
--- Managers Boutique (5)
-DECLARE
-  v_id NUMBER := 128;
-BEGIN
-  FOR i IN 1..5 LOOP
-    INSERT INTO Personnel VALUES (v_id, v_id, 100, 14, 'Manager', 'Boutique'||i,
-      'manager_boutique'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
-      TO_DATE('2021-06-01', 'YYYY-MM-DD'), 2400, 'manager_boutique'||i, 1);
-    v_id := v_id + 1;
-  END LOOP;
-  COMMIT;
-END;
-/
+-- Zone Amazonienne: même logique
+INSERT INTO Personnel VALUES (130, 103, 103, 3, 'Silva', 'João', 'joao.silva@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-09-20', 'YYYY-MM-DD'), 2400.00, 'soigneur_009', 1);
+INSERT INTO Personnel VALUES (131, 130, 103, 3, 'Santos', 'Maria', 'maria.santos@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-10-01', 'YYYY-MM-DD'), 2400.00, 'soigneur_010', 1);
+INSERT INTO Personnel VALUES (132, 131, 103, 3, 'Oliveira', 'Pedro', 'pedro.oliveira@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-11-15', 'YYYY-MM-DD'), 2400.00, 'soigneur_011', 1);
+INSERT INTO Personnel VALUES (133, 132, 103, 3, 'Costa', 'Ana', 'ana.costa@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-12-01', 'YYYY-MM-DD'), 2400.00, 'soigneur_012', 1);
 
--- Caissiers (10)
-DECLARE
-  v_id NUMBER := 133;
-BEGIN
-  FOR i IN 1..10 LOOP
-    INSERT INTO Personnel VALUES (v_id, v_id, 128 + MOD(i, 5), 15, 'Caissier', 'Caisse'||i,
-      'caissier'||i||'@zoo.com', '$2a$12$AygVSlcsTpInKU44E1kN/uSGKET2uXiTKWySpQoecwuhZGfkYrJ3S',
-      TO_DATE('2021-09-01', 'YYYY-MM-DD') + (i*7), 1800, 'caissier'||i, 1);
-    v_id := v_id + 1;
-  END LOOP;
-  COMMIT;
-END;
-/
+-- Zone Arctique: même logique
+INSERT INTO Personnel VALUES (140, 104, 104, 3, 'Andersson', 'Erik', 'erik.andersson@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2019-01-10', 'YYYY-MM-DD'), 2400.00, 'soigneur_013', 1);
+INSERT INTO Personnel VALUES (141, 140, 104, 3, 'Bergström', 'Ingrid', 'ingrid.bergstrom@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2019-02-01', 'YYYY-MM-DD'), 2400.00, 'soigneur_014', 1);
 
--- =========================
+-- Zone Marine: même logique
+INSERT INTO Personnel VALUES (150, 105, 105, 3, 'Dubois', 'Pierre', 'pierre.dubois@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2019-03-15', 'YYYY-MM-DD'), 2400.00, 'soigneur_015', 1);
+INSERT INTO Personnel VALUES (151, 150, 105, 3, 'Dupuis', 'Marie', 'marie.dupuis@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2019-04-01', 'YYYY-MM-DD'), 2400.00, 'soigneur_016', 1);
+
+-- Vétérinaires
+INSERT INTO Personnel VALUES (200, 200, 100, 4, 'Labelle', 'Dr. Cécile', 'cecile.labelle@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2015-09-01', 'YYYY-MM-DD'), 3800.00, 'vet_001', 1);
+INSERT INTO Personnel VALUES (201, 201, 100, 4, 'Leduc', 'Dr. Frédéric', 'frederic.leduc@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2016-03-15', 'YYYY-MM-DD'), 3800.00, 'vet_002', 1);
+INSERT INTO Personnel VALUES (202, 202, 100, 4, 'Moreau', 'Dr. Hélène', 'helene.moreau@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2017-05-01', 'YYYY-MM-DD'), 3800.00, 'vet_003', 1);
+
+-- Managers Boutique
+INSERT INTO Personnel VALUES (300, 300, 100, 5, 'Bernard', 'Thomas', 'thomas.bernard@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-06-01', 'YYYY-MM-DD'), 2900.00, 'mgr_boutique_001', 1);
+INSERT INTO Personnel VALUES (301, 301, 100, 5, 'Richard', 'Nicole', 'nicole.richard@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-07-15', 'YYYY-MM-DD'), 2900.00, 'mgr_boutique_002', 1);
+INSERT INTO Personnel VALUES (302, 302, 100, 5, 'Dubois', 'Laurent', 'laurent.dubois@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2018-08-01', 'YYYY-MM-DD'), 2900.00, 'mgr_boutique_003', 1);
+
+-- Caissiers
+INSERT INTO Personnel VALUES (310, 310, 300, 6, 'Petit', 'Isabelle', 'isabelle.petit@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2019-01-15', 'YYYY-MM-DD'), 2000.00, 'caissier_001', 1);
+INSERT INTO Personnel VALUES (311, 311, 300, 6, 'Dupont', 'Pascal', 'pascal.dupont@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2019-02-01', 'YYYY-MM-DD'), 2000.00, 'caissier_002', 1);
+INSERT INTO Personnel VALUES (312, 312, 301, 6, 'Michel', 'Florence', 'florence.michel@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2019-03-15', 'YYYY-MM-DD'), 2000.00, 'caissier_003', 1);
+INSERT INTO Personnel VALUES (313, 313, 301, 6, 'Lefevre', 'Valérie', 'valerie.lefevre@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2019-04-01', 'YYYY-MM-DD'), 2000.00, 'caissier_004', 1);
+INSERT INTO Personnel VALUES (314, 314, 302, 6, 'Mercier', 'Olivier', 'olivier.mercier@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2019-05-15', 'YYYY-MM-DD'), 2000.00, 'caissier_005', 1);
+
+-- Techniciens entretien
+INSERT INTO Personnel VALUES (400, 400, 101, 7, 'Renard', 'Alain', 'alain.renard@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2016-08-01', 'YYYY-MM-DD'), 2600.00, 'tech_entretien_001', 1);
+INSERT INTO Personnel VALUES (401, 401, 102, 7, 'Vincent', 'Didier', 'didier.vincent@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2017-02-15', 'YYYY-MM-DD'), 2600.00, 'tech_entretien_002', 1);
+INSERT INTO Personnel VALUES (402, 402, 103, 7, 'Benoit', 'Robert', 'robert.benoit@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2017-09-01', 'YYYY-MM-DD'), 2600.00, 'tech_entretien_003', 1);
+
+-- Guides touristiques
+INSERT INTO Personnel VALUES (500, 500, 101, 8, 'Arnould', 'Stéphane', 'stephane.arnould@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2019-06-01', 'YYYY-MM-DD'), 2200.00, 'guide_001', 1);
+INSERT INTO Personnel VALUES (501, 501, 102, 8, 'Audrain', 'Nathalie', 'nathalie.audrain@zoo.com',
+  '$2a$12$Cxp..EXnGgLFTdfc1EnwxOmzzl2fPkyBC1gcLh/DAKzygCY4PQTKG', TO_DATE('2019-07-15', 'YYYY-MM-DD'), 2200.00, 'guide_002', 1);
+
+COMMIT;
+
+-- =============================================
 -- 3. INSERTION DES ZONES
--- =========================
-INSERT INTO Zone VALUES (10, 'Zone Africaine', 101);
-INSERT INTO Zone VALUES (11, 'Zone Asiatique', 102);
-INSERT INTO Zone VALUES (12, 'Zone Amazonienne', 103);
-INSERT INTO Zone VALUES (13, 'Zone Arctique', 101);
-INSERT INTO Zone VALUES (14, 'Zone Marine', 102);
-INSERT INTO Zone VALUES (15, 'Zone Australienne', 103);
+-- =============================================
+INSERT INTO Zone VALUES (1, 'Zone Africaine', 101);
+INSERT INTO Zone VALUES (2, 'Zone Asiatique', 102);
+INSERT INTO Zone VALUES (3, 'Zone Amazonienne', 103);
+INSERT INTO Zone VALUES (4, 'Zone Arctique', 104);
+INSERT INTO Zone VALUES (5, 'Zone Marine', 105);
 COMMIT;
 
--- =========================
+-- =============================================
 -- 4. INSERTION DES ENCLOS
--- =========================
-BEGIN
-  -- Zone Africaine (10 enclos)
-  INSERT INTO Enclos VALUES (10, 20, 10, 'Savane');
-  INSERT INTO Enclos VALUES (10, 21, 10, 'Savane');
-  INSERT INTO Enclos VALUES (10, 22, 10, 'Savane');
-  INSERT INTO Enclos VALUES (11, 20, 10, 'Forêt');
-  INSERT INTO Enclos VALUES (11, 21, 10, 'Forêt');
-  INSERT INTO Enclos VALUES (11, 22, 10, 'Montagne');
-  INSERT INTO Enclos VALUES (12, 20, 10, 'Plaine');
-  INSERT INTO Enclos VALUES (12, 21, 10, 'Plaine');
-  INSERT INTO Enclos VALUES (13, 20, 10, 'Bassin');
-  INSERT INTO Enclos VALUES (13, 21, 10, 'Bassin');
-  
-  -- Zone Asiatique (8 enclos)
-  INSERT INTO Enclos VALUES (20, 30, 11, 'Jungle');
-  INSERT INTO Enclos VALUES (20, 31, 11, 'Jungle');
-  INSERT INTO Enclos VALUES (20, 32, 11, 'Jungle');
-  INSERT INTO Enclos VALUES (21, 30, 11, 'Montagne');
-  INSERT INTO Enclos VALUES (21, 31, 11, 'Montagne');
-  INSERT INTO Enclos VALUES (21, 32, 11, 'Forêt');
-  INSERT INTO Enclos VALUES (22, 30, 11, 'Plaine');
-  INSERT INTO Enclos VALUES (22, 31, 11, 'Plaine');
-  
-  -- Zone Amazonienne (8 enclos)
-  INSERT INTO Enclos VALUES (30, 40, 12, 'Jungle');
-  INSERT INTO Enclos VALUES (30, 41, 12, 'Jungle');
-  INSERT INTO Enclos VALUES (30, 42, 12, 'Jungle');
-  INSERT INTO Enclos VALUES (31, 40, 12, 'Aquatique');
-  INSERT INTO Enclos VALUES (31, 41, 12, 'Aquatique');
-  INSERT INTO Enclos VALUES (31, 42, 12, 'Aquatique');
-  INSERT INTO Enclos VALUES (32, 40, 12, 'Forêt');
-  INSERT INTO Enclos VALUES (32, 41, 12, 'Forêt');
-  
-  -- Zone Arctique (8 enclos)
-  INSERT INTO Enclos VALUES (40, 50, 13, 'Glace');
-  INSERT INTO Enclos VALUES (40, 51, 13, 'Glace');
-  INSERT INTO Enclos VALUES (40, 52, 13, 'Glace');
-  INSERT INTO Enclos VALUES (41, 50, 13, 'Eau Froide');
-  INSERT INTO Enclos VALUES (41, 51, 13, 'Eau Froide');
-  INSERT INTO Enclos VALUES (41, 52, 13, 'Eau Froide');
-  INSERT INTO Enclos VALUES (42, 50, 13, 'Toundra');
-  INSERT INTO Enclos VALUES (42, 51, 13, 'Toundra');
-  
-  -- Zone Marine (4 enclos)
-  INSERT INTO Enclos VALUES (50, 60, 14, 'Bassin');
-  INSERT INTO Enclos VALUES (50, 61, 14, 'Bassin');
-  INSERT INTO Enclos VALUES (51, 60, 14, 'Bassin');
-  INSERT INTO Enclos VALUES (51, 61, 14, 'Bassin');
-  
-  COMMIT;
-END;
-/
+-- =============================================
+-- Zone Africaine (12 enclos)
+INSERT INTO Enclos VALUES (10.0, 20.0, 1, 'Savane');
+INSERT INTO Enclos VALUES (10.0, 20.5, 1, 'Savane');
+INSERT INTO Enclos VALUES (10.5, 20.0, 1, 'Savane');
+INSERT INTO Enclos VALUES (11.0, 20.0, 1, 'Forêt');
+INSERT INTO Enclos VALUES (11.0, 20.5, 1, 'Forêt');
+INSERT INTO Enclos VALUES (11.5, 20.0, 1, 'Montagne');
+INSERT INTO Enclos VALUES (12.0, 20.0, 1, 'Plaine');
+INSERT INTO Enclos VALUES (12.0, 20.5, 1, 'Plaine');
+INSERT INTO Enclos VALUES (12.5, 20.0, 1, 'Bassin');
+INSERT INTO Enclos VALUES (12.5, 20.5, 1, 'Bassin');
+INSERT INTO Enclos VALUES (13.0, 20.0, 1, 'Clôture');
+INSERT INTO Enclos VALUES (13.0, 20.5, 1, 'Clôture');
 
--- =========================
--- 5. INSERTION DES ESPÈCES
--- =========================
-BEGIN
-  -- Afrique
-  INSERT INTO Espece VALUES (100, 'Lion', 'Panthera leo', 1);
-  INSERT INTO Espece VALUES (101, 'Éléphant', 'Loxodonta africana', 1);
-  INSERT INTO Espece VALUES (102, 'Girafe', 'Giraffa camelopardalis', 1);
-  INSERT INTO Espece VALUES (103, 'Zèbre', 'Equus quagga', 0);
-  INSERT INTO Espece VALUES (104, 'Hippopotame', 'Hippopotamus amphibius', 1);
-  
-  -- Asie
-  INSERT INTO Espece VALUES (105, 'Tigre du Bengale', 'Panthera tigris tigris', 1);
-  INSERT INTO Espece VALUES (106, 'Éléphant d''Asie', 'Elephas maximus', 1);
-  INSERT INTO Espece VALUES (107, 'Panda Géant', 'Ailuropoda melanoleuca', 1);
-  INSERT INTO Espece VALUES (108, 'Rhinocéros', 'Rhinoceros unicornis', 1);
-  INSERT INTO Espece VALUES (109, 'Singe Doré', 'Rhinopithecus roxellana', 1);
-  
-  -- Amazonie
-  INSERT INTO Espece VALUES (110, 'Jaguar', 'Panthera onca', 1);
-  INSERT INTO Espece VALUES (111, 'Anaconda', 'Eunectes murinus', 0);
-  INSERT INTO Espece VALUES (112, 'Piranha', 'Pygocentrus nattereri', 0);
-  INSERT INTO Espece VALUES (113, 'Ara Bleu', 'Ara ararauna', 1);
-  INSERT INTO Espece VALUES (114, 'Caïman', 'Caiman yacare', 0);
-  
-  -- Arctique
-  INSERT INTO Espece VALUES (115, 'Ours Blanc', 'Ursus maritimus', 1);
-  INSERT INTO Espece VALUES (116, 'Phoque', 'Phoca vitulina', 0);
-  INSERT INTO Espece VALUES (117, 'Baleine Béluga', 'Delphinapterus leucas', 1);
-  INSERT INTO Espece VALUES (118, 'Morse', 'Odobenus rosmarus', 1);
-  INSERT INTO Espece VALUES (119, 'Renard Arctique', 'Vulpes lagopus', 0);
-  
-  -- Marin
-  INSERT INTO Espece VALUES (120, 'Requin Blanc', 'Carcharodon carcharias', 1);
-  INSERT INTO Espece VALUES (121, 'Dauphin', 'Tursiops truncatus', 0);
-  INSERT INTO Espece VALUES (122, 'Tortue Marine', 'Chelonia mydas', 1);
-  INSERT INTO Espece VALUES (123, 'Raie Manta', 'Manta birostris', 1);
-  INSERT INTO Espece VALUES (124, 'Otarie', 'Zalophus californianus', 0);
-  
-  -- Australie
-  INSERT INTO Espece VALUES (125, 'Kangourou', 'Macropus rufus', 0);
-  INSERT INTO Espece VALUES (126, 'Koala', 'Phascolarctos cinereus', 1);
-  INSERT INTO Espece VALUES (127, 'Crocodile d''eau de mer', 'Crocodylus porosus', 1);
-  INSERT INTO Espece VALUES (128, 'Ornithorynque', 'Ornithorhynchus anatinus', 0);
-  INSERT INTO Espece VALUES (129, 'Échidné', 'Tachyglossus aculeatus', 0);
-  
-  COMMIT;
-END;
-/
+-- Zone Asiatique (10 enclos)
+INSERT INTO Enclos VALUES (20.0, 30.0, 2, 'Jungle');
+INSERT INTO Enclos VALUES (20.0, 30.5, 2, 'Jungle');
+INSERT INTO Enclos VALUES (20.5, 30.0, 2, 'Jungle');
+INSERT INTO Enclos VALUES (21.0, 30.0, 2, 'Montagne');
+INSERT INTO Enclos VALUES (21.0, 30.5, 2, 'Montagne');
+INSERT INTO Enclos VALUES (21.5, 30.0, 2, 'Forêt');
+INSERT INTO Enclos VALUES (22.0, 30.0, 2, 'Plaine');
+INSERT INTO Enclos VALUES (22.0, 30.5, 2, 'Plaine');
+INSERT INTO Enclos VALUES (22.5, 30.0, 2, 'Bambou');
+INSERT INTO Enclos VALUES (22.5, 30.5, 2, 'Bambou');
 
--- =========================
--- 6. INSERTION DES ANIMAUX (150 animaux)
--- =========================
-BEGIN
-  -- Animaux nommés
-  INSERT INTO Animal VALUES (1000, 10, 20, 100, TO_DATE('2018-03-15', 'YYYY-MM-DD'), 'Simba', 180, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1001, 10, 20, 100, TO_DATE('2019-07-22', 'YYYY-MM-DD'), 'Mufasa', 190, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1002, 10, 21, 101, TO_DATE('2017-05-10', 'YYYY-MM-DD'), 'Dumbo', 5000, 'Herbivore', 1);
-  INSERT INTO Animal VALUES (1003, 10, 21, 101, TO_DATE('2019-11-08', 'YYYY-MM-DD'), 'Elmer', 4500, 'Herbivore', 1);
-  INSERT INTO Animal VALUES (1004, 10, 22, 102, TO_DATE('2020-01-17', 'YYYY-MM-DD'), 'Gérald', 1200, 'Herbivore', 1);
-  INSERT INTO Animal VALUES (1005, 11, 20, 103, TO_DATE('2019-02-14', 'YYYY-MM-DD'), 'Marty', 450, 'Herbivore', 1);
-  INSERT INTO Animal VALUES (1006, 11, 21, 104, TO_DATE('2018-08-25', 'YYYY-MM-DD'), 'Hipo', 3500, 'Herbivore', 1);
-  INSERT INTO Animal VALUES (1007, 20, 30, 105, TO_DATE('2016-11-29', 'YYYY-MM-DD'), 'Rajah', 200, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1008, 20, 31, 106, TO_DATE('2018-06-12', 'YYYY-MM-DD'), 'Chandra', 1200, 'Herbivore', 1);
-  INSERT INTO Animal VALUES (1009, 20, 32, 107, TO_DATE('2020-04-08', 'YYYY-MM-DD'), 'Po', 100, 'Herbivore', 1);
-  INSERT INTO Animal VALUES (1010, 21, 30, 108, TO_DATE('2017-09-03', 'YYYY-MM-DD'), 'Rhino', 2200, 'Herbivore', 1);
-  INSERT INTO Animal VALUES (1011, 21, 31, 105, TO_DATE('2019-01-20', 'YYYY-MM-DD'), 'Kanha', 180, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1012, 30, 40, 110, TO_DATE('2019-05-14', 'YYYY-MM-DD'), 'Jaguar', 120, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1013, 30, 41, 113, TO_DATE('2020-02-28', 'YYYY-MM-DD'), 'Macaw', 1.2, 'Frugivore', 1);
-  INSERT INTO Animal VALUES (1014, 31, 40, 114, TO_DATE('2018-07-07', 'YYYY-MM-DD'), 'Crocy', 250, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1015, 31, 41, 111, TO_DATE('2017-10-15', 'YYYY-MM-DD'), 'Snakey', 50, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1016, 40, 50, 115, TO_DATE('2015-12-22', 'YYYY-MM-DD'), 'Nanook', 500, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1017, 40, 51, 116, TO_DATE('2019-03-10', 'YYYY-MM-DD'), 'Foka', 150, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1018, 41, 50, 117, TO_DATE('2018-06-05', 'YYYY-MM-DD'), 'Beluga', 1200, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1019, 50, 60, 120, TO_DATE('2016-08-19', 'YYYY-MM-DD'), 'Bruce', 1800, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1020, 50, 61, 121, TO_DATE('2019-11-12', 'YYYY-MM-DD'), 'Flipper', 300, 'Carnivore', 1);
-  INSERT INTO Animal VALUES (1021, 51, 60, 122, TO_DATE('2017-04-21', 'YYYY-MM-DD'), 'Shelly', 500, 'Omnivore', 1);
-  
-  COMMIT;
-END;
-/
+-- Zone Amazonienne (10 enclos)
+INSERT INTO Enclos VALUES (30.0, 40.0, 3, 'Jungle');
+INSERT INTO Enclos VALUES (30.0, 40.5, 3, 'Jungle');
+INSERT INTO Enclos VALUES (30.5, 40.0, 3, 'Jungle');
+INSERT INTO Enclos VALUES (31.0, 40.0, 3, 'Aquatique');
+INSERT INTO Enclos VALUES (31.0, 40.5, 3, 'Aquatique');
+INSERT INTO Enclos VALUES (31.5, 40.0, 3, 'Aquatique');
+INSERT INTO Enclos VALUES (32.0, 40.0, 3, 'Forêt');
+INSERT INTO Enclos VALUES (32.0, 40.5, 3, 'Forêt');
+INSERT INTO Enclos VALUES (32.5, 40.0, 3, 'Canopée');
+INSERT INTO Enclos VALUES (32.5, 40.5, 3, 'Canopée');
 
--- Animaux générés en masse (130 animaux supplémentaires)
-BEGIN
-  FOR i IN 1..130 LOOP
-    DECLARE
-      lat NUMBER;
-      lng NUMBER;
-      zone_id NUMBER;
-      espece_id NUMBER;
-      v_animal_id NUMBER;
-    BEGIN
-      v_animal_id := 1021 + i;
-      zone_id := MOD(i - 1, 6) + 1;
-      espece_id := MOD(i - 1, 30) + 100;
-      
-      -- Assigner des coordonnées valides selon la zone
-      CASE zone_id
-        WHEN 1 THEN lat := 10 + MOD(i, 3); lng := 20 + MOD(i, 2);
-        WHEN 2 THEN lat := 20 + MOD(i, 2); lng := 30 + MOD(i, 3);
-        WHEN 3 THEN lat := 30 + MOD(i, 2); lng := 40 + MOD(i, 3);
-        WHEN 4 THEN lat := 40 + MOD(i, 2); lng := 50 + MOD(i, 3);
-        WHEN 5 THEN lat := 50; lng := 60 + MOD(i, 2);
-        ELSE lat := 13; lng := 20 + MOD(i, 2);
-      END CASE;
-      
-      INSERT INTO Animal VALUES (
-        v_animal_id,
-        lat,
-        lng,
-        espece_id,
-        TRUNC(SYSDATE) - ROUND(DBMS_RANDOM.VALUE(1, 3650)),
-        'Animal_Generique_'||i,
-        ROUND(DBMS_RANDOM.VALUE(5, 5000), 2),
-        CASE WHEN MOD(i, 3) = 0 THEN 'Herbivore' WHEN MOD(i, 3) = 1 THEN 'Carnivore' ELSE 'Omnivore' END,
-        1
-      );
-    EXCEPTION WHEN OTHERS THEN
-      NULL;
-    END;
-  END LOOP;
-  COMMIT;
-END;
-/
+-- Zone Arctique (10 enclos)
+INSERT INTO Enclos VALUES (40.0, 50.0, 4, 'Glace');
+INSERT INTO Enclos VALUES (40.0, 50.5, 4, 'Glace');
+INSERT INTO Enclos VALUES (40.5, 50.0, 4, 'Glace');
+INSERT INTO Enclos VALUES (41.0, 50.0, 4, 'Eau Froide');
+INSERT INTO Enclos VALUES (41.0, 50.5, 4, 'Eau Froide');
+INSERT INTO Enclos VALUES (41.5, 50.0, 4, 'Eau Froide');
+INSERT INTO Enclos VALUES (42.0, 50.0, 4, 'Toundra');
+INSERT INTO Enclos VALUES (42.0, 50.5, 4, 'Toundra');
+INSERT INTO Enclos VALUES (42.5, 50.0, 4, 'Falaise');
+INSERT INTO Enclos VALUES (42.5, 50.5, 4, 'Falaise');
 
--- =========================
--- 7. INSERTION DES BOUTIQUES
--- =========================
-BEGIN
-  FOR i IN 1..10 LOOP
-    INSERT INTO Boutique VALUES (9 + i, 128 + MOD(i-1, 5), 10 + MOD(i-1, 6),
-      'Boutique '||i, 'Boutique touristique '||i);
-  END LOOP;
-  COMMIT;
-END;
-/
+-- Zone Marine (8 enclos)
+INSERT INTO Enclos VALUES (50.0, 60.0, 5, 'Bassin Profond');
+INSERT INTO Enclos VALUES (50.0, 60.5, 5, 'Bassin Profond');
+INSERT INTO Enclos VALUES (50.5, 60.0, 5, 'Bassin Côtier');
+INSERT INTO Enclos VALUES (50.5, 60.5, 5, 'Bassin Côtier');
+INSERT INTO Enclos VALUES (51.0, 60.0, 5, 'Lagon');
+INSERT INTO Enclos VALUES (51.0, 60.5, 5, 'Lagon');
+INSERT INTO Enclos VALUES (51.5, 60.0, 5, 'Récif');
+INSERT INTO Enclos VALUES (51.5, 60.5, 5, 'Récif');
 
--- =========================
--- 8. INSERTION DES PRESTATAIRES
--- =========================
-BEGIN
-  FOR i IN 1..15 LOOP
-    INSERT INTO Prestataire VALUES (9 + i, 'Entreprise'||i, 'Contact'||i);
-  END LOOP;
-  COMMIT;
-END;
-/
-
--- =========================
--- 9. INSERTION DES PARRAINAGES
--- =========================
-INSERT INTO Parrainage VALUES (10, 'Bronze');
-INSERT INTO Parrainage VALUES (11, 'Argent');
-INSERT INTO Parrainage VALUES (12, 'Or');
-INSERT INTO Parrainage VALUES (13, 'Platine');
-INSERT INTO Parrainage VALUES (14, 'Diamant');
 COMMIT;
 
--- =========================
--- 10. INSERTION DES VISITEURS
--- =========================
+-- =============================================
+-- 5. INSERTION DES ESPÈCES
+-- =============================================
+-- Afrique
+INSERT INTO Espece VALUES (1, 'Lion', 'Panthera leo', 1);
+INSERT INTO Espece VALUES (2, 'Éléphant Africain', 'Loxodonta africana', 1);
+INSERT INTO Espece VALUES (3, 'Girafe', 'Giraffa camelopardalis', 1);
+INSERT INTO Espece VALUES (4, 'Zèbre des Plaines', 'Equus quagga', 0);
+INSERT INTO Espece VALUES (5, 'Hippopotame', 'Hippopotamus amphibius', 1);
+INSERT INTO Espece VALUES (6, 'Léopard', 'Panthera pardus', 1);
+INSERT INTO Espece VALUES (7, 'Gnou', 'Connochaetes taurinus', 0);
+INSERT INTO Espece VALUES (8, 'Autruche', 'Struthio camelus', 0);
+
+-- Asie
+INSERT INTO Espece VALUES (10, 'Tigre du Bengale', 'Panthera tigris tigris', 1);
+INSERT INTO Espece VALUES (11, 'Éléphant d''Asie', 'Elephas maximus', 1);
+INSERT INTO Espece VALUES (12, 'Panda Géant', 'Ailuropoda melanoleuca', 1);
+INSERT INTO Espece VALUES (13, 'Rhinocéros Indien', 'Rhinoceros unicornis', 1);
+INSERT INTO Espece VALUES (14, 'Singe Doré du Vietnam', 'Rhinopithecus roxellana', 1);
+INSERT INTO Espece VALUES (15, 'Koala', 'Phascolarctos cinereus', 1);
+INSERT INTO Espece VALUES (16, 'Orang-outan', 'Pongo pygmaeus', 1);
+INSERT INTO Espece VALUES (17, 'Cobra Royal', 'Ophiophagus hannah', 0);
+
+-- Amazonie
+INSERT INTO Espece VALUES (20, 'Jaguar', 'Panthera onca', 1);
+INSERT INTO Espece VALUES (21, 'Anaconda', 'Eunectes murinus', 0);
+INSERT INTO Espece VALUES (22, 'Piranha', 'Pygocentrus nattereri', 0);
+INSERT INTO Espece VALUES (23, 'Ara Bleu', 'Ara ararauna', 1);
+INSERT INTO Espece VALUES (24, 'Caïman Noir', 'Caiman yacare', 0);
+INSERT INTO Espece VALUES (25, 'Dauphin Rose', 'Inia geoffrensis', 1);
+INSERT INTO Espece VALUES (26, 'Boa Constricteur', 'Boa constrictor', 0);
+INSERT INTO Espece VALUES (27, 'Toucan', 'Ramphastos toco', 0);
+
+-- Arctique
+INSERT INTO Espece VALUES (30, 'Ours Blanc', 'Ursus maritimus', 1);
+INSERT INTO Espece VALUES (31, 'Phoque Barbu', 'Erignathus barbatus', 0);
+INSERT INTO Espece VALUES (32, 'Baleine Béluga', 'Delphinapterus leucas', 1);
+INSERT INTO Espece VALUES (33, 'Morse', 'Odobenus rosmarus', 1);
+INSERT INTO Espece VALUES (34, 'Renard Arctique', 'Vulpes lagopus', 0);
+INSERT INTO Espece VALUES (35, 'Harfang des Neiges', 'Bubo scandiacus', 1);
+
+-- Marin
+INSERT INTO Espece VALUES (40, 'Requin Blanc', 'Carcharodon carcharias', 1);
+INSERT INTO Espece VALUES (41, 'Dauphin Souffleur', 'Tursiops truncatus', 0);
+INSERT INTO Espece VALUES (42, 'Tortue Marine Verte', 'Chelonia mydas', 1);
+INSERT INTO Espece VALUES (43, 'Raie Manta', 'Manta birostris', 1);
+INSERT INTO Espece VALUES (44, 'Otarie de Californie', 'Zalophus californianus', 0);
+INSERT INTO Espece VALUES (45, 'Poisson-Clown', 'Amphiprion ocellaris', 0);
+
+COMMIT;
+
+-- =============================================
+-- 6. INSERTION DES ANIMAUX
+-- =============================================
+-- Animaux Africains
+INSERT INTO Animal VALUES (1000, 10.0, 20.0, 1, TO_DATE('2018-03-15', 'YYYY-MM-DD'), 'Simba', 190, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1001, 10.0, 20.0, 1, TO_DATE('2019-07-22', 'YYYY-MM-DD'), 'Nala', 170, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1002, 10.0, 20.5, 2, TO_DATE('2017-05-10', 'YYYY-MM-DD'), 'Dumbo', 5000, 'Herbivore', 1);
+INSERT INTO Animal VALUES (1003, 10.0, 20.5, 2, TO_DATE('2019-11-08', 'YYYY-MM-DD'), 'Elmer', 4500, 'Herbivore', 1);
+INSERT INTO Animal VALUES (1004, 10.5, 20.0, 3, TO_DATE('2020-01-17', 'YYYY-MM-DD'), 'Gérald', 1200, 'Herbivore', 1);
+INSERT INTO Animal VALUES (1005, 10.5, 20.0, 3, TO_DATE('2021-02-14', 'YYYY-MM-DD'), 'Martine', 1150, 'Herbivore', 1);
+INSERT INTO Animal VALUES (1006, 11.0, 20.0, 4, TO_DATE('2019-02-14', 'YYYY-MM-DD'), 'Marty', 450, 'Herbivore', 1);
+INSERT INTO Animal VALUES (1007, 11.0, 20.5, 5, TO_DATE('2018-08-25', 'YYYY-MM-DD'), 'Hipo', 3500, 'Herbivore', 1);
+INSERT INTO Animal VALUES (1008, 11.5, 20.0, 6, TO_DATE('2020-05-10', 'YYYY-MM-DD'), 'Kali', 70, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1009, 12.0, 20.0, 7, TO_DATE('2019-12-01', 'YYYY-MM-DD'), 'Gnou1', 250, 'Herbivore', 1);
+INSERT INTO Animal VALUES (1010, 12.0, 20.5, 8, TO_DATE('2018-09-15', 'YYYY-MM-DD'), 'Autry', 120, 'Omnivore', 1);
+
+-- Animaux Asiatiques
+INSERT INTO Animal VALUES (1020, 20.0, 30.0, 10, TO_DATE('2016-11-29', 'YYYY-MM-DD'), 'Rajah', 200, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1021, 20.0, 30.5, 11, TO_DATE('2018-06-12', 'YYYY-MM-DD'), 'Chandra', 4200, 'Herbivore', 1);
+INSERT INTO Animal VALUES (1022, 20.5, 30.0, 12, TO_DATE('2020-04-08', 'YYYY-MM-DD'), 'Po', 100, 'Herbivore', 1);
+INSERT INTO Animal VALUES (1023, 20.5, 30.0, 12, TO_DATE('2021-03-15', 'YYYY-MM-DD'), 'Mei', 105, 'Herbivore', 1);
+INSERT INTO Animal VALUES (1024, 21.0, 30.0, 13, TO_DATE('2017-09-03', 'YYYY-MM-DD'), 'Rhino', 2200, 'Herbivore', 1);
+INSERT INTO Animal VALUES (1025, 21.0, 30.5, 10, TO_DATE('2019-01-20', 'YYYY-MM-DD'), 'Kanha', 180, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1026, 21.5, 30.0, 14, TO_DATE('2020-07-22', 'YYYY-MM-DD'), 'Or', 8, 'Omnivore', 1);
+INSERT INTO Animal VALUES (1027, 22.0, 30.0, 16, TO_DATE('2019-05-10', 'YYYY-MM-DD'), 'Borneo', 90, 'Frugivore', 1);
+
+-- Animaux Amazoniens
+INSERT INTO Animal VALUES (1040, 30.0, 40.0, 20, TO_DATE('2019-05-14', 'YYYY-MM-DD'), 'Jaguar1', 120, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1041, 30.0, 40.5, 23, TO_DATE('2020-02-28', 'YYYY-MM-DD'), 'Macaw1', 1.2, 'Frugivore', 1);
+INSERT INTO Animal VALUES (1042, 30.5, 40.0, 23, TO_DATE('2021-01-10', 'YYYY-MM-DD'), 'Macaw2', 1.3, 'Frugivore', 1);
+INSERT INTO Animal VALUES (1043, 31.0, 40.0, 24, TO_DATE('2018-07-07', 'YYYY-MM-DD'), 'Crocy', 250, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1044, 31.0, 40.5, 21, TO_DATE('2017-10-15', 'YYYY-MM-DD'), 'Snakey', 50, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1045, 31.5, 40.0, 25, TO_DATE('2019-11-25', 'YYYY-MM-DD'), 'Rose', 180, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1046, 32.0, 40.0, 27, TO_DATE('2020-08-30', 'YYYY-MM-DD'), 'Boa1', 30, 'Carnivore', 1);
+
+-- Animaux Arctiques
+INSERT INTO Animal VALUES (1060, 40.0, 50.0, 30, TO_DATE('2015-12-22', 'YYYY-MM-DD'), 'Nanook', 500, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1061, 40.0, 50.5, 30, TO_DATE('2019-04-10', 'YYYY-MM-DD'), 'Ismo', 480, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1062, 40.5, 50.0, 31, TO_DATE('2019-03-10', 'YYYY-MM-DD'), 'Foka', 150, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1063, 41.0, 50.0, 32, TO_DATE('2018-06-05', 'YYYY-MM-DD'), 'Beluga', 1200, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1064, 41.0, 50.5, 33, TO_DATE('2017-08-14', 'YYYY-MM-DD'), 'Walrus', 1200, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1065, 42.0, 50.0, 34, TO_DATE('2020-01-20', 'YYYY-MM-DD'), 'Arctic_Fox', 5, 'Carnivore', 1);
+
+-- Animaux Marins
+INSERT INTO Animal VALUES (1080, 50.0, 60.0, 40, TO_DATE('2016-08-19', 'YYYY-MM-DD'), 'Bruce', 1800, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1081, 50.0, 60.5, 41, TO_DATE('2019-11-12', 'YYYY-MM-DD'), 'Flipper', 300, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1082, 50.5, 60.0, 42, TO_DATE('2017-04-21', 'YYYY-MM-DD'), 'Shelly', 500, 'Omnivore', 1);
+INSERT INTO Animal VALUES (1083, 50.5, 60.5, 43, TO_DATE('2018-09-10', 'YYYY-MM-DD'), 'Manta1', 400, 'Omnivore', 1);
+INSERT INTO Animal VALUES (1084, 51.0, 60.0, 44, TO_DATE('2019-02-15', 'YYYY-MM-DD'), 'Seal', 350, 'Carnivore', 1);
+INSERT INTO Animal VALUES (1085, 51.0, 60.5, 45, TO_DATE('2020-10-05', 'YYYY-MM-DD'), 'Nemo', 0.1, 'Omnivore', 1);
+
+COMMIT;
+
+-- =============================================
+-- 7. INSERTION DES BOUTIQUES
+-- =============================================
+INSERT INTO Boutique VALUES (1, 300, 1, 'Boutique Africaine', 'Souvenirs et produits africains');
+INSERT INTO Boutique VALUES (2, 300, 2, 'Boutique Asiatique', 'Artisanat asiatique et soieries');
+INSERT INTO Boutique VALUES (3, 301, 3, 'Boutique Amazonienne', 'Produits issus de la forêt tropicale');
+INSERT INTO Boutique VALUES (4, 301, 4, 'Boutique Arctique', 'Articles polaires et fourrures écologiques');
+INSERT INTO Boutique VALUES (5, 302, 5, 'Boutique Marine', 'Souvenirs marins et minéraux');
+INSERT INTO Boutique VALUES (6, 302, 1, 'Boutique Générale', 'Produits divers et souvenirs du zoo');
+COMMIT;
+
+-- =============================================
+-- 8. INSERTION DES VISITEURS
+-- =============================================
 BEGIN
-  FOR i IN 1..500 LOOP
-    INSERT INTO Visiteur VALUES (999 + i, 10 + MOD(i, 5), 'Visiteur_'||i);
+  FOR i IN 1..100 LOOP
+    INSERT INTO Visiteur VALUES (5000 + i, 'Visiteur_' || TO_CHAR(i, '000'));
   END LOOP;
   COMMIT;
 END;
 /
 
--- =========================
--- 11. INSERTION DES PRESTATIONS
--- =========================
-BEGIN
-  FOR i IN 1..10 LOOP
-    INSERT INTO Prestation VALUES (9 + i, 'Prestation '||i);
-  END LOOP;
-  COMMIT;
-END;
-/
+-- =============================================
+-- 9. INSERTION DES PRESTATAIRES
+-- =============================================
+INSERT INTO Prestataire VALUES (1, 'BTP Solutions', 'Jean');
+INSERT INTO Prestataire VALUES (2, 'Entreprise Nettoyage', 'Marie');
+INSERT INTO Prestataire VALUES (3, 'Réparations Rapides', 'Pierre');
+INSERT INTO Prestataire VALUES (4, 'Maintenance Plus', 'Sophie');
+INSERT INTO Prestataire VALUES (5, 'Travaux Généraux', 'Laurent');
+COMMIT;
 
--- =========================
--- 12. INSERTION DES CONTRATS DE TRAVAIL
--- =========================
+-- =============================================
+-- 10. INSERTION DES PARRAINAGES (EST_PARRAINE)
+-- =============================================
 BEGIN
-  FOR i IN 100..142 LOOP
+  FOR i IN 1000..1085 LOOP
     BEGIN
-      INSERT INTO Contrat_Travail VALUES (i, i,
-        (SELECT ID_FONCTION FROM Personnel WHERE ID_PERSONNEL = i),
-        TO_DATE('2020-01-01', 'YYYY-MM-DD') + ((i-100)*10),
-        TO_DATE('2026-12-31', 'YYYY-MM-DD'));
+      INSERT INTO Est_Parraine VALUES (
+        i,
+        5000 + MOD(i - 1000, 100) + 1,
+        MOD(i - 1000, 5) + 1,
+        CASE WHEN MOD(i - 1000, 5) = 0 THEN 'Bronze'
+             WHEN MOD(i - 1000, 5) = 1 THEN 'Argent'
+             WHEN MOD(i - 1000, 5) = 2 THEN 'Or'
+             WHEN MOD(i - 1000, 5) = 3 THEN 'Platine'
+             ELSE 'Diamant' END
+      );
     EXCEPTION WHEN OTHERS THEN NULL; END;
   END LOOP;
   COMMIT;
 END;
 /
 
--- =========================
--- 13. INSERTION DE EST_AFFECTEE_A
--- =========================
-BEGIN
-  -- Affectation des responsables de zone
-  INSERT INTO Est_Affectee_A VALUES (10, 101);
-  INSERT INTO Est_Affectee_A VALUES (11, 102);
-  INSERT INTO Est_Affectee_A VALUES (12, 103);
-  INSERT INTO Est_Affectee_A VALUES (13, 101);
-  INSERT INTO Est_Affectee_A VALUES (14, 102);
-  INSERT INTO Est_Affectee_A VALUES (15, 103);
-  
-  -- Affectation des soigneurs aux zones
-  FOR i IN 104..123 LOOP
-    BEGIN
-      INSERT INTO Est_Affectee_A VALUES (10 + MOD(i-104, 6), i);
-    EXCEPTION WHEN OTHERS THEN NULL; END;
-  END LOOP;
-  
-  -- Affectation des vétérinaires aux zones
-  FOR i IN 124..127 LOOP
-    FOR zone IN 10..15 LOOP
-      BEGIN
-        INSERT INTO Est_Affectee_A VALUES (zone, i);
-      EXCEPTION WHEN OTHERS THEN NULL; END;
-    END LOOP;
-  END LOOP;
-  
-  COMMIT;
-END;
-/
+-- =============================================
+-- 11. INSERTION DES COMPATIBILITÉS (EST_COMPATIBLE_AVEC)
+-- =============================================
+-- Herbivores africains entre eux
+INSERT INTO Est_Compatible_Avec VALUES (2, 3);   -- Éléphant - Girafe
+INSERT INTO Est_Compatible_Avec VALUES (2, 4);   -- Éléphant - Zèbre
+INSERT INTO Est_Compatible_Avec VALUES (3, 4);   -- Girafe - Zèbre
+INSERT INTO Est_Compatible_Avec VALUES (3, 7);   -- Girafe - Gnou
 
--- =========================
--- 14. INSERTION DE TRAVAILLE_DANS_LA_BOUTIQUE
--- =========================
-BEGIN
-  FOR i IN 133..142 LOOP
-    BEGIN
-      INSERT INTO Travaille_Dans_La_Boutique VALUES (10 + MOD(i-133, 10), i);
-    EXCEPTION WHEN OTHERS THEN NULL; END;
-  END LOOP;
-  COMMIT;
-END;
-/
+-- Carnivores africains
+INSERT INTO Est_Compatible_Avec VALUES (1, 6);   -- Lion - Léopard
 
--- =========================
--- 15. INSERTION DE EST_PARRAINE
--- =========================
-BEGIN
-  -- Tous les animaux sont parrainés
-  FOR i IN 1000..1149 LOOP
-    BEGIN
-      INSERT INTO Est_Parraine VALUES (i, 10 + MOD(i, 5));
-    EXCEPTION WHEN OTHERS THEN NULL; END;
-  END LOOP;
-  COMMIT;
-END;
-/
+-- Herbivores asiatiques
+INSERT INTO Est_Compatible_Avec VALUES (11, 13);  -- Éléphant d'Asie - Rhino
+INSERT INTO Est_Compatible_Avec VALUES (12, 14);  -- Panda - Singe Doré
 
--- =========================
--- 16. INSERTION DE A_ACCES_A
--- =========================
-BEGIN
-  -- Bronze : accès basique
-  INSERT INTO A_Acces_A VALUES (10, 10);
-  INSERT INTO A_Acces_A VALUES (10, 11);
-  
-  -- Argent : accès étendu
-  INSERT INTO A_Acces_A VALUES (11, 10);
-  INSERT INTO A_Acces_A VALUES (11, 11);
-  INSERT INTO A_Acces_A VALUES (11, 12);
-  
-  -- Or : accès complet
-  INSERT INTO A_Acces_A VALUES (12, 10);
-  INSERT INTO A_Acces_A VALUES (12, 11);
-  INSERT INTO A_Acces_A VALUES (12, 12);
-  INSERT INTO A_Acces_A VALUES (12, 13);
-  
-  -- Platine : VIP access
-  INSERT INTO A_Acces_A VALUES (13, 10);
-  INSERT INTO A_Acces_A VALUES (13, 11);
-  INSERT INTO A_Acces_A VALUES (13, 12);
-  INSERT INTO A_Acces_A VALUES (13, 13);
-  INSERT INTO A_Acces_A VALUES (13, 14);
-  
-  -- Diamant : accès complet
-  INSERT INTO A_Acces_A VALUES (14, 10);
-  INSERT INTO A_Acces_A VALUES (14, 11);
-  INSERT INTO A_Acces_A VALUES (14, 12);
-  INSERT INTO A_Acces_A VALUES (14, 13);
-  INSERT INTO A_Acces_A VALUES (14, 14);
-  
-  COMMIT;
-END;
-/
+-- Animaux marins
+INSERT INTO Est_Compatible_Avec VALUES (41, 42);  -- Dauphin - Tortue
+INSERT INTO Est_Compatible_Avec VALUES (42, 43);  -- Tortue - Raie Manta
+INSERT INTO Est_Compatible_Avec VALUES (41, 45);  -- Dauphin - Poisson-Clown
 
--- =========================
--- 17. INSERTION DE EST_COMPATIBLE_AVEC
--- =========================
-BEGIN
-  -- Herbivores entre eux
-  INSERT INTO Est_Compatible_Avec VALUES (101, 102);
-  INSERT INTO Est_Compatible_Avec VALUES (102, 101);
-  INSERT INTO Est_Compatible_Avec VALUES (101, 103);
-  INSERT INTO Est_Compatible_Avec VALUES (103, 101);
-  INSERT INTO Est_Compatible_Avec VALUES (102, 103);
-  INSERT INTO Est_Compatible_Avec VALUES (103, 102);
-  
-  -- Herbivores asiatiques
-  INSERT INTO Est_Compatible_Avec VALUES (106, 108);
-  INSERT INTO Est_Compatible_Avec VALUES (108, 106);
-  
-  -- Animaux marins
-  INSERT INTO Est_Compatible_Avec VALUES (121, 122);
-  INSERT INTO Est_Compatible_Avec VALUES (122, 121);
-  
-  -- Animaux arctiques
-  INSERT INTO Est_Compatible_Avec VALUES (115, 116);
-  INSERT INTO Est_Compatible_Avec VALUES (116, 115);
-  INSERT INTO Est_Compatible_Avec VALUES (115, 118);
-  INSERT INTO Est_Compatible_Avec VALUES (118, 115);
-  
-  COMMIT;
-END;
-/
+-- Animaux arctiques
+INSERT INTO Est_Compatible_Avec VALUES (31, 32);  -- Phoque - Béluga
+INSERT INTO Est_Compatible_Avec VALUES (32, 33);  -- Béluga - Morse
 
--- =========================
--- 18. INSERTION DE EST_LE_PARENT_DE
--- =========================
-BEGIN
-  -- Lions
-  INSERT INTO Est_Le_Parent_De VALUES (1000, 1001);
-  
-  -- Éléphants
-  INSERT INTO Est_Le_Parent_De VALUES (1002, 1003);
-  INSERT INTO Est_Le_Parent_De VALUES (1003, 1004);
-  
-  -- Tigres
-  INSERT INTO Est_Le_Parent_De VALUES (1007, 1008);
-  
-  -- Jaguars
-  INSERT INTO Est_Le_Parent_De VALUES (1012, 1013);
-  
-  -- Ours
-  INSERT INTO Est_Le_Parent_De VALUES (1016, 1017);
-  
-  -- Dauphins
-  INSERT INTO Est_Le_Parent_De VALUES (1020, 1021);
-  
-  COMMIT;
-END;
-/
+COMMIT;
 
--- =========================
--- 19. INSERTION DE BIEN_ETRE_QUOTIDIEN
--- =========================
+-- =============================================
+-- 12. INSERTION DES RELATIONS PARENTALES (EST_LE_PARENT_DE)
+-- =============================================
+-- Lions
+INSERT INTO Est_Le_Parent_De VALUES (1000, 1001);  -- Simba - Nala
+
+-- Éléphants
+INSERT INTO Est_Le_Parent_De VALUES (1002, 1003);  -- Dumbo - Elmer
+
+-- Girafes
+INSERT INTO Est_Le_Parent_De VALUES (1004, 1005);  -- Gérald - Martine
+
+-- Tigres
+INSERT INTO Est_Le_Parent_De VALUES (1020, 1025);  -- Rajah - Kanha
+
+-- Pandas
+INSERT INTO Est_Le_Parent_De VALUES (1022, 1023);  -- Po - Mei
+
+-- (Pas de relation parentale jaguar valide - contrainte CHECK(ID_Parent < ID_Enfant) prévient l'auto-référence)
+
+-- Aras
+INSERT INTO Est_Le_Parent_De VALUES (1041, 1042);  -- Macaw1 - Macaw2
+
+-- Ours Blancs
+INSERT INTO Est_Le_Parent_De VALUES (1060, 1061);  -- Nanook - Ismo
+
+COMMIT;
+
+-- =============================================
+-- 13. INSERTION DES AFFECTATIONS AUX ZONES (EST_AFFECTEE_A)
+-- =============================================
+-- Managers aux zones (déjà manager via FK Zone)
+INSERT INTO Est_Affectee_A VALUES (1, 101);
+INSERT INTO Est_Affectee_A VALUES (2, 102);
+INSERT INTO Est_Affectee_A VALUES (3, 103);
+INSERT INTO Est_Affectee_A VALUES (4, 104);
+INSERT INTO Est_Affectee_A VALUES (5, 105);
+
+-- Soigneurs aux zones
+INSERT INTO Est_Affectee_A VALUES (1, 110);
+INSERT INTO Est_Affectee_A VALUES (1, 111);
+INSERT INTO Est_Affectee_A VALUES (1, 112);
+INSERT INTO Est_Affectee_A VALUES (1, 113);
+INSERT INTO Est_Affectee_A VALUES (2, 120);
+INSERT INTO Est_Affectee_A VALUES (2, 121);
+INSERT INTO Est_Affectee_A VALUES (2, 122);
+INSERT INTO Est_Affectee_A VALUES (2, 123);
+INSERT INTO Est_Affectee_A VALUES (3, 130);
+INSERT INTO Est_Affectee_A VALUES (3, 131);
+INSERT INTO Est_Affectee_A VALUES (3, 132);
+INSERT INTO Est_Affectee_A VALUES (3, 133);
+INSERT INTO Est_Affectee_A VALUES (4, 140);
+INSERT INTO Est_Affectee_A VALUES (4, 141);
+INSERT INTO Est_Affectee_A VALUES (5, 150);
+INSERT INTO Est_Affectee_A VALUES (5, 151);
+
+-- Vétérinaires à toutes les zones
+INSERT INTO Est_Affectee_A VALUES (1, 200);
+INSERT INTO Est_Affectee_A VALUES (2, 200);
+INSERT INTO Est_Affectee_A VALUES (3, 200);
+INSERT INTO Est_Affectee_A VALUES (4, 201);
+INSERT INTO Est_Affectee_A VALUES (5, 201);
+INSERT INTO Est_Affectee_A VALUES (1, 202);
+INSERT INTO Est_Affectee_A VALUES (2, 202);
+INSERT INTO Est_Affectee_A VALUES (3, 202);
+
+-- Techniciens entretien aux zones
+INSERT INTO Est_Affectee_A VALUES (1, 400);
+INSERT INTO Est_Affectee_A VALUES (2, 401);
+INSERT INTO Est_Affectee_A VALUES (3, 402);
+
+-- Guides touristiques
+INSERT INTO Est_Affectee_A VALUES (1, 500);
+INSERT INTO Est_Affectee_A VALUES (2, 501);
+
+COMMIT;
+
+-- =============================================
+-- 14. INSERTION DES AFFECTATIONS BOUTIQUE (TRAVAILLE_DANS_LA_BOUTIQUE)
+-- =============================================
+-- Caissiers aux boutiques
+INSERT INTO Travaille_Dans_La_Boutique VALUES (1, 310);
+INSERT INTO Travaille_Dans_La_Boutique VALUES (1, 311);
+INSERT INTO Travaille_Dans_La_Boutique VALUES (2, 312);
+INSERT INTO Travaille_Dans_La_Boutique VALUES (2, 313);
+INSERT INTO Travaille_Dans_La_Boutique VALUES (3, 314);
+INSERT INTO Travaille_Dans_La_Boutique VALUES (4, 310);
+INSERT INTO Travaille_Dans_La_Boutique VALUES (5, 312);
+INSERT INTO Travaille_Dans_La_Boutique VALUES (6, 311);
+
+COMMIT;
+
+-- =============================================
+-- 15. INSERTION DU BIEN-ÊTRE QUOTIDIEN (BIEN_ETRE_QUOTIDIEN)
+-- =============================================
 BEGIN
-  FOR animal_id IN 1000..1149 LOOP
-    FOR day_offset IN 0..90 LOOP
-      IF DBMS_RANDOM.VALUE() < 0.7 THEN
+  FOR animal_id IN 1000..1085 LOOP
+    FOR day_offset IN 0..30 LOOP
+      IF DBMS_RANDOM.VALUE() < 0.6 THEN
         BEGIN
           INSERT INTO Bien_Etre_Quotidien VALUES (
             animal_id,
-            104 + MOD(animal_id, 20),
+            110 + MOD(animal_id - 1000, 50),
             TRUNC(SYSDATE) - day_offset,
-            ROUND(DBMS_RANDOM.VALUE(1, 50), 2)
+            ROUND(DBMS_RANDOM.VALUE(1, 100), 2)
           );
         EXCEPTION WHEN OTHERS THEN NULL; END;
       END IF;
@@ -529,24 +500,22 @@ BEGIN
 END;
 /
 
--- =========================
--- 20. INSERTION DE PRATIQUE_SOINS
--- =========================
+-- =============================================
+-- 16. INSERTION DES SOINS (PRATIQUE_SOINS)
+-- =============================================
 BEGIN
-  FOR animal_id IN 1000..1149 LOOP
+  FOR animal_id IN 1000..1085 LOOP
     FOR month_offset IN 0..11 LOOP
-      IF DBMS_RANDOM.VALUE() < 0.2 THEN
+      IF DBMS_RANDOM.VALUE() < 0.3 THEN
         BEGIN
           INSERT INTO Pratique_Soins VALUES (
             animal_id,
-            124 + MOD(animal_id, 4),
+            200 + MOD(animal_id - 1000, 3),
             TRUNC(SYSDATE) - (month_offset * 30),
-            CASE
-              WHEN DBMS_RANDOM.VALUE() < 0.3 THEN 'Vaccin'
-              WHEN DBMS_RANDOM.VALUE() < 0.6 THEN 'Examen médical'
-              WHEN DBMS_RANDOM.VALUE() < 0.8 THEN 'Détartrage'
-              ELSE 'Traitement parasitaire'
-            END
+            CASE WHEN DBMS_RANDOM.VALUE() < 0.25 THEN 'Vaccination'
+                 WHEN DBMS_RANDOM.VALUE() < 0.50 THEN 'Examen médical'
+                 WHEN DBMS_RANDOM.VALUE() < 0.75 THEN 'Détartrage'
+                 ELSE 'Traitement parasitaire' END
           );
         EXCEPTION WHEN OTHERS THEN NULL; END;
       END IF;
@@ -556,54 +525,25 @@ BEGIN
 END;
 /
 
--- =========================
--- 21. INSERTION DE CHIFFRE_AFFAIRES (365 jours x 10 boutiques)
--- =========================
+-- =============================================
+-- 17. INSERTION DES RÉPARATIONS (REPARATION)
+-- =============================================
 BEGIN
-  FOR boutique_id IN 10..19 LOOP
-    FOR day_offset IN 0..364 LOOP
-      BEGIN
-        INSERT INTO Chiffre_Affaires VALUES (
-          boutique_id,
-          TRUNC(SYSDATE) - 365 + day_offset,
-          ROUND(DBMS_RANDOM.VALUE(500, 3000), 2)
-        );
-      EXCEPTION WHEN OTHERS THEN NULL; END;
-    END LOOP;
-  END LOOP;
-  COMMIT;
-END;
-/
-
--- =========================
--- 22. INSERTION DE REPARATION
--- =========================
-BEGIN
-  FOR i IN 1..50 LOOP
+  FOR i IN 1..30 LOOP
     DECLARE
       lat NUMBER;
       lng NUMBER;
-      zone_id NUMBER;
     BEGIN
-      zone_id := MOD(i, 6) + 1;
-      
-      -- Sélectionner un enclos valide
-      CASE zone_id
-        WHEN 1 THEN lat := 10 + MOD(i, 3); lng := 20 + MOD(i, 2);
-        WHEN 2 THEN lat := 20; lng := 30 + MOD(i, 3);
-        WHEN 3 THEN lat := 30; lng := 40 + MOD(i, 3);
-        WHEN 4 THEN lat := 40; lng := 50 + MOD(i, 3);
-        WHEN 5 THEN lat := 50; lng := 60 + MOD(i, 2);
-        ELSE lat := 13; lng := 21;
-      END CASE;
+      lat := 10.0 + MOD(i, 5) * 0.5;
+      lng := 20.0 + MOD(i, 3) * 0.5;
       
       INSERT INTO Reparation VALUES (
-        TRUNC(SYSDATE) - i,
+        TRUNC(SYSDATE) - (i * 5),
         lat,
         lng,
-        104 + MOD(i, 20),
-        10 + MOD(i, 15),
-        TRUNC(SYSDATE) - i + ROUND(DBMS_RANDOM.VALUE(1, 5)),
+        400 + MOD(i, 3),
+        MOD(i, 5) + 1,
+        TRUNC(SYSDATE) - (i * 5) + ROUND(DBMS_RANDOM.VALUE(1, 30)),
         CASE WHEN MOD(i, 4) = 0 THEN 'Réparation clôture'
              WHEN MOD(i, 4) = 1 THEN 'Réparation bassin'
              WHEN MOD(i, 4) = 2 THEN 'Rénovation abri'
@@ -616,9 +556,51 @@ BEGIN
 END;
 /
 
--- =========================
--- RÉSUMÉ DU SCRIPT
--- =========================
+-- =============================================
+-- 18. INSERTION DES CHIFFRES D'AFFAIRES (CHIFFRE_AFFAIRES)
+-- =============================================
+BEGIN
+  FOR boutique_id IN 1..6 LOOP
+    FOR day_offset IN 0..365 LOOP
+      BEGIN
+        INSERT INTO Chiffre_Affaires VALUES (
+          boutique_id,
+          TRUNC(SYSDATE) - 365 + day_offset,
+          ROUND(DBMS_RANDOM.VALUE(200, 2000), 2)
+        );
+      EXCEPTION WHEN OTHERS THEN NULL; END;
+    END LOOP;
+  END LOOP;
+  COMMIT;
+END;
+/
+
+-- =============================================
+-- 19. INSERTION DES CONTRATS DE TRAVAIL (CONTRAT_TRAVAIL)
+-- =============================================
+DECLARE
+  v_id NUMBER := 1;
+BEGIN
+  -- Contrats pour tous les personnels
+  FOR pers_id IN 100..501 LOOP
+    BEGIN
+      INSERT INTO Contrat_Travail VALUES (
+        v_id,
+        pers_id,
+        (SELECT ID_Fonction FROM Personnel WHERE ID_Personnel = pers_id),
+        TO_DATE('2020-01-01', 'YYYY-MM-DD'),
+        TO_DATE('2028-12-31', 'YYYY-MM-DD')
+      );
+      v_id := v_id + 1;
+    EXCEPTION WHEN OTHERS THEN NULL; END;
+  END LOOP;
+  COMMIT;
+END;
+/
+
+-- =============================================
+-- RÉSUMÉ DE L'INSERTION
+-- =============================================
 DECLARE
   nb_func NUMBER;
   nb_pers NUMBER;
@@ -628,8 +610,14 @@ DECLARE
   nb_animaux NUMBER;
   nb_boutiques NUMBER;
   nb_visiteurs NUMBER;
+  nb_parrainages NUMBER;
+  nb_bien_etre NUMBER;
+  nb_soins NUMBER;
   nb_affectations NUMBER;
-  nb_emploi_boutique NUMBER;
+  nb_boutique_staff NUMBER;
+  nb_reparations NUMBER;
+  nb_ca NUMBER;
+  nb_contrats NUMBER;
 BEGIN
   SELECT COUNT(*) INTO nb_func FROM Fonction;
   SELECT COUNT(*) INTO nb_pers FROM Personnel;
@@ -639,21 +627,37 @@ BEGIN
   SELECT COUNT(*) INTO nb_animaux FROM Animal;
   SELECT COUNT(*) INTO nb_boutiques FROM Boutique;
   SELECT COUNT(*) INTO nb_visiteurs FROM Visiteur;
+  SELECT COUNT(*) INTO nb_parrainages FROM Est_Parraine;
+  SELECT COUNT(*) INTO nb_bien_etre FROM Bien_Etre_Quotidien;
+  SELECT COUNT(*) INTO nb_soins FROM Pratique_Soins;
   SELECT COUNT(*) INTO nb_affectations FROM Est_Affectee_A;
-  SELECT COUNT(*) INTO nb_emploi_boutique FROM Travaille_Dans_La_Boutique;
+  SELECT COUNT(*) INTO nb_boutique_staff FROM Travaille_Dans_La_Boutique;
+  SELECT COUNT(*) INTO nb_reparations FROM Reparation;
+  SELECT COUNT(*) INTO nb_ca FROM Chiffre_Affaires;
+  SELECT COUNT(*) INTO nb_contrats FROM Contrat_Travail;
   
-  DBMS_OUTPUT.PUT_LINE('====== RÉSUMÉ DE L''INSERTION ======');
-  DBMS_OUTPUT.PUT_LINE('Fonctions: ' || nb_func);
-  DBMS_OUTPUT.PUT_LINE('Personnels: ' || nb_pers);
-  DBMS_OUTPUT.PUT_LINE('Zones: ' || nb_zones);
-  DBMS_OUTPUT.PUT_LINE('Enclos: ' || nb_enclos);
-  DBMS_OUTPUT.PUT_LINE('Espèces: ' || nb_especes);
-  DBMS_OUTPUT.PUT_LINE('Animaux: ' || nb_animaux);
-  DBMS_OUTPUT.PUT_LINE('Boutiques: ' || nb_boutiques);
-  DBMS_OUTPUT.PUT_LINE('Visiteurs: ' || nb_visiteurs);
-  DBMS_OUTPUT.PUT_LINE('Affectations: ' || nb_affectations);
-  DBMS_OUTPUT.PUT_LINE('Emplois boutique: ' || nb_emploi_boutique);
-  DBMS_OUTPUT.PUT_LINE('=====================================');
+  DBMS_OUTPUT.PUT_LINE('===============================================');
+  DBMS_OUTPUT.PUT_LINE('      RÉSUMÉ DE L''INSERTION DE DONNÉES');
+  DBMS_OUTPUT.PUT_LINE('===============================================');
+  DBMS_OUTPUT.PUT_LINE('Fonctions:                  ' || nb_func);
+  DBMS_OUTPUT.PUT_LINE('Personnels:                 ' || nb_pers);
+  DBMS_OUTPUT.PUT_LINE('Zones:                      ' || nb_zones);
+  DBMS_OUTPUT.PUT_LINE('Enclos:                     ' || nb_enclos);
+  DBMS_OUTPUT.PUT_LINE('Espèces:                    ' || nb_especes);
+  DBMS_OUTPUT.PUT_LINE('Animaux:                    ' || nb_animaux);
+  DBMS_OUTPUT.PUT_LINE('Boutiques:                  ' || nb_boutiques);
+  DBMS_OUTPUT.PUT_LINE('Visiteurs:                  ' || nb_visiteurs);
+  DBMS_OUTPUT.PUT_LINE('Parrainages:                ' || nb_parrainages);
+  DBMS_OUTPUT.PUT_LINE('Bien-être quotidien:        ' || nb_bien_etre);
+  DBMS_OUTPUT.PUT_LINE('Soins pratiqués:            ' || nb_soins);
+  DBMS_OUTPUT.PUT_LINE('Affectations zones:         ' || nb_affectations);
+  DBMS_OUTPUT.PUT_LINE('Affectations boutiques:     ' || nb_boutique_staff);
+  DBMS_OUTPUT.PUT_LINE('Réparations:                ' || nb_reparations);
+  DBMS_OUTPUT.PUT_LINE('Chiffres d''affaires:        ' || nb_ca);
+  DBMS_OUTPUT.PUT_LINE('Contrats de travail:        ' || nb_contrats);
+  DBMS_OUTPUT.PUT_LINE('===============================================');
+  DBMS_OUTPUT.PUT_LINE('INSERTION COMPLÈTE ET VALIDÉE');
+  DBMS_OUTPUT.PUT_LINE('===============================================');
 END;
 /
 

@@ -4,6 +4,7 @@ class ProfilController extends BaseController
 {
 
     private $serviceEmployee;
+    
     public function __construct()
     {
         $this->serviceEmployee = new ServiceEmployee();
@@ -26,7 +27,7 @@ class ProfilController extends BaseController
             $this->redirectWithMessage('home', 'Utilisateur introuvable.', 'error');
         }
 
-        $historique = ContratTravail::recupParPersonnel($id_user);
+        $historique = $this->serviceEmployee->getContratsParID($id_user);
         $title = "Mon profil";
 
         $this->render('profil/v-profil', [

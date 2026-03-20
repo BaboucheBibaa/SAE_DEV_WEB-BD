@@ -2,29 +2,35 @@
 
 class ServiceZone
 {
-
+    private $Zone;
+    private $User;
+    public function __construct()
+    {
+        $this->Zone = new Zone();
+        $this->User = new User();
+    }
 
     public function getToutesLesZones()
     {
         //Récupère toutes les zones de la base de données
-        return Zone::toutRecup();
+        return $this->Zone->toutRecup();
     }
     public function getZoneParID($id_zone)
     {
         //Récupère une zone spécifique à partir de son ID
-        return Zone::recupParID($id_zone);
+        return $this->Zone->recupParID($id_zone);
     }
 
     public function getManagerParZone($id_zone)
     {
         //Récupère le manager d'une zone donnée
-        return Zone::recupNomManager($id_zone);
+        return $this->Zone->recupNomManager($id_zone);
     }
 
     public function getZoneDuManager($id_manager)
     {
         //Récupère la zone dont l'utilisateur est le manager
-        return Zone::recupZoneDuManager($id_manager);
+        return $this->Zone->recupZoneDuManager($id_manager);
     }
 
     //MAJ/Suppression/Création d'une zone
@@ -36,12 +42,12 @@ class ServiceZone
             'id_manager' => !empty($_POST['id_manager_modif']) ? $_POST['id_manager_modif'] : null
         ];
 
-        return Zone::maj($id, $data);
+        return $this->Zone->maj($id, $data);
     }
     public function supprZone($id)
     {
         //Supprime une zone de la base de données
-        return Zone::suppr($id);
+        return $this->Zone->suppr($id);
     }
     public function ajoutZone()
     {
@@ -51,14 +57,14 @@ class ServiceZone
             'id_manager' => !empty($_POST['id_manager_cree']) ? $_POST['id_manager_cree'] : null
         ];
 
-        return Zone::creer($data);
+        return $this->Zone->creer($data);
     }
 
     //Fonctions permettant l'affichage de formulaires d'édition/création de zone
     public function dataCreationZone()
     {
         //Retourne les données pour la création d'un formulaire de création de zone
-        $employees = User::toutRecup();
+        $employees = $this->User->toutRecup();
         if (!$employees) {
             return null; // Pas d'employés disponibles pour être manager
         }
@@ -76,12 +82,12 @@ class ServiceZone
             return null; //id inexistant
         }
 
-        $zone = Zone::recupParID($id);
+        $zone = $this->Zone->recupParID($id);
         if (!$zone) {
             return null; // Zone non trouvée
         }
 
-        $employees = User::toutRecup();
+        $employees = $this->User->toutRecup();
         $title = "Modifier une Zone";
         return [
             'title' => $title,

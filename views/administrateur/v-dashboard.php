@@ -5,30 +5,37 @@
             background-color: #0d6efd !important;
             color: white !important;
         }
+
         .accordion-button-primary:not(.collapsed) {
             background-color: #0d6efd;
             color: white;
         }
+
         .accordion-button-success {
             background-color: #198754 !important;
             color: white !important;
         }
+
         .accordion-button-success:not(.collapsed) {
             background-color: #198754;
             color: white;
         }
+
         .accordion-button-info {
             background-color: #0dcaf0 !important;
             color: black !important;
         }
+
         .accordion-button-info:not(.collapsed) {
             background-color: #0dcaf0;
             color: black;
         }
+
         .accordion-button-warning {
             background-color: #ffc107 !important;
             color: black !important;
         }
+
         .accordion-button-warning:not(.collapsed) {
             background-color: #ffc107;
             color: black;
@@ -254,12 +261,17 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
+                                                        <a href="index.php?action=profilZone&id=<?= $zone['ID_ZONE'] ?>" class="btn btn-outline-info" title="Profil">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
                                                         <a href="index.php?action=editionZone&id=<?= $zone['ID_ZONE'] ?>" class="btn btn-outline-warning" title="Modifier">
                                                             <i class="bi bi-pencil"></i>
                                                         </a>
+
                                                         <a href="index.php?action=supprZone&id=<?= $zone['ID_ZONE'] ?>" class="btn btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette zone ?')" title="Supprimer">
                                                             <i class="bi bi-trash"></i>
                                                         </a>
+
                                                     </div>
                                                 </td>
                                             </tr>
@@ -307,6 +319,10 @@
                                                 <td><strong><?= htmlspecialchars($boutique['NOM_BOUTIQUE'] ?? 'N/A') ?></strong></td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
+                                                        <a href="index.php?action=profilBoutique&id=<?= $boutique['ID_BOUTIQUE'] ?>" class="btn btn-outline-info btn-sm" title="Profil">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+
                                                         <a href="index.php?action=editionBoutique&id=<?= $boutique['ID_BOUTIQUE'] ?>" class="btn btn-outline-warning" title="Modifier">
                                                             <i class="bi bi-pencil"></i>
                                                         </a>
