@@ -44,8 +44,16 @@ class Soigneurs extends BaseController
     {
         $this->requireRole(SOIGNEUR);
         if ($this->serviceSoin->ajoutNourriture()) {
+            $this->logEvent(
+                'INSERTION_BD',
+                "Dose de nourriture ajoutée par le soigneur id={$_SESSION['user']['ID_PERSONNEL']}"
+            );
             $this->redirectWithMessage('formAjoutNourriture', 'Dose de nourriture enregistrée avec succès.', 'success');
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de l'enregistrement de la dose de nourriture par le soigneur id={$_SESSION['user']['ID_PERSONNEL']}"
+            );
             $this->redirectWithMessage('formAjoutNourriture', 'Erreur lors de l\'enregistrement.', 'error');
         }
     }

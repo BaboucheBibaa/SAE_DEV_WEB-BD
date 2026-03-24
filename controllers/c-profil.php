@@ -4,7 +4,7 @@ class ProfilController extends BaseController
 {
 
     private $serviceEmployee;
-    
+
     public function __construct()
     {
         $this->serviceEmployee = new ServiceEmployee();
@@ -75,11 +75,19 @@ class ProfilController extends BaseController
         $MDP = password_hash($newPassword, PASSWORD_DEFAULT);
 
         if ($this->serviceEmployee->majPassword($userId, $MDP)) {
+            $this->logEvent(
+                'UPDATE_BD',
+                "Mot de passe mis à jour pour l'utilisateur id={$userId}"
+            );
             $_SESSION['flash'] = ['type' => 'success', 'message' => 'Votre mot de passe a été modifié avec succès.'];
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la mise à jour du mot de passe pour l'utilisateur id={$userId}"
+            );
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Une erreur a eu lieu lors de la mise à jour du profil.'];
         }
 
-        $this->redirect('profil',$userId);
+        $this->redirect('profil', $userId);
     }
 }

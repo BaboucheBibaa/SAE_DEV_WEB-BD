@@ -11,6 +11,15 @@ class User
         return $row['NEW_ID'];
     }
 
+    public function getLastInsertId()
+    {
+        $db = Database::getConnection();
+        $sqlSeq = "SELECT NVL(MAX(ID_PERSONNEL), 0) AS LAST_ID FROM Personnel";
+        $stid = oci_parse($db, $sqlSeq);
+        oci_execute($stid);
+        return oci_fetch_assoc($stid);
+    }
+
     /**
      * Récupère un utilisateur par son login (pour l'authentification)
      */

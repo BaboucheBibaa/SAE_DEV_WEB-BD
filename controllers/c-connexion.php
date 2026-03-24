@@ -36,9 +36,17 @@ class ConnexionController extends BaseController
         if ($loginValide) {
             session_regenerate_id(true);
             $_SESSION['user'] = $user;
+            $this->logEvent(
+                'CONNEXION',
+                "Connexion réussie: login={$login}, id={$user['ID_PERSONNEL']}"
+            );
             header('Location: index.php?action=profil&id=' . $user['ID_PERSONNEL']);
             exit;
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Échec connexion: login={$login}"
+            );
             $error = "Identifiant ou mot de passe incorrect.";
         }
 
@@ -51,6 +59,11 @@ class ConnexionController extends BaseController
 
     public function deconnexion()
     {
+        $userId = $_SESSION['user']['ID_PERSONNEL'] ?? 'inconnu';
+        $this->logEvent(
+            'DECONNEXION',
+            "Déconnexion utilisateur id={$userId}"
+        );
         session_destroy();
         $this->redirectWithMessage('home', 'Vous avez été déconnecté avec succès.', 'success');
     }

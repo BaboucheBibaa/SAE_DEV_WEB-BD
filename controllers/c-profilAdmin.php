@@ -85,12 +85,21 @@ class AdminController extends BaseController
         switch ($this->serviceEmployee->ajoutEmployee()) {
             //valeurs de retour de la fonction ajoutEmployee: 0 ou 1 car retourne un boolean
             case 1:
+                $this->logEvent(
+                    'INSERTION_BD',
+                    "Nouvel employé ajouté: id={$this->serviceEmployee->getLastInsertId()}"
+                );
                 $this->redirectWithMessage('adminDashboard', 'Employé ajouté avec succès.', 'success');
                 break;
             case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de l'ajout d'un employé"
+                );
                 $this->redirectWithMessage('creationEmployee', 'Erreur lors de l\'ajout de l\'employé.', 'error');
                 break;
             //autres cas ici : valeurs de retour de la validation de formulaire
+            //pas de message dans les logs pour ces erreurs car c'est côté utilisateur et non côt serveur
             case 2:
                 $this->redirectWithMessage('creationEmployee', 'Erreur : Nom invalide.', 'error');
                 break;
@@ -132,9 +141,18 @@ class AdminController extends BaseController
         switch ($this->serviceEmployee->majEmployee($id)) {
             //valeurs de retour de la fonction majEmployee: 0 ou 1 car retourne un boolean
             case 1:
+                $this->logEvent(
+                    'UPDATE_BD',
+                    "Employé mis à jour: id={$id}"
+                );
                 $this->redirectWithMessage('adminDashboard', 'Employé mis à jour avec succès.', 'success');
                 break;
             case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de la mise à jour de l'employé id={$id}"
+                );
+
                 $this->redirectWithMessage('editionEmployee', 'Erreur lors de la mise à jour de l\'employé.', 'error');
                 break;
             //autres cas ici : valeurs de retour de la validation de formulaire
@@ -170,8 +188,16 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         if ($this->serviceEmployee->supprEmployee($id)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Employé supprimé: id={$id}"
+            );
             $this->redirectWithMessage('adminDashboard', 'Employé supprimé avec succès.', 'success');
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression de l'employé id={$id}"
+            );
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de l\'employé.', 'error');
         }
     }
@@ -237,8 +263,16 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         if ($this->serviceBoutique->ajoutBoutique()) {
+            $this->logEvent(
+                'INSERTION_BD',
+                "Nouvelle boutique ajoutée"
+            );
             $this->redirectWithMessage('adminDashboard', 'Boutique ajoutée avec succès.', 'success');
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de l'ajout d'une boutique"
+            );
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout de la boutique.', 'error');
         }
     }
@@ -258,8 +292,16 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         if ($this->serviceBoutique->majBoutique($id)) {
+            $this->logEvent(
+                'UPDATE_BD',
+                "Boutique mise à jour: id={$id}"
+            );
             $this->redirectWithMessage('adminDashboard', 'Boutique mise à jour avec succès.', 'success');
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la mise à jour de la boutique id={$id}"
+            );
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de la boutique.', 'error');
         }
     }
@@ -268,8 +310,18 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         if ($this->serviceBoutique->supprBoutique($id)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Boutique supprimée: id={$id}"
+            );
+
             $this->redirectWithMessage('adminDashboard', 'Boutique supprimée avec succès.', 'success');
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression de la boutique id={$id}"
+            );
+
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de la boutique.', 'error');
         }
     }
@@ -291,9 +343,18 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         if ($this->serviceZone->ajoutZone()) {
+            $this->logEvent(
+                'INSERTION_BD',
+                "Nouvelle zone ajoutée"
+            );
+
             $this->redirectWithMessage('adminDashboard', 'Zone ajoutée avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout de la zone.', 'error');
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de l'ajout d'une zone"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout d\'une zone.', 'error');
         }
     }
 
@@ -312,8 +373,16 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         if ($this->serviceZone->majZone($id)) {
+            $this->logEvent(
+                'UPDATE_BD',
+                "Zone mise à jour: id={$id}"
+            );
             $this->redirectWithMessage('adminDashboard', 'Zone mise à jour avec succès.', 'success');
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la mise à jour de la zone id={$id}"
+            );
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de la zone.', 'error');
         }
     }
@@ -322,8 +391,16 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         if ($this->serviceZone->supprZone($id)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Zone supprimée: id={$id}"
+            );
             $this->redirectWithMessage('adminDashboard', 'Zone supprimée avec succès.', 'success');
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression de la zone id={$id}"
+            );
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de la zone.', 'error');
         }
     }
@@ -353,8 +430,16 @@ class AdminController extends BaseController
         } elseif ($result === 3) {
             $this->redirectWithMessage('creationAnimal', 'Erreur : Poids invalide.', 'error');
         } elseif ($result === true) {
+            $this->logEvent(
+                'INSERTION_BD',
+                "Nouvel animal ajouté"
+            );
             $this->redirectWithMessage('adminDashboard', 'Animal ajouté avec succès.', 'success');
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de l'ajout d'un animal"
+            );
             $this->redirectWithMessage('creationAnimal', 'Erreur lors de l\'ajout de l\'animal.', 'error');
         }
     }
@@ -386,8 +471,16 @@ class AdminController extends BaseController
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Poids invalide.'];
             $this->redirect('editionAnimal', $id);
         } elseif ($result === true) {
+            $this->logEvent(
+                'UPDATE_BD',
+                "Animal mis à jour: id={$id}"
+            );
             $this->redirectWithMessage('adminDashboard', 'Animal mis à jour avec succès.', 'success');
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la mise à jour de l\'animal id={$id}"
+            );
             $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur lors de la mise à jour de l\'animal.'];
             $this->redirect('editionAnimal', $id);
         }
@@ -397,8 +490,16 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         if ($this->serviceAnimal->supprAnimal($id)) {
+            $this->logEvent(
+                'DELETE_BD',
+                "Animal supprimé: id={$id}"
+            );
             $this->redirectWithMessage('adminDashboard', 'Animal supprimé avec succès.', 'success');
         } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression de l'animal id={$id}"
+            );
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de l\'animal.', 'error');
         }
     }

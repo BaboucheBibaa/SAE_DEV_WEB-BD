@@ -1,0 +1,4 @@
+[2026-03-21 13:06:06] [INSERTION_BD] Nouvel employé ajouté: id=405
+[2026-03-21 13:08:52] [SUPPRESSION_BD] Employé supprimé: id=403
+[2026-03-21 13:08:55] [SUPPRESSION_BD] Employé supprimé: id=404
+[2026-03-21 13:08:58] [SUPPRESSION_BD] Employé supprimé: id=405

@@ -193,6 +193,7 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 - [ ] Gérer l'affichage des données d'un genre d'employé par une vue
 - [ ] Ajouter des opérations +/- complexes en faisant des statistiques diverses et variées dans la BD (divisions / agrégats / jointures complexes)
 - [ ] Ajout d'un fichier de gestion des logs (Connexion / Déconnexion au sein du site et Ajout / Maj / Suppression au sein de la BD)
+- ✅ Popup pour les fins de contrat sur le dashboard admin
 
 ---
 

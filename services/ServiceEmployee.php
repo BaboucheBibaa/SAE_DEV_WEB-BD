@@ -27,6 +27,12 @@ class ServiceEmployee
         }
     }
 
+    public function getLastInsertId()
+    {
+        //Récupère l'id du dernier employé ajouté à la base de données
+        return $this->User->getLastInsertId()['LAST_ID'];
+    }
+
     public function getContratsParID($id)
     {
         if (!$id) {

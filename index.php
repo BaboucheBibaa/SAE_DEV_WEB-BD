@@ -1,10 +1,10 @@
 <?php
-define("ADMINID",1);
-define("RESPSOIG",2);
-define("SOIGNEUR",3);
-define("RESPBOUTIQUE",5);
-define("EMPLOYEE_BOUTIQUE",6);
-define("ENTRETIEN",7);
+define("ADMINID", 1);
+define("RESPSOIG", 2);
+define("SOIGNEUR", 3);
+define("RESPBOUTIQUE", 5);
+define("EMPLOYEE_BOUTIQUE", 6);
+define("ENTRETIEN", 7);
 
 session_start();
 
@@ -26,6 +26,7 @@ require_once 'models/m-User.php';
 require_once 'models/m-Zone.php';
 require_once 'models/m-ContratTravail.php';
 require_once 'models/m-CA.php';
+require_once 'models/m-LogWriter.php';
 
 require_once 'utilities/Utils.php';
 
@@ -55,13 +56,16 @@ require_once 'controllers/c-profilZone.php';
 require_once 'controllers/c-personnelEntretien.php';
 require_once 'controllers/c-profilBoutique.php';
 
+if (!file_exists('logs.txt')) {
+    touch('logs.txt');
+}
 
 //toutes les pages se chargeront par index.php via la méthode GET action, une seule page sera affichée
 $action = $_GET['action'] ?? 'home';
 
 
 // On instancie UNIQUEMENT les contrôleurs nécessaires au fonctionnement de la page demandée par GET.
-switch ($action){
+switch ($action) {
     case 'home':
     case 'afficheConnexion':
     case 'connexion':
@@ -72,7 +76,7 @@ switch ($action){
     case 'updatePassword':
         $controller = new ProfilController();
         break;
-    case 'adminDashboard':    
+    case 'adminDashboard':
     case 'supprEmployee':
     case 'archiverEmployee':
     case 'creationEmployee':
@@ -342,7 +346,7 @@ switch ($action) {
     case 'search':
         $controller->gererRequete();
         break;
-        
+
     default:
         echo "Page introuvable";
 }

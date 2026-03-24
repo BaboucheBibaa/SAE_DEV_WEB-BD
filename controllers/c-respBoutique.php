@@ -109,9 +109,18 @@ class RespBoutiqueController extends BaseController
         ];
 
         if ($this->serviceCA->ajoutCA($data)) {
-            $this->redirectWithMessage('respBoutiqueDashboard', 'Chiffre d\'affaires journalier ajouté avec succès.', 'success');
-        }
+            $this->logEvent(
+                'INSERTION_BD',
+                "Chiffre d'affaires journalier ajouté pour la boutique id={$boutique['ID_BOUTIQUE']} à la date {$date}"
+            );
 
-        $this->redirectWithMessage('creationCA', 'Erreur lors de l\'ajout du chiffre d\'affaires.', 'error');
+            $this->redirectWithMessage('respBoutiqueDashboard', 'Chiffre d\'affaires journalier ajouté avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de l'ajout du chiffre d'affaires pour la boutique id={$boutique['ID_BOUTIQUE']} à la date {$date}"
+            );
+            $this->redirectWithMessage('creationCA', 'Erreur lors de l\'ajout du chiffre d\'affaires.', 'error');
+        }
     }
 }

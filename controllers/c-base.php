@@ -1,6 +1,16 @@
 <?php
 class BaseController
 {
+    protected function logEvent(string $type, string $message, string $filename = 'logs.txt'): void
+    {
+        try {
+            $logger = new LogWriter();
+            $logger->writeLog($type, $message, $filename);
+        } catch (Exception $e) {
+            // Ne pas casser le flux applicatif si l'écriture de log échoue.
+        }
+    }
+
     protected function render(string $viewPath, array $data = [], string $title = "Zoo'land"): void
     {
         // Extrait les données afin de les rendre visible dans la vue, voir les controlleurs pour en savoir plus

@@ -2,6 +2,11 @@
 
 class SearchController extends BaseController
 {
+    private $serviceSearch;
+    public function __construct()
+    {
+        $this->serviceSearch = new ServiceSearch();
+    }
     public function gererRequete()
     {
         $action = $_GET['search_action'] ?? 'affiche';
@@ -35,7 +40,7 @@ class SearchController extends BaseController
         if (empty($searchTerm)) {
             $message = 'Veuillez entrer un terme de recherche.';
         } else {
-            $results = ServiceSearch::recherchGlobale($searchTerm);
+            $results = $this->serviceSearch->recherchGlobale($searchTerm);
             
             // Compte le total de résultats
             $totalResults = 0;

@@ -17,7 +17,6 @@ INSERT INTO Fonction VALUES (4, 'Vétérinaire', 'Soins médicaux et consultatio
 INSERT INTO Fonction VALUES (5, 'Manager Boutique', 'Gestion commerciale d''une boutique');
 INSERT INTO Fonction VALUES (6, 'Caissier', 'Gestion des ventes et commerçage');
 INSERT INTO Fonction VALUES (7, 'Technicien Entretien', 'Maintenance des installations et enclos');
-INSERT INTO Fonction VALUES (8, 'Guide Touristique', 'Accompagnement des visiteurs et animations');
 COMMIT;
 
 -- =============================================
