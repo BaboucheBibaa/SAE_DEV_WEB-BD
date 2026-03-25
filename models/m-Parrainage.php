@@ -6,7 +6,7 @@ class Parrainage
     {
         //Récupère tous les parrainages
         $db = Database::getConnection();
-        $sql = "SELECT ep.*, V.NOM_Visiteur, A.NOM_Animal FROM Animal A, Visiteur V, Est_Parraine ep WHERE ep.ID_Visiteur = V.ID_Visiteur AND ep.ID_ANIMAL = A.ID_Animal ORDER BY ep.ID_ANIMAL, ep.ID_Visiteur, ep.Niveau";
+        $sql = "SELECT ep.*, V.NOM_Visiteur, A.NOM_Animal FROM Animal A, Visiteur V, Est_Parraine ep WHERE ep.ID_Visiteur = V.ID_Visiteur AND ep.ID_ANIMAL = A.ID_Animal ORDER BY ep.ID_ANIMAL, ep.ID_Visiteur";
         $stid = oci_parse($db, $sql);
         $r = oci_execute($stid);
         if (!$r) {
@@ -20,7 +20,7 @@ class Parrainage
 
     public function recupParAnimal($id_animal){
         $db = Database::getConnection();
-        $sql = "SELECT V.ID_Visiteur, V.NOM_Visiteur FROM Visiteur V, Est_Parraine ep WHERE ep.ID_Visiteur = V.ID_Visiteur AND ep.ID_ANIMAL = :id_animal";
+        $sql = "SELECT V.ID_Visiteur, V.NOM_Visiteur,ep.LIBELLE LIBELLE FROM Visiteur V, Est_Parraine ep WHERE ep.ID_Visiteur = V.ID_Visiteur AND ep.ID_ANIMAL = :id_animal";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ":id_animal", $id_animal);
 
@@ -49,9 +49,9 @@ class Parrainage
         return $result;
     }
 
-    public function recupNiveauxParrainage(){
+    public function recupLibelleParrainages(){
         $db = Database::getConnection();
-        $sql = "SELECT DISTINCT Niveau FROM Est_Parraine ORDER BY Niveau";
+        $sql = "SELECT DISTINCT LIBELLE FROM Est_Parraine";
         $stid = oci_parse($db, $sql);
         $r = oci_execute($stid);
         if (!$r) {
@@ -67,11 +67,10 @@ class Parrainage
         //
         $db = Database::getConnection();
 
-        $sql = "INSERT INTO Est_Parraine (ID_Animal, ID_Visiteur, Niveau, Libelle) VALUES (:id_animal, :id_visiteur, :niveau, :libelle)";
+        $sql = "INSERT INTO Est_Parraine (ID_Animal, ID_Visiteur, Libelle) VALUES (:id_animal, :id_visiteur, :libelle)";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ":id_animal", $data['id_animal']);
         oci_bind_by_name($stid, ":id_visiteur", $data['id_visiteur']);
-        oci_bind_by_name($stid, ":niveau", $data['niveau']);
         oci_bind_by_name($stid, ":libelle", $data['libelle']);
 
         $r = oci_execute($stid);

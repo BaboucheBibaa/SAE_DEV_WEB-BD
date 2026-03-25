@@ -269,7 +269,7 @@
                                         foreach ($parrains as $parrain) {
                                             $id_visiteur = htmlspecialchars($parrain['ID_VISITEUR'] ?? '');
                                             $nomVisiteur = htmlspecialchars($parrain['NOM_VISITEUR'] ?? 'Non spécifié');
-                                            $niveau = htmlspecialchars($parrain['NIVEAU'] ?? 'Non spécifié');
+                                            $niveau = htmlspecialchars($parrain['LIBELLE'] ?? 'Non spécifié');
                                             
                                             // Couleur du badge selon le niveau
                                             $badgeClass = 'bg-secondary';
@@ -347,15 +347,14 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <label for="id_parrainage" class="form-label">Type de Parrainage</label>
-                                        <select class="form-select" id="id_parrainage" name="id_parrainage" required>
+                                        <label for="libelle" class="form-label">Type de Parrainage</label>
+                                        <select class="form-select" id="libelle" name="libelle" required>
                                             <option value="">-- Choisir un type --</option>
                                             <?php 
-                                            if (!empty($niveaux) && is_array($niveaux)):
-                                                foreach ($niveaux as $niveau):
-                                                    $id_parrainage = htmlspecialchars($niveau['ID_PARRAINAGE'] ?? '');
-                                                    $nom_niveau = htmlspecialchars($niveau['NIVEAU'] ?? 'Non spécifié');
-                                                    echo "<option value=\"{$id_parrainage}\">{$nom_niveau}</option>";
+                                            if (!empty($libelles) && is_array($libelles)):
+                                                foreach ($libelles as $libelle):
+                                                    $nom_niveau = htmlspecialchars($libelle['LIBELLE'] ?? 'Non spécifié');
+                                                    echo "<option value=\"{$libelle['LIBELLE']}\">{$nom_niveau}</option>";
                                                 endforeach;
                                             endif;
                                             ?>

@@ -49,6 +49,11 @@ class ServiceSoin
         $descriptionSoin = $_POST['DESCRIPTION_SOIN'] ?? null;
         $idPersonnel = $_SESSION['user']['ID_PERSONNEL'];
 
+        //gestion si un soigneur qui n'est pas le soigneur attitré d'un animal décide d'ajouter un soin sur un animal qu'il ne gère pas
+        $soigneurEtRemplacant = $this->Animal->recupSoigneurEtRemplacant($idAnimal);
+        if ($soigneurEtRemplacant['SOIGNEUR'] != $_SESSION['user']['ID_PERSONNEL'] || $soigneurEtRemplacant['REMPLACANT'] != $_SESSION['ID_PERSONNEL']){
+            return null;
+        }
         if (!$idAnimal || !$dateSoin || !$descriptionSoin || !$idPersonnel) {
             return null;
         }

@@ -4,7 +4,7 @@ class HistoriqueSoins
     public function toutRecup()
     {
         $db = Database::getConnection();
-        $sql = "SELECT * FROM BIEN_ETRE_QUOTIDIEN";
+        $sql = "SELECT * FROM EST_NOURRI";
         $stid = oci_parse($db, $sql);
 
         $r = oci_execute($stid);
@@ -20,7 +20,7 @@ class HistoriqueSoins
     public function recupNourritureParPersonne($id_personnel)
     {
         $db = Database::getConnection();
-        $sql = "SELECT * FROM BIEN_ETRE_QUOTIDIEN WHERE ID_PERSONNEL = :id_personnel";
+        $sql = "SELECT * FROM EST_NOURRI WHERE ID_PERSONNEL = :id_personnel";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ":id_personnel", $id_personnel);
 
@@ -37,7 +37,7 @@ class HistoriqueSoins
     public function recupNourritureParAnimal($id_animal): mixed
     {
         $db = Database::getConnection();
-        $sql = "SELECT B.*, P.NOM,P.PRENOM FROM BIEN_ETRE_QUOTIDIEN B JOIN PERSONNEL P ON B.ID_PERSONNEL = P.ID_PERSONNEL WHERE B.ID_ANIMAL = :id_animal ORDER BY B.DATE_NOURRIT DESC";
+        $sql = "SELECT EN.*, P.NOM,P.PRENOM FROM EST_NOURRI EN JOIN PERSONNEL P ON EN.ID_PERSONNEL = P.ID_PERSONNEL WHERE EN.ID_ANIMAL = :id_animal ORDER BY EN.DATE_NOURRIT DESC";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ":id_animal", $id_animal);
 
@@ -54,7 +54,7 @@ class HistoriqueSoins
     public function recupSoinsParAnimal($id_animal): mixed
     {
         $db = Database::getConnection();
-        $sql = "SELECT PS.*, P.NOM,P.PRENOM FROM PRATIQUE_SOINS PS JOIN PERSONNEL P ON PS.ID_PERSONNEL = P.ID_PERSONNEL WHERE PS.ID_ANIMAL = :id_animal ORDER BY PS.DATE_SOIN DESC";
+        $sql = "SELECT S.*, P.NOM,P.PRENOM FROM SOIN S JOIN PERSONNEL P ON S.ID_Soigneur = P.ID_PERSONNEL WHERE S.ID_ANIMAL = :id_animal ORDER BY S.DATE_SOIN DESC";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ":id_animal", $id_animal);
 
@@ -71,7 +71,7 @@ class HistoriqueSoins
     public function recupSoinsParPersonne($id_personnel): mixed
     {
         $db = Database::getConnection();
-        $sql = "SELECT PS.*, A.NOM_ANIMAL FROM PRATIQUE_SOINS PS JOIN ANIMAL A ON PS.ID_ANIMAL = A.ID_ANIMAL WHERE PS.ID_PERSONNEL = :id_personnel ORDER BY PS.DATE_SOIN DESC";
+        $sql = "SELECT S.*, A.NOM_ANIMAL FROM SOIN S JOIN ANIMAL A ON S.ID_ANIMAL = A.ID_ANIMAL WHERE S.ID_Soigneur = :id_personnel ORDER BY S.DATE_SOIN DESC";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ":id_personnel", $id_personnel);
 
@@ -88,9 +88,10 @@ class HistoriqueSoins
     public function creer($data)
     {
         $db = Database::getConnection();
-        $sql = "INSERT INTO PRATIQUE_SOINS (ID_PERSONNEL, ID_ANIMAL, DATE_SOIN, DESCRIPTION_SOIN) VALUES (:id_personnel, :id_animal, TO_DATE(:date_soin, 'YYYY-MM-DD'), :description_soin)";
+        $sql = "INSERT INTO SOIN (ID_PERSONNEL, ID_VETERINAIRE,ID_ANIMAL, DATE_SOIN, DESCRIPTION_SOIN) VALUES (:id_personnel, :id_veterinaire, :id_animal, TO_DATE(:date_soin, 'YYYY-MM-DD'), :description_soin)";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ":id_personnel", $data['ID_PERSONNEL']);
+        oci_bind_by_name($stid, ":id_veterinaire", $data['ID_VETERINAIRE']);
         oci_bind_by_name($stid, ":id_animal", $data['ID_ANIMAL']);
         oci_bind_by_name($stid, ":date_soin", $data['DATE_SOIN']);
         oci_bind_by_name($stid, ":description_soin", $data['DESCRIPTION_SOIN']);
@@ -106,7 +107,7 @@ class HistoriqueSoins
     public function creerNourriture($data)
     {
         $db = Database::getConnection();
-        $sql = "INSERT INTO BIEN_ETRE_QUOTIDIEN (ID_ANIMAL, ID_PERSONNEL, DATE_NOURRIT, DOSE_NOURRITURE) VALUES (:id_animal, :id_personnel, TO_DATE(:date_nourrit, 'YYYY-MM-DD'), TO_NUMBER(:dose_nourriture, '9999.99'))";
+        $sql = "INSERT INTO EST_NOURRI (ID_ANIMAL, ID_PERSONNEL, DATE_NOURRIT, DOSE_NOURRITURE) VALUES (:id_animal, :id_personnel, TO_DATE(:date_nourrit, 'YYYY-MM-DD'), TO_NUMBER(:dose_nourriture, '9999.99'))";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ":id_animal", $data['ID_ANIMAL']);
         oci_bind_by_name($stid, ":id_personnel", $data['ID_PERSONNEL']);

@@ -9,8 +9,8 @@ CREATE TABLE Fonction (
 -- TABLE PERSONNEL
 CREATE TABLE Personnel (
     ID_Personnel NUMBER,
-    ID_Remplacant NUMBER, -- Référence à lui-même si aucun remplaçant attitré
-    ID_Superieur NUMBER, -- Référence à lui-même si aucun supérieur hiérarchique
+    ID_Remplacant NUMBER NOT NULL, -- Référence à lui-même si aucun remplaçant attitré
+    ID_Superieur NUMBER NOT NULL, -- Référence à lui-même si aucun supérieur hiérarchique
     ID_Fonction NUMBER NOT NULL,
     Nom VARCHAR2(50),
     Prenom VARCHAR2(50),
@@ -42,7 +42,7 @@ CREATE TABLE Contrat_Travail (
 CREATE TABLE Zone (
     ID_Zone NUMBER,
     Nom_Zone VARCHAR2(100),
-    ID_Manager NUMBER, --Chaque zone a obligatoirement un manager qui est membre du personnel
+    ID_Manager NUMBER NOT NULL, --Chaque zone a obligatoirement un manager qui est membre du personnel
     CONSTRAINT PK_Zone PRIMARY KEY (ID_Zone),
     CONSTRAINT FK_Zone_Manager FOREIGN KEY (ID_Manager) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
 );
@@ -50,7 +50,7 @@ CREATE TABLE Zone (
 -- TABLE BOUTIQUE
 CREATE TABLE Boutique (
     ID_Boutique NUMBER,
-    ID_Manager NUMBER, --Chaque boutique a obligatoirement un manager qui est membre du personnel
+    ID_Manager NUMBER NOT NULL, --Chaque boutique a obligatoirement un manager qui est membre du personnel
     ID_Zone NUMBER NOT NULL,
     Nom_Boutique VARCHAR2(100),
     Description_Boutique VARCHAR2(200),
@@ -105,8 +105,9 @@ CREATE TABLE Animal (
     Nom_Animal VARCHAR2(50),
     Poids NUMBER(6,2),
     Regime_Alimentaire VARCHAR2(50),
-    estArchive NUMBER(1) DEFAULT 1, -- 1 pour actif et 0 pour archivé
+    ID_Soigneur NUMBER NOT NULL,
     CONSTRAINT PK_Animal PRIMARY KEY (ID_Animal),
+    CONSTRAINT PK_Animal_Personnel FOREIGN KEY (ID_Soigneur) REFERENCES Personnel(ID_Personnel),
     CONSTRAINT FK_Animal_Enclos FOREIGN KEY (Latitude_Enclos, Longitude_Enclos) REFERENCES Enclos(Latitude, Longitude) ON DELETE CASCADE,
     CONSTRAINT FK_Animal_Espece FOREIGN KEY (ID_Espece) REFERENCES Espece(ID_Espece) ON DELETE CASCADE
 );
@@ -122,7 +123,6 @@ CREATE TABLE Visiteur (
 CREATE TABLE Est_Parraine (
     ID_Animal NUMBER NOT NULL,
     ID_Visiteur NUMBER NOT NULL,
-    NIVEAU NUMBER NOT NULL,
     LIBELLE VARCHAR2(100),
     CONSTRAINT PK_Est_Parraine PRIMARY KEY (ID_Animal, ID_Visiteur),
     CONSTRAINT FK_Est_Parraine_Animal FOREIGN KEY (ID_Animal) REFERENCES Animal(ID_Animal) ON DELETE CASCADE,
@@ -150,8 +150,7 @@ CREATE TABLE Est_Le_Parent_De (
     CONSTRAINT FK_Est_Le_Parent_De_Enfant FOREIGN KEY (ID_Enfant) REFERENCES Animal(ID_Animal) ON DELETE CASCADE
 );
 
--- TABLE BIEN_ETRE_QUOTIDIEN
-CREATE TABLE Bien_Etre_Quotidien (
+CREATE TABLE Est_Nourri (
     ID_Animal NUMBER,
     ID_Personnel NUMBER,
     Date_Nourrit DATE,
@@ -161,15 +160,17 @@ CREATE TABLE Bien_Etre_Quotidien (
     CONSTRAINT FK_Bien_Etre_Quotidien_Personnel FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
 );
 
--- TABLE PRATIQUE_SOINS
-CREATE TABLE Pratique_Soins (
+-- TABLE Soin
+CREATE TABLE Soin (
     ID_Animal NUMBER,
-    ID_Personnel NUMBER,
     Date_Soin DATE,
+    ID_Soigneur NUMBER,
+    ID_Veterinaire NUMBER,
     Description_Soin VARCHAR2(200),
-    CONSTRAINT PK_Pratique_Soins PRIMARY KEY (ID_Animal, ID_Personnel, Date_Soin),
-    CONSTRAINT FK_Pratique_Soins_Animal FOREIGN KEY (ID_Animal) REFERENCES Animal(ID_Animal) ON DELETE CASCADE,
-    CONSTRAINT FK_Pratique_Soins_Personnel FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
+    CONSTRAINT PK_Soin PRIMARY KEY (ID_Animal, Date_Soin),
+    CONSTRAINT FK_Soin_Animal FOREIGN KEY (ID_Animal) REFERENCES Animal(ID_Animal) ON DELETE CASCADE,
+    CONSTRAINT FK_Soin_Soigneur FOREIGN KEY (ID_Soigneur) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE,
+    CONSTRAINT FK_Soin_Veterinaire FOREIGN KEY (ID_Veterinaire) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
 );
 
 -- TABLE EST_AFFECTEE_A
@@ -205,3 +206,4 @@ CREATE TABLE Reparation (
     CONSTRAINT FK_Reparation_Personnel FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE,
     CONSTRAINT FK_Reparation_Prestataire FOREIGN KEY (ID_Prestataire) REFERENCES Prestataire(ID_Prestataire) ON DELETE CASCADE
 );
+COMMIT;

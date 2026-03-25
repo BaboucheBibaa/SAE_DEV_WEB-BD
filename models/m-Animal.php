@@ -37,6 +37,24 @@ class Animal
         return oci_fetch_assoc($stid);
     }
 
+    public function recupSoigneurEtRemplacant($id_animal){
+        //récupère le soigneur attitré ainsi que le soigneur remplaçant de l'animal
+        $db = Database::getConnection();
+        $sql = "SELECT A.ID_SOIGNEUR SOIGNEUR,P.ID_REMPLACANT REMPLACANT FROM Animal A, Personnel P WHERE A.ID_SOIGNEUR = P.ID_PERSONNEL AND A.ID_ANIMAL = :id_animal";
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid, ':id_animal', $id_animal);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        $result = oci_fetch_assoc($stid);
+        return $result;
+
+    }
+
     public function toutRecup()
     {
         $db = Database::getConnection();

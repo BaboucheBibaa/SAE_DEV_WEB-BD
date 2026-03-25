@@ -16,9 +16,9 @@ class ServiceParrainage
         return $parrains;
     }
 
-    public function getNiveauxParrainages()
+    public function getLibelleParrainages()
     {
-        $parrainages = $this->Parrainage->recupNiveauxParrainage();
+        $parrainages = $this->Parrainage->recupLibelleParrainages();
         if (!$parrainages) {
             return null;
         }
@@ -33,7 +33,7 @@ class ServiceParrainage
         return $visiteurs;
     }
 
-    public function getNiveauxParrainage()
+    public function getAll()
     {
         $niveaux = $this->Parrainage->toutRecup();
         if (!$niveaux) {
@@ -49,11 +49,14 @@ class ServiceParrainage
 
     public function creerParrainage()
     {
+        echo $_POST['id_animal'];
+        echo $_POST['id_visiteur'];
+        echo $_POST['libelle'];
+
         $data = [
-            'id_animal' => $_POST['ID_ANIMAL'] ?? null,
-            'id_visiteur' => $_POST['ID_VISITEUR'] ?? null,
-            'niveau' => $_POST['NIVEAU'] ?? null,
-            'libelle' => $_POST['LIBELLE'] ?? null
+            'id_animal' => $_POST['id_animal'] ?? null,
+            'id_visiteur' => $_POST['id_visiteur'] ?? null,
+            'libelle' => $_POST['libelle'] ?? null
         ];
         return $this->Parrainage->creerParrainage($data);
     }

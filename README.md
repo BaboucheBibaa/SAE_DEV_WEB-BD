@@ -154,6 +154,7 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 
 - ✅ Historique des soins apportés sur les animaux qu'il gère
 - ✅ Ajouter un soin sur un animal
+  - ✅ Vérifier si le soigneur qui pratique le soin sur l'animal est bien le soigneur attitré (ou le remplaçant du soigneur attitré)
 - ✅ Ajouter la distribution de nourriture faite pour un animal
 
 ### Dashboard Responsable de Boutique

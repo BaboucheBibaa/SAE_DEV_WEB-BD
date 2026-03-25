@@ -132,3 +132,24 @@ INSERT INTO Est_Parraine VALUES (11, 3, 1, 'Parrain Or');
 INSERT INTO Est_Parraine VALUES (12, 4, 3, 'Parrain Bronze');
 INSERT INTO Est_Parraine VALUES (13, 6, 2, 'Parrain Argent');
 
+INSERT INTO Est_Compatible_Avec VALUES (1, 2);
+INSERT INTO Est_Compatible_Avec VALUES (1, 3);
+INSERT INTO Est_Compatible_Avec VALUES (2, 4);
+INSERT INTO Est_Compatible_Avec VALUES (2, 5);
+INSERT INTO Est_Compatible_Avec VALUES (3, 6);
+INSERT INTO Est_Compatible_Avec VALUES (3, 7);
+INSERT INTO Est_Compatible_Avec VALUES (4, 8);
+INSERT INTO Est_Compatible_Avec VALUES (5, 9);
+INSERT INTO Est_Compatible_Avec VALUES (6, 10);
+INSERT INTO Est_Compatible_Avec VALUES (7, 8);
+
+INSERT INTO Est_Le_Parent_De VALUES (1, 2);
+INSERT INTO Est_Le_Parent_De VALUES (1, 3);
+INSERT INTO Est_Le_Parent_De VALUES (2, 4);
+INSERT INTO Est_Le_Parent_De VALUES (2, 5);
+INSERT INTO Est_Le_Parent_De VALUES (3, 6);
+INSERT INTO Est_Le_Parent_De VALUES (3, 7);
+INSERT INTO Est_Le_Parent_De VALUES (4, 8);
+INSERT INTO Est_Le_Parent_De VALUES (5, 9);
+INSERT INTO Est_Le_Parent_De VALUES (6, 10);
+INSERT INTO Est_Le_Parent_De VALUES (7, 10);
