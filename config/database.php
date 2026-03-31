@@ -16,7 +16,6 @@ class Database
             $e = oci_error();
             trigger_error(htmlspecialchars($e['message'], ENT_QUOTES), E_USER_ERROR);
         }
-
         return self::$conn;
     }
 }

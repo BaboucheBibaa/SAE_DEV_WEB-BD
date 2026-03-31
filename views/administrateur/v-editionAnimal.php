@@ -15,16 +15,46 @@
                         <div class="mb-3">
                             <label for="id_espece_modif" class="form-label">Espèce <span class="text-danger">*</span></label>
                             <select name="id_espece_modif" id="id_espece_modif" class="form-control" required>
-                                <option value="">-- Sélectionner une espèce --</option>
                                 <?php
+                                if (isset($especeAnimal)) {
+                                    echo '<option value="' . htmlspecialchars($especeAnimal['ID_ESPECE']) . '">'
+                                        . htmlspecialchars($especeAnimal['NOM_ESPECE'])
+                                        . '</option>';
+                                } else {
+                                    echo '<option value="">-- Sélectionnez une espèce --</option>';
+                                }
                                 if (!empty($especes)) {
                                     foreach ($especes as $espece) {
-                                        $selected = (isset($animal['ID_ESPECE']) && $espece['ID_ESPECE'] == $animal['ID_ESPECE']) ? 'selected' : '';
-                                        echo '<option value="' . htmlspecialchars($espece['ID_ESPECE']) . '" ' . $selected . '>';
+                                        if (isset($especeAnimal) && $espece['ID_ESPECE'] == $especeAnimal['ID_ESPECE']) continue;
+
+                                        echo '<option value="' . htmlspecialchars($espece['ID_ESPECE']) . '">';
                                         echo htmlspecialchars($espece['NOM_ESPECE']);
                                         if (!empty($espece['NOM_LATIN_ESPECE'])) {
                                             echo ' (' . htmlspecialchars($espece['NOM_LATIN_ESPECE']) . ')';
                                         }
+                                        echo '</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_soigneur_modif" class="form-label">Soigneur attitré <span class="text-danger">*</span></label>
+                            <select name="id_soigneur_modif" id="id_soigneur_modif" class="form-control" required>
+                                <?php
+                                if (isset($soigneur_attitre)) {
+                                    echo "prout";
+                                    echo '<option value ="' . htmlspecialchars($soigneur_attitre['ID_PERSONNEL']) . '">' . htmlspecialchars($soigneur_attitre['NOM']) . '</option>';
+                                } else {
+                                    echo "caca";
+                                    echo '<option value="">-- Sélectionnez un soigneur --</option>';
+                                }
+                                if (!empty($soigneurs)) {
+                                    foreach ($soigneurs as $soigneur) {
+                                        if (isset($soigneur_attitre) && $soigneur['ID_PERSONNEL'] == $soigneur_attitre['ID_PERSONNEL']) continue;
+                                        echo '<option value="' . htmlspecialchars($soigneur['ID_PERSONNEL']) . '">';
+                                        echo htmlspecialchars($soigneur['NOM']);
                                         echo '</option>';
                                     }
                                 }

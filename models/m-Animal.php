@@ -37,10 +37,11 @@ class Animal
         return oci_fetch_assoc($stid);
     }
 
-    public function recupSoigneurEtRemplacant($id_animal){
+    public function recupSoigneurEtRemplacant($id_animal)
+    {
         //récupère le soigneur attitré ainsi que le soigneur remplaçant de l'animal
         $db = Database::getConnection();
-        $sql = "SELECT A.ID_SOIGNEUR SOIGNEUR,P.ID_REMPLACANT REMPLACANT FROM Animal A, Personnel P WHERE A.ID_SOIGNEUR = P.ID_PERSONNEL AND A.ID_ANIMAL = :id_animal";
+        $sql = "SELECT P.ID_SOIGNEUR SOIGNEUR,P.ID_REMPLACANT REMPLACANT FROM Animal A, Personnel P WHERE A.ID_SOIGNEUR = P.ID_PERSONNEL AND A.ID_ANIMAL = :id_animal";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ':id_animal', $id_animal);
 
@@ -52,7 +53,6 @@ class Animal
 
         $result = oci_fetch_assoc($stid);
         return $result;
-
     }
 
     public function toutRecup()
@@ -94,20 +94,10 @@ class Animal
     }
     public function recupTousParSoigneurs($id_soigneur)
     {
-        /* Récupère tous les animaux de la zone ou le soigneur $id_soigneur travaille */
+        /* Récupère tous les animaux ou le soigneur $id_soigneur est responsable */
         $db = Database::getConnection();
         $query = "SELECT A.*,E.NOM_ESPECE
-            FROM Animal A
-            LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE
-            WHERE (A.LATITUDE_ENCLOS, A.LONGITUDE_ENCLOS) IN (
-                SELECT E.LATITUDE, E.LONGITUDE
-                FROM Enclos E
-                WHERE E.ID_Zone IN (
-                    SELECT ID_Zone
-                    FROM Est_Affectee_A
-                    WHERE ID_Personnel = :id_soigneur
-                )
-            );";
+            FROM Animal A JOIN Espece E ON A.ID_Espece = E.ID_Espece WHERE A.ID_Soigneur = :id_soigneur;";
 
         $stid = oci_parse($db, $query);
         oci_bind_by_name($stid, ':id_soigneur', $id_soigneur);
@@ -147,10 +137,13 @@ class Animal
     public function creer($data)
     {
         $db = Database::getConnection();
-        $sql = "INSERT INTO Animal (ID_ANIMAL, NOM_ANIMAL, DATE_NAISSANCE, POIDS, REGIME_ALIMENTAIRE, ID_ESPECE, LATITUDE_ENCLOS, LONGITUDE_ENCLOS) 
-                VALUES ((SELECT NVL(MAX(ID_ANIMAL), 0) + 1 FROM Animal), :nom_animal, TO_DATE(:date_naissance, 'YYYY-MM-DD'), :poids, :regime_alimentaire, :id_espece, :latitude_enclos, :longitude_enclos)";
+
+        $sql = "INSERT INTO Animal (ID_ANIMAL, NOM_ANIMAL, DATE_NAISSANCE, POIDS, REGIME_ALIMENTAIRE, ID_ESPECE, LATITUDE_ENCLOS, LONGITUDE_ENCLOS, ID_SOIGNEUR) 
+                VALUES ((SELECT NVL(MAX(ID_ANIMAL), 0) + 1 FROM Animal), :nom_animal, TO_DATE(:date_naissance, 'YYYY-MM-DD'), :poids, :regime_alimentaire, :id_espece, :latitude_enclos, :longitude_enclos, :id_soigneur)";
 
         $stid = oci_parse($db, $sql);
+
+        $data['poids'] = str_replace('.',',',$data['poids']);
 
         oci_bind_by_name($stid, ':nom_animal', $data['nom_animal']);
         oci_bind_by_name($stid, ':date_naissance', $data['date_naissance']);
@@ -159,6 +152,7 @@ class Animal
         oci_bind_by_name($stid, ':id_espece', $data['id_espece']);
         oci_bind_by_name($stid, ':latitude_enclos', $data['latitude_enclos']);
         oci_bind_by_name($stid, ':longitude_enclos', $data['longitude_enclos']);
+        oci_bind_by_name($stid, ':id_soigneur', $data['id_soigneur']);
 
         $r = oci_execute($stid);
         if (!$r) {
@@ -184,6 +178,8 @@ class Animal
 
         $stid = oci_parse($db, $sql);
 
+        $data['poids'] = str_replace('.',',',$data['poids']);
+
         oci_bind_by_name($stid, ':id_animal', $id);
         oci_bind_by_name($stid, ':nom_animal', $data['nom_animal']);
         oci_bind_by_name($stid, ':date_naissance', $data['date_naissance']);
@@ -192,7 +188,6 @@ class Animal
         oci_bind_by_name($stid, ':id_espece', $data['id_espece']);
         oci_bind_by_name($stid, ':latitude_enclos', $data['latitude_enclos']);
         oci_bind_by_name($stid, ':longitude_enclos', $data['longitude_enclos']);
-
         $r = oci_execute($stid);
         if (!$r) {
             $e = oci_error($stid);

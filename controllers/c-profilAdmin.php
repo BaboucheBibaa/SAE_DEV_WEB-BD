@@ -409,33 +409,44 @@ class AdminController extends BaseController
     //  Animaux
     // ========================
 
+
+    /**
+     * 
+     * Affiche le formulaire de création d'un animal pour un administrateur
+     */
     public function formCreationAnimal()
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceAnimal->dataCreationAnimal();
-        if ($data === null) {
+        if ($data == null) {
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation de la création de l\'animal.', 'error');
         } else {
             $this->render('administrateur/v-createAnimal', $data);
         }
     }
 
+
+    /**
+     * 
+     * Gère l'insertion en BD d'un animal
+     */
     public function ajoutAnimal()
     {
+
         $this->requireRole(ADMINID);
         $result = $this->serviceAnimal->ajoutAnimal();
-
         if ($result === 2) {
             $this->redirectWithMessage('creationAnimal', 'Erreur : Nom invalide.', 'error');
         } elseif ($result === 3) {
             $this->redirectWithMessage('creationAnimal', 'Erreur : Poids invalide.', 'error');
-        } elseif ($result === true) {
+        } elseif ($result == 1) {
             $this->logEvent(
                 'INSERTION_BD',
                 "Nouvel animal ajouté"
             );
             $this->redirectWithMessage('adminDashboard', 'Animal ajouté avec succès.', 'success');
         } else {
+            echo $result;
             $this->logEvent(
                 'ERREUR',
                 "Erreur lors de l'ajout d'un animal"
@@ -444,6 +455,9 @@ class AdminController extends BaseController
         }
     }
 
+    /**
+     * Permet d'afficher le formulaire d'édition de l'animal $id
+     */
     public function formEditionAnimal($id)
     {
         $this->requireRole(ADMINID);

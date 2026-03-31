@@ -19,6 +19,23 @@ class Zone
         return $zones;
     }
 
+    public function recupZoneParEnclos($latitude, $longitude)
+    {
+
+        $db = Database::getConnection();
+        $sql = "SELECT Z.ID_ZONE FROM ZONE Z, ENCLOS E WHERE Z.ID_ZONE = E.ID_ZONE AND LATITUDE = :latitude AND LONGITUDE = :longitude;";
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid, ':latitude', $latitude);
+        oci_bind_by_name($stid, ':longitude', $longitude);
+
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+        return oci_fetch($stid);
+    }
+
     public function recupNomManager($id_zone)
     {
         /*Récupère la zone dont l'employé est le manager
@@ -115,7 +132,7 @@ class Zone
         oci_bind_by_name($stid, ':nom_zone', $nom_zone);
         oci_bind_by_name($stid, ':id_manager', $id_manager);
         oci_bind_by_name($stid, ':id', $id);
-        
+
         $r = oci_execute($stid);
         if (!$r) {
             $e = oci_error($stid);

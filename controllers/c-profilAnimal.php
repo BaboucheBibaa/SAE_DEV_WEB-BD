@@ -22,7 +22,6 @@ class ProfilAnimalController extends BaseController
         if (!$animal) {
             $this->redirectWithMessage('home', 'Animal non trouvé.', 'error');
         }
-        echo $animal['ID_ANIMAL'];
         $nourriture = $this->serviceSoin->getNourritureParAnimal($id);
         $soins = $this->serviceSoin->getSoinsParAnimal($id);
         $listeParrains = $this->serviceParrainage->getParrainsParAnimal($id);

@@ -2,9 +2,11 @@
 define("ADMINID", 1);
 define("RESPSOIG", 2);
 define("SOIGNEUR", 3);
-define("RESPBOUTIQUE", 5);
-define("EMPLOYEE_BOUTIQUE", 6);
-define("ENTRETIEN", 7);
+define("RESPBOUTIQUE", 4);
+define("EMPLOYEE_BOUTIQUE", 5);
+define("ENTRETIEN", 6);
+define("COMPTABLE",7);
+define("VETERINAIRE",8);
 
 session_start();
 

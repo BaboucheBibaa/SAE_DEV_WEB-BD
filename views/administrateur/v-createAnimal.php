@@ -32,6 +32,26 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="id_soigneur" class="form-label">Soigneur attitré <span class="text-danger">*</span></label>
+                            <select name="id_soigneur" id="id_soigneur" class="form-control" required>
+                                <option value="">-- Sélectionnez son soigneur attitré --</option>
+                                <?php
+                                if (!empty($soigneurs)) {
+                                    foreach ($soigneurs as $soigneur) {
+                                        $selected = ($formData['id_espece'] == $soigneur['NOM']) ? 'selected' : '';
+                                        echo '<option value="' . htmlspecialchars($soigneur['ID_PERSONNEL']) . '" ' . $selected . '>';
+                                        if (!empty($espece['NOM_LATIN_ESPECE'])) {
+                                            echo ' (' . htmlspecialchars($soigneur['NOM']) . ')';
+                                        }
+                                        echo '</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+
+                        <div class="mb-3">
                             <label for="date_naissance_cree" class="form-label">Date de naissance <span class="text-danger">*</span></label>
                             <input type="date" class="form-control" id="date_naissance_cree" name="date_naissance_cree" value="<?= htmlspecialchars($formData['date_naissance']) ?>" required>
                         </div>
@@ -85,7 +105,7 @@
                                     <option value="">-- Sélectionner d'abord une zone --</option>
                                 <?php else: ?>
                                     <option value="">-- Sélectionner un enclos --</option>
-                                    <?php 
+                                    <?php
                                     foreach ($enclos as $enc) {
                                         $enclosValue = $enc['LATITUDE'] . '|' . $enc['LONGITUDE'];
                                         $currentEnclos = $formData['latitude_enclos'] . '|' . $formData['longitude_enclos'];
@@ -117,13 +137,13 @@
 </div>
 
 <script>
-// Mise à jour des champs cachés lors de la sélection d'un enclos
-document.getElementById('enclos_cree').addEventListener('change', function() {
-    const value = this.value;
-    if (value) {
-        const [latitude, longitude] = value.split('|');
-        document.getElementById('latitude_enclos_cree').value = latitude;
-        document.getElementById('longitude_enclos_cree').value = longitude;
-    }
-});
+    // Mise à jour des champs cachés lors de la sélection d'un enclos
+    document.getElementById('enclos_cree').addEventListener('change', function() {
+        const value = this.value;
+        if (value) {
+            const [latitude, longitude] = value.split('|');
+            document.getElementById('latitude_enclos_cree').value = latitude;
+            document.getElementById('longitude_enclos_cree').value = longitude;
+        }
+    });
 </script>

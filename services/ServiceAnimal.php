@@ -5,12 +5,14 @@ class ServiceAnimal
     private $Espece;
     private $Zone;
     private $Enclos;
+    private $User;
     public function __construct()
     {
         $this->Animal = new Animal();
         $this->Espece = new Espece();
         $this->Zone = new Zone();
         $this->Enclos = new Enclos();
+        $this->User = new User();
     }
     //Getters
     public function getTousAnimaux()
@@ -56,7 +58,7 @@ class ServiceAnimal
 
     //Ajout/MAJ/Suppression d'un animal + validation des données du formulaire
 
-        public function verificationForm($champ)
+    public function verificationForm($champ)
     {
         //ne doit pas retourner 1 car on peut confondre avec le retour du boolean de la fonction de création ou de modification d'un animal, c'est pour ça que les codes d'erreur commencent à 2
         if (!preg_match('/^[a-zA-Z-\'éèêëç ]+$/', $_POST['nom_animal_' . $champ] ?? '')) {
@@ -71,6 +73,7 @@ class ServiceAnimal
     public function ajoutAnimal()
     {
         $validationCode = $this->verificationForm('cree');
+
         if ($validationCode != 0) {
             return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
         }
@@ -79,6 +82,7 @@ class ServiceAnimal
             'nom_animal' => $_POST['nom_animal_cree'] ?? null,
             'date_naissance' => $_POST['date_naissance_cree'] ?? null,
             'poids' => $_POST['poids_cree'] ?? null,
+            'id_soigneur' => $_POST['id_soigneur'] ?? null,
             'regime_alimentaire' => $_POST['regime_alimentaire_cree'] ?? null,
             'id_espece' => $_POST['id_espece_cree'] ?? null,
             'latitude_enclos' => $_POST['latitude_enclos_cree'] ?? null,
@@ -92,18 +96,20 @@ class ServiceAnimal
         $validationCode = $this->verificationForm('modif');
         if ($validationCode != 0) {
             return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
-        }
+        };
+
+        $poids = str_replace('.', ',', $_POST['poids_modif']);
         //Met à jour les données d'un animal
         $data = [
             'nom_animal' => $_POST['nom_animal_modif'] ?? null,
             'date_naissance' => $_POST['date_naissance_modif'] ?? null,
             'poids' => $_POST['poids_modif'] ?? null,
             'regime_alimentaire' => $_POST['regime_alimentaire_modif'] ?? null,
+            'id_soigneur' => $_POST['id_soigneur'] ?? null,
             'id_espece' => $_POST['id_espece_modif'] ?? null,
             'latitude_enclos' => $_POST['latitude_enclos_modif'] ?? null,
             'longitude_enclos' => $_POST['longitude_enclos_modif'] ?? null
         ];
-
         return $this->Animal->maj($id, $data);
     }
     public function supprAnimal($id)
@@ -113,7 +119,7 @@ class ServiceAnimal
     }
 
 
-    
+
     //Retourne les données nécessaires à des affichages de formulaires
     public function dataEditionAnimal($id)
     {
@@ -122,36 +128,30 @@ class ServiceAnimal
             return null; //id inexistant
         }
 
+        //données de l'animal
         $animal = $this->Animal->recupParID($id);
         if (!$animal) {
             return null; // Animal non trouvé
         }
 
+        //données quant à tout ce qui concerne les espèces / zones / soigneurs
         $especes = $this->Espece->toutRecup();
         $zones = $this->Zone->toutRecup();
+        $soigneurs = $this->User->recupParFonction(SOIGNEUR);
 
-        // Récupérer la zone sélectionnée (soit depuis le formulaire, soit depuis l'animal)
-        $id_zone_selected = $_POST['id_zone_modif'] ?? $_GET['id_zone_modif'] ?? null;
-
-        // Si pas de zone sélectionnée, trouver la zone de l'enclos actuel
-        if (empty($id_zone_selected) && !empty($animal['LATITUDE_ENCLOS']) && !empty($animal['LONGITUDE_ENCLOS'])) {
-            foreach ($zones as $zone) {
-                $enclos_zone = $this->Enclos->recupEnclosZone($zone['ID_ZONE']);
-                foreach ($enclos_zone as $enc) {
-                    if ($enc['LATITUDE'] == $animal['LATITUDE_ENCLOS'] && $enc['LONGITUDE'] == $animal['LONGITUDE_ENCLOS']) {
-                        $id_zone_selected = $zone['ID_ZONE'];
-                        break 2; // Sortir des deux boucles une fois la zone trouvée
-                    }
-                }
-            }
+        if (!empty($animal['LATITUDE_ENCLOS']) && !empty($animal['LONGITUDE_ENCLOS'])) {
+            $id_zone_selected = $this->Zone->recupZoneParEnclos($animal['LATITUDE_ENCLOS'], $animal['LONGITUDE_ENCLOS']);
         }
 
+        $soigneur_attire = $this->User->recupParID($animal['ID_SOIGNEUR']);
+        $especeAnimal = $this->Espece->recupParID($animal['ID_ESPECE']);
         // Charger les enclos de la zone sélectionnée
         $enclos = [];
         if (!empty($id_zone_selected)) {
             $enclos = $this->Enclos->recupEnclosZone($id_zone_selected);
         }
 
+        $animal['POIDS'] = str_replace(',', '.', $animal['POIDS']);
         $title = "Modifier un Animal";
         return [
             'animal' => $animal,
@@ -159,7 +159,10 @@ class ServiceAnimal
             'zones' => $zones,
             'enclos' => $enclos,
             'id_zone_selected' => $id_zone_selected,
-            'title' => $title
+            'title' => $title,
+            'soigneurs' => $soigneurs,
+            'soigneur_attitre' => $soigneur_attire,
+            'especeAnimal' => $especeAnimal
         ];
     }
     public function dataCreationAnimal()
@@ -167,6 +170,7 @@ class ServiceAnimal
         //Retourne les données nécessaires à l'affichage du formulaire de création d'un nouvel animal
         $especes = $this->Espece->toutRecup();
         $zones = $this->Zone->toutRecup();
+        $soigneurs = $this->User->recupParFonction(SOIGNEUR);
 
         if (empty($especes) || empty($zones)) {
             return null; // Impossible de créer un animal sans espèces ou zones
@@ -178,6 +182,7 @@ class ServiceAnimal
             'date_naissance' => $_POST['date_naissance_cree'] ?? '',
             'poids' => $_POST['poids_cree'] ?? '',
             'regime_alimentaire' => $_POST['regime_alimentaire_cree'] ?? '',
+            'id_soigneur' => $_POST['id_soigneur'] ?? '',
             'id_zone' => $_POST['id_zone_cree'] ?? '',
             'latitude_enclos' => $_POST['latitude_enclos_cree'] ?? '',
             'longitude_enclos' => $_POST['longitude_enclos_cree'] ?? ''
@@ -195,7 +200,8 @@ class ServiceAnimal
             'zones' => $zones,
             'formData' => $formData,
             'enclos' => $enclos,
-            'title' => $title
+            'title' => $title,
+            'soigneurs' => $soigneurs
         ];
     }
 }

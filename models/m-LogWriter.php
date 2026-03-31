@@ -5,7 +5,6 @@ class LogWriter
     public function writeLog($type, $message, $filename = 'logs.txt')
     {
         /**
-         * Écrit un message de log dans un fichier avec un verrouillage pour éviter les conflits d'écriture.
          * @param string $type Le type de log: 'CONNEXION', 'DECONNEXION', 'INSERTION_BD', 'SUPPRESSION_BD', 'UPDATE_BD', 'ERREUR'
          * @param string $message Le message à enregistrer dans le log
          * @param string $filename Le nom du fichier de log (par défaut 'logs.txt')

@@ -46,17 +46,46 @@
                                 <input
                                     type="date"
                                     class="form-control form-control-lg"
-                                    id="dateSoin"
+                                    id="ID_ANIMAL"
                                     name="DATE_SOIN"
                                     required
                                     value="<?= date('Y-m-d') ?>"
-                                    max="<?= date('Y-m-d') ?>"
                                     aria-label="Date du soin">
                                 <small class="form-text text-muted d-block mt-1">
                                     <i class="bi bi-info-circle"></i> La date de la date d'ajout du soin
                                 </small>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="animalSelect" class="form-label fw-bold">
+                                    <i class="bi bi-paw"></i> Vétérinaire impliqué
+                                </label>
+                                <select
+                                    class="form-select form-select-lg"
+                                    id="animalSelect"
+                                    name="ID_VETERINAIRE"
+                                    required
+                                    aria-label="Sélectionner un vétérinaire">
+                                    <option value="">-- Sélectionner un vétérinaire --</option>
+                                    <?php if (isset($veterinaires) && is_array($veterinaires)): ?>
+                                        <?php foreach ($veterinaires as $veterinaire): ?>
+                                            <option value="<?= htmlspecialchars($veterinaire['ID_PERSONNEL'] ?? '') ?>">
+                                                <?= htmlspecialchars($veterinaire['NOM'] ?? '') ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                                <small class="form-text text-muted d-block mt-1">
+                                    <i class="bi bi-info-circle"></i> Si aucun vétérinaire impliqué, laisser tel quel
+                                </small>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="estImplique" value="oui" id="flexCheckChecked" checked>
+                                <input type="hidden" name="estImplique" value="non">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Êtes-vous impliqué dans le soin de l'animal ?
+                                </label>
+                            </div>
                             <!-- Description -->
                             <div class="mb-4">
                                 <label for="descriptionSoin" class="form-label fw-bold">

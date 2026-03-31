@@ -3,9 +3,11 @@
 class Soigneurs extends BaseController
 {
     private $serviceSoin;
+    private $serviceEmployee;
     public function __construct()
     {
         $this->serviceSoin = new ServiceSoin();
+        $this->serviceEmployee = new ServiceEmployee();
     }
 
     public function index()
@@ -19,17 +21,20 @@ class Soigneurs extends BaseController
     {
         $this->requireRole(SOIGNEUR);
         $title = "Ajouter un Soin - Zoo'land";
+        $veterinaires = $this->serviceEmployee->getEmployeeParFonction(VETERINAIRE);
         $animaux = $this->serviceSoin->getAnimauxParSoigneur($_SESSION['user']['ID_PERSONNEL']);
-        $this->render('soigneurs/v-formAjoutSoin', ['title' => $title, 'animaux' => $animaux]);
+        $this->render('soigneurs/v-formAjoutSoin', ['title' => $title, 'animaux' => $animaux, 'veterinaires' => $veterinaires]);
     }
 
     public function ajoutSoin()
     {
         $this->requireRole(SOIGNEUR);
-        if ($this->serviceSoin->ajoutSoin()) {
-            $this->redirectWithMessage('formAjoutSoin', 'Soin ajouté avec succès.', 'success');
+        $result = $this->serviceSoin->ajoutSoin();
+
+        if ($result) {
+            //$this->redirectWithMessage('formAjoutSoin', 'Soin ajouté avec succès.', 'success');
         } else {
-            $this->redirectWithMessage('formAjoutSoin', 'Erreur lors de l\'ajout du soin.', 'error');
+            //$this->redirectWithMessage('formAjoutSoin', 'Erreur lors de l\'ajout du soin.', 'error');
         }
     }
     public function formCreationAjoutNourriture()
@@ -66,7 +71,8 @@ class Soigneurs extends BaseController
         $this->render('soigneurs/v-listeSoins', ['title' => $title, 'soins' => $soins]);
     }
 
-    public function statsSoigneurs(){
+    public function statsSoigneurs()
+    {
         $this->requireRole(SOIGNEUR);
         $title = "Statistiques des Soigneurs - Zoo'land";
         $stats = $this->serviceSoin->getStatsSoigneurs();

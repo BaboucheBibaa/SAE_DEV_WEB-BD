@@ -85,9 +85,46 @@ class User
         return $result;
     }
 
+    public function recupParFonction($id_fonction){
+                $db = Database::getConnection();
+        $sql = "SELECT P.NOM, P.PRENOM, P.ID_PERSONNEL FROM Personnel P, Fonction F WHERE P.ID_FONCTION = F.ID_FONCTION AND F.ID_FONCTION = :id_fonction";
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid,":id_fonction",$id_fonction);
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        $result = [];
+        //OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC sont des constantes qui définissent le comportement du tableau retourné dans $result
+        //la première constante fait en sorte qu'elle soit sous la forme d'un seul tableau et la 2eme fait en sorte que les index soient associatifs (clé => valeur)
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
+
+    }
+    public function recupSoigneursParSuperieur($id)
+    {
+        $db = Database::getConnection();
+        $sql = "SELECT P.NOM,P.PRENOM, P.ID_PERSONNEL FROM Personnel P WHERE P.ID_SUPERIEUR = :id";
+        $stid = oci_parse($db, $sql);
+        oci_bind_by_name($stid,':id',$id);
+        $r = oci_execute($stid);
+        if (!$r) {
+            $e = oci_error($stid);
+            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        }
+
+        $result = [];
+        //OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC sont des constantes qui définissent le comportement du tableau retourné dans $result
+        //la première constante fait en sorte qu'elle soit sous la forme d'un seul tableau et la 2eme fait en sorte que les index soient associatifs (clé => valeur)
+        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+        return $result;
+    }
+
     /**
      * Récupère les employés selon le statut d'archivage
-        * $estArchive = null => tous, 1 => actifs, 0 => archivés
+     * $estArchive = null => tous, 1 => actifs, 0 => archivés
      */
     public function toutRecupParArchive($estArchive = null)
     {
@@ -142,7 +179,7 @@ class User
         $db = Database::getConnection();
 
         $new_id = $this->getNextIdPersonnel($db);
-        
+
         $sql = "INSERT INTO Personnel (ID_Personnel, Nom, Prenom, Mail, MDP, Date_Entree, Salaire, ID_Fonction, LOGIN, ID_Remplacant, ID_Superieur) 
             VALUES (:id_personnel, :nom, :prenom, :mail, :MDP, TO_DATE(:date_entree, 'YYYY-MM-DD'), :salaire, :ID_Fonction, :login, :ID_Remplacant, :ID_Superieur)";
         $stid = oci_parse($db, $sql);

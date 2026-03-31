@@ -1,46 +1,4 @@
 <main class="flex-grow-1">
-    <style>
-        /* Styles personnalisés pour les boutons d'accordion */
-        .accordion-button-primary {
-            background-color: #0d6efd !important;
-            color: white !important;
-        }
-
-        .accordion-button-primary:not(.collapsed) {
-            background-color: #0d6efd;
-            color: white;
-        }
-
-        .accordion-button-success {
-            background-color: #198754 !important;
-            color: white !important;
-        }
-
-        .accordion-button-success:not(.collapsed) {
-            background-color: #198754;
-            color: white;
-        }
-
-        .accordion-button-info {
-            background-color: #0dcaf0 !important;
-            color: black !important;
-        }
-
-        .accordion-button-info:not(.collapsed) {
-            background-color: #0dcaf0;
-            color: black;
-        }
-
-        .accordion-button-warning {
-            background-color: #ffc107 !important;
-            color: black !important;
-        }
-
-        .accordion-button-warning:not(.collapsed) {
-            background-color: #ffc107;
-            color: black;
-        }
-    </style>
     <div class="container my-5">
         <!-- Titre et breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-4">

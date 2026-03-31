@@ -19,7 +19,8 @@ class ServiceSoin
         return $animaux;
     }
 
-    public function getSoinsParSoigneur($id_soigneur){
+    public function getSoinsParSoigneur($id_soigneur)
+    {
         $soins = $this->HistoriqueSoins->recupSoinsParPersonne($id_soigneur);
         if (!$soins) {
             return null;
@@ -27,14 +28,16 @@ class ServiceSoin
         return $soins;
     }
 
-    public function getSoinsParAnimal($id_animal){
+    public function getSoinsParAnimal($id_animal)
+    {
         $soins = $this->HistoriqueSoins->recupSoinsParAnimal($id_animal);
         if (!$soins) {
             return null;
         }
         return $soins;
     }
-    public function getNourritureParAnimal($id_animal){
+    public function getNourritureParAnimal($id_animal)
+    {
         $nourriture = $this->HistoriqueSoins->recupNourritureParAnimal($id_animal);
         if (!$nourriture) {
             return null;
@@ -44,6 +47,7 @@ class ServiceSoin
 
     public function ajoutSoin()
     {
+
         $idAnimal = isset($_POST['ID_ANIMAL']) && $_POST['ID_ANIMAL'] !== '' ? intval($_POST['ID_ANIMAL']) : null;
         $dateSoin = $_POST['DATE_SOIN'] ?? null;
         $descriptionSoin = $_POST['DESCRIPTION_SOIN'] ?? null;
@@ -51,7 +55,7 @@ class ServiceSoin
 
         //gestion si un soigneur qui n'est pas le soigneur attitré d'un animal décide d'ajouter un soin sur un animal qu'il ne gère pas
         $soigneurEtRemplacant = $this->Animal->recupSoigneurEtRemplacant($idAnimal);
-        if ($soigneurEtRemplacant['SOIGNEUR'] != $_SESSION['user']['ID_PERSONNEL'] || $soigneurEtRemplacant['REMPLACANT'] != $_SESSION['ID_PERSONNEL']){
+        if ($soigneurEtRemplacant['SOIGNEUR'] != $_SESSION['user']['ID_PERSONNEL'] || $soigneurEtRemplacant['REMPLACANT'] != $_SESSION['user']['ID_REMPLACANT']) {
             return null;
         }
         if (!$idAnimal || !$dateSoin || !$descriptionSoin || !$idPersonnel) {
@@ -66,6 +70,7 @@ class ServiceSoin
         ];
         return $this->HistoriqueSoins->creer($data);
     }
+
     public function ajoutNourriture()
     {
 
@@ -73,7 +78,6 @@ class ServiceSoin
         $dateNourrit = $_POST['DATE_NOURRIT'] ?? null;
         $doseNourriture = $_POST['DOSE_NOURRITURE'] ?? null;
         $idPersonnel = $_SESSION['user']['ID_PERSONNEL'] ?? null;
-
         if (!$idAnimal || !$dateNourrit || !$doseNourriture || !$idPersonnel) {
             return null;
         }
@@ -87,7 +91,8 @@ class ServiceSoin
         return $this->HistoriqueSoins->creerNourriture($data);
     }
 
-    public function getStatsSoigneurs(){
+    public function getStatsSoigneurs()
+    {
         return $this->HistoriqueSoins->recupStatsSoigneurs();
     }
 }

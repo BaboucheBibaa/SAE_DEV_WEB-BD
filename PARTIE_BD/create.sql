@@ -15,7 +15,7 @@ CREATE TABLE Personnel (
     Nom VARCHAR2(50),
     Prenom VARCHAR2(50),
     Mail VARCHAR2(100),
-    MDP VARCHAR2(100) NOT NULL, -- MDP donc not null
+    MDP VARCHAR2(255) NOT NULL, -- MDP donc not null
     Date_Entree DATE NOT NULL,
     Salaire NUMBER(10,2),
     LOGIN VARCHAR2(50) NOT NULL UNIQUE, -- Login doit être unique et not null
@@ -130,11 +130,11 @@ CREATE TABLE Est_Parraine (
 );
 
 -- TABLE EST_COMPATIBLE_AVEC
+-- On suppose que pour que deux espèces soient compatibles, (a,b) et (b,a) doivent être dans la table
 CREATE TABLE Est_Compatible_Avec (
     ID_Espece1 NUMBER NOT NULL,
     ID_Espece2 NUMBER NOT NULL,
     CONSTRAINT PK_Est_Compatible_Avec PRIMARY KEY (ID_Espece1, ID_Espece2),
-    CHECK (ID_Espece1 < ID_Espece2), -- pour éviter (a,b) et (b,a)
     CONSTRAINT FK_Est_Compatible_Avec_Espece1 FOREIGN KEY (ID_Espece1) REFERENCES Espece(ID_Espece) ON DELETE CASCADE,
     CONSTRAINT FK_Est_Compatible_Avec_Espece2 FOREIGN KEY (ID_Espece2) REFERENCES Espece(ID_Espece) ON DELETE CASCADE
 );
@@ -206,4 +206,91 @@ CREATE TABLE Reparation (
     CONSTRAINT FK_Reparation_Personnel FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE,
     CONSTRAINT FK_Reparation_Prestataire FOREIGN KEY (ID_Prestataire) REFERENCES Prestataire(ID_Prestataire) ON DELETE CASCADE
 );
+
+SET LINESIZE 200
+SET PAGESIZE 50
+SET TAB OFF
+
+COLUMN ID_Fonction       FORMAT 9999
+COLUMN Nom_Fonction      FORMAT A25
+COLUMN Description        FORMAT A40
+COLUMN ID_Personnel      FORMAT 9999
+COLUMN ID_Remplacant     FORMAT 9999
+COLUMN ID_Superieur      FORMAT 9999
+COLUMN ID_Fonction       FORMAT 9999
+COLUMN Nom               FORMAT A20
+COLUMN Prenom            FORMAT A20
+COLUMN Mail              FORMAT A30
+COLUMN MDP               FORMAT A20
+COLUMN Date_Entree       FORMAT A12
+COLUMN Salaire           FORMAT 999999.99
+COLUMN LOGIN             FORMAT A20
+COLUMN estArchive        FORMAT 9
+COLUMN ID_Contrat        FORMAT 9999
+COLUMN ID_Personnel      FORMAT 9999
+COLUMN ID_Fonction       FORMAT 9999
+COLUMN Date_Debut        FORMAT A12
+COLUMN Date_Fin          FORMAT A12
+COLUMN ID_Zone           FORMAT 9999
+COLUMN Nom_Zone          FORMAT A25
+COLUMN ID_Manager        FORMAT 9999
+COLUMN ID_Boutique       FORMAT 9999
+COLUMN ID_Manager        FORMAT 9999
+COLUMN ID_Zone           FORMAT 9999
+COLUMN Nom_Boutique      FORMAT A25
+COLUMN Description_Boutique FORMAT A40
+COLUMN ID_Boutique       FORMAT 9999
+COLUMN Date_CA_Journalier FORMAT A12
+COLUMN Montant           FORMAT 999999.99
+COLUMN ID_Prestataire    FORMAT 9999
+COLUMN Nom_Prestataire   FORMAT A20
+COLUMN Prenom_Prestataire FORMAT A20
+COLUMN Latitude          FORMAT 9999
+COLUMN Longitude         FORMAT 9999
+COLUMN ID_Zone           FORMAT 9999
+COLUMN Type_Enclos       FORMAT A20
+COLUMN ID_Espece         FORMAT 9999
+COLUMN Nom_Espece        FORMAT A25
+COLUMN Nom_Latin_Espece  FORMAT A30
+COLUMN Est_Menacee       FORMAT 9
+COLUMN ID_Animal         FORMAT 9999
+COLUMN Latitude_Enclos   FORMAT 9999
+COLUMN Longitude_Enclos  FORMAT 9999
+COLUMN ID_Espece         FORMAT 9999
+COLUMN Date_Naissance    FORMAT A12
+COLUMN Nom_Animal        FORMAT A20
+COLUMN Poids             FORMAT 9999.99
+COLUMN Regime_Alimentaire FORMAT A20
+COLUMN ID_Soigneur       FORMAT 9999
+COLUMN ID_Visiteur       FORMAT 9999
+COLUMN Nom_Visiteur      FORMAT A20
+COLUMN ID_Animal         FORMAT 9999
+COLUMN ID_Visiteur       FORMAT 9999
+COLUMN LIBELLE           FORMAT A30
+COLUMN ID_Espece1        FORMAT 9999
+COLUMN ID_Espece2        FORMAT 9999
+COLUMN ID_Parent         FORMAT 9999
+COLUMN ID_Enfant         FORMAT 9999
+COLUMN ID_Animal         FORMAT 9999
+COLUMN ID_Personnel      FORMAT 9999
+COLUMN Date_Nourrit      FORMAT A12
+COLUMN Dose_Nourriture   FORMAT 9999.99
+COLUMN ID_Animal         FORMAT 9999
+COLUMN Date_Soin         FORMAT A12
+COLUMN ID_Soigneur       FORMAT 9999
+COLUMN ID_Veterinaire    FORMAT 9999
+COLUMN Description_Soin  FORMAT A40
+COLUMN ID_Zone           FORMAT 9999
+COLUMN ID_Personnel      FORMAT 9999
+COLUMN ID_Boutique       FORMAT 9999
+COLUMN ID_Personnel      FORMAT 9999
+COLUMN Date_Debut_Reparation FORMAT A12
+COLUMN Latitude_Enclos       FORMAT 9999
+COLUMN Longitude_Enclos      FORMAT 9999
+COLUMN ID_Personnel          FORMAT 9999
+COLUMN ID_Prestataire        FORMAT 9999
+COLUMN Date_Fin              FORMAT A12
+COLUMN Nature_Reparation     FORMAT A40
+COLUMN Cout_Reparation       FORMAT 999999.99
+
 COMMIT;

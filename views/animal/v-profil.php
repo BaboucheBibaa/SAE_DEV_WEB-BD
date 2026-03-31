@@ -158,7 +158,7 @@
                 </h2>
                 <div id="collapseNourriture" class="accordion-collapse collapse">
                     <div class="accordion-body">
-                        <?php if (!empty($nourriture) && isset($nourriture[0]) && is_array($nourriture[0])): ?>
+                        <?php if (!empty($nourriture) && isset($nourriture[0])): ?>
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover">
                                     <thead class="table-light">
@@ -170,7 +170,7 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $count = count($nourriture[0]);
+                                        $count = count($nourriture);
                                         for ($i = 0; $i < $count; $i++) {
                                             $dateNourrit = htmlspecialchars($nourriture[$i]['DATE_NOURRIT'] ?? '');
                                             $nomPersonnel = htmlspecialchars($nourriture[$i]['NOM'] ?? 'Non spécifié');

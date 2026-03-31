@@ -21,6 +21,10 @@ class ServiceZone
         return $this->Zone->recupParID($id_zone);
     }
 
+    public function getZoneParEnclos($latitude,$longitude){
+        return $this->Zone->recupZoneParEnclos($latitude,$longitude);
+    }
+
     public function getManagerParZone($id_zone)
     {
         //Récupère le manager d'une zone donnée
