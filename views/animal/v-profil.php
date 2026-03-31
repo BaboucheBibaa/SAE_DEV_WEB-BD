@@ -144,6 +144,13 @@
                                     </span>
                                 </div>
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <a href="index.php?action=profilEnclos&latitude=<?= htmlspecialchars($animal['LATITUDE_ENCLOS']) ?>&longitude=<?= htmlspecialchars($animal['LONGITUDE_ENCLOS']) ?>" class="btn btn-sm btn-outline-info mb-3">
+                                        <i class="bi bi-eye"></i> Voir le profil de l'enclos
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -176,7 +183,7 @@
                                             $nomPersonnel = htmlspecialchars($nourriture[$i]['NOM'] ?? 'Non spécifié');
                                             $prenomPersonnel = htmlspecialchars($nourriture[$i]['PRENOM'] ?? '');
                                             $dose = htmlspecialchars($nourriture[$i]['DOSE_NOURRITURE'] ?? '');
-                                            
+
                                             echo "<tr>";
                                             echo "<td><strong>{$dateNourrit}</strong></td>";
                                             echo "<td>{$nomPersonnel} {$prenomPersonnel}</td>";
@@ -223,7 +230,7 @@
                                             $nomPersonnel = htmlspecialchars($soins[$i]['NOM'] ?? 'Non spécifié');
                                             $prenomPersonnel = htmlspecialchars($soins[$i]['PRENOM'] ?? '');
                                             $description = htmlspecialchars($soins[$i]['DESCRIPTION_SOIN'] ?? 'Non spécifiée');
-                                            
+
                                             echo "<tr>";
                                             echo "<td><strong>{$dateSoin}</strong></td>";
                                             echo "<td>{$nomPersonnel} {$prenomPersonnel}</td>";
@@ -260,7 +267,7 @@
                                             <th>Nom du Visiteur</th>
                                             <th>Niveau de Parrainage</th>
                                             <?php if ($canEdit): ?>
-                                            <th class="text-center">Actions</th>
+                                                <th class="text-center">Actions</th>
                                             <?php endif; ?>
                                         </tr>
                                     </thead>
@@ -270,7 +277,7 @@
                                             $id_visiteur = htmlspecialchars($parrain['ID_VISITEUR'] ?? '');
                                             $nomVisiteur = htmlspecialchars($parrain['NOM_VISITEUR'] ?? 'Non spécifié');
                                             $niveau = htmlspecialchars($parrain['LIBELLE'] ?? 'Non spécifié');
-                                            
+
                                             // Couleur du badge selon le niveau
                                             $badgeClass = 'bg-secondary';
                                             if (stripos($niveau, 'diamant') !== false) {
@@ -284,11 +291,11 @@
                                             } elseif (stripos($niveau, 'bronze') !== false) {
                                                 $badgeClass = 'bg-danger';
                                             }
-                                            
+
                                             echo "<tr>";
                                             echo "<td><strong>{$nomVisiteur}</strong></td>";
                                             echo "<td><span class='badge {$badgeClass}'>{$niveau}</span></td>";
-                                            
+
                                             if (isset($_SESSION['user']['ID_FONCTION']) && ($_SESSION['user']['ID_FONCTION'] == RESPSOIG || $_SESSION['user']['ID_FONCTION'] == ADMINID)) {
                                                 echo "<td class='text-center'>";
                                                 echo "<form action='index.php?action=supprimerParrainage' method='POST' style='display:inline;'>";
@@ -300,7 +307,7 @@
                                                 echo "</form>";
                                                 echo "</td>";
                                             }
-                                            
+
                                             echo "</tr>";
                                         }
                                         ?>
@@ -318,62 +325,62 @@
 
             <!-- Ajouter un parrain (Réservé RESPSOIG et ADMIN) -->
             <?php if (isset($_SESSION['user']['ID_FONCTION']) && ($_SESSION['user']['ID_FONCTION'] == RESPSOIG || $_SESSION['user']['ID_FONCTION'] == ADMINID)): ?>
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAjouterParrain">
-                        <i class="bi bi-person-plus me-2"></i> Ajouter un Parrain
-                    </button>
-                </h2>
-                <div id="collapseAjouterParrain" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                        <form action="index.php?action=ajouterParrainage" method="POST" class="needs-validation">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label for="id_visiteur" class="form-label">Sélectionner un Visiteur</label>
-                                        <select class="form-select" id="id_visiteur" name="id_visiteur" required>
-                                            <option value="">-- Choisir un visiteur --</option>
-                                            <?php 
-                                            if (!empty($visiteurs) && is_array($visiteurs)):
-                                                foreach ($visiteurs as $visiteur):
-                                                    $id_visiteur = htmlspecialchars($visiteur['ID_VISITEUR'] ?? '');
-                                                    $nom_visiteur = htmlspecialchars($visiteur['NOM_VISITEUR'] ?? 'Visiteur inconnu');
-                                                    echo "<option value=\"{$id_visiteur}\">{$nom_visiteur}</option>";
-                                                endforeach;
-                                            endif;
-                                            ?>
-                                        </select>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAjouterParrain">
+                            <i class="bi bi-person-plus me-2"></i> Ajouter un Parrain
+                        </button>
+                    </h2>
+                    <div id="collapseAjouterParrain" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <form action="index.php?action=ajouterParrainage" method="POST" class="needs-validation">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="id_visiteur" class="form-label">Sélectionner un Visiteur</label>
+                                            <select class="form-select" id="id_visiteur" name="id_visiteur" required>
+                                                <option value="">-- Choisir un visiteur --</option>
+                                                <?php
+                                                if (!empty($visiteurs) && is_array($visiteurs)):
+                                                    foreach ($visiteurs as $visiteur):
+                                                        $id_visiteur = htmlspecialchars($visiteur['ID_VISITEUR'] ?? '');
+                                                        $nom_visiteur = htmlspecialchars($visiteur['NOM_VISITEUR'] ?? 'Visiteur inconnu');
+                                                        echo "<option value=\"{$id_visiteur}\">{$nom_visiteur}</option>";
+                                                    endforeach;
+                                                endif;
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="libelle" class="form-label">Type de Parrainage</label>
+                                            <select class="form-select" id="libelle" name="libelle" required>
+                                                <option value="">-- Choisir un type --</option>
+                                                <?php
+                                                if (!empty($libelles) && is_array($libelles)):
+                                                    foreach ($libelles as $libelle):
+                                                        $nom_niveau = htmlspecialchars($libelle['LIBELLE'] ?? 'Non spécifié');
+                                                        echo "<option value=\"{$libelle['LIBELLE']}\">{$nom_niveau}</option>";
+                                                    endforeach;
+                                                endif;
+                                                ?>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="mb-3">
-                                        <label for="libelle" class="form-label">Type de Parrainage</label>
-                                        <select class="form-select" id="libelle" name="libelle" required>
-                                            <option value="">-- Choisir un type --</option>
-                                            <?php 
-                                            if (!empty($libelles) && is_array($libelles)):
-                                                foreach ($libelles as $libelle):
-                                                    $nom_niveau = htmlspecialchars($libelle['LIBELLE'] ?? 'Non spécifié');
-                                                    echo "<option value=\"{$libelle['LIBELLE']}\">{$nom_niveau}</option>";
-                                                endforeach;
-                                            endif;
-                                            ?>
-                                        </select>
+                                <input type="hidden" name="id_animal" value="<?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?>">
+                                <div class="row mt-3">
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="bi bi-check-circle"></i> Ajouter le parrainage
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                            <input type="hidden" name="id_animal" value="<?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?>">
-                            <div class="row mt-3">
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="bi bi-check-circle"></i> Ajouter le parrainage
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
             <?php endif; ?>
         </div>
 
@@ -385,11 +392,11 @@
                 </a>
             </div>
             <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
-            <div class="col-auto">
-                <a href="index.php?action=editionAnimal&id=<?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?>&edit=1" class="btn btn-primary">
-                    <i class="bi bi-pencil"></i> Modifier
-                </a>
-            </div>
+                <div class="col-auto">
+                    <a href="index.php?action=editionAnimal&id=<?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?>&edit=1" class="btn btn-primary">
+                        <i class="bi bi-pencil"></i> Modifier
+                    </a>
+                </div>
             <?php endif; ?>
         </div>
     </div>

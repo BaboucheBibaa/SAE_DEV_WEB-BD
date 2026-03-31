@@ -227,10 +227,11 @@ class AdminController extends BaseController
             header('Location: index.php?action=adminDashboard&filtreArchive=' . $filtreArchive);
             exit;
         }
-
-        $valeurDemandee = isset($_GET['valeur']) ? (int) $_GET['valeur'] : null;
-        $nouvelEtat = ($valeurDemandee === 0 || $valeurDemandee === 1)
-            ? $valeurDemandee
+        //valeur : 0 pour archiver, 1 pour désarchiver, si elle existe on la met en int et on l'affecte, sinon null
+        $valeur = isset($_GET['valeur']) ? intval($_GET['valeur']) : null;
+        //si valeur est à 0 ou à 1 alors l'état de l'archivage est valide (archiver ou désarchiver) sinon on regarde l'état de l'archivage de l'employé
+        $nouvelEtat = ($valeur === 0 || $valeur === 1)
+            ? $valeur
             : ((int) ($employee['ESTARCHIVE'] ?? 1) === 1 ? 0 : 1);
 
         if ($this->serviceEmployee->majArchiveEmployee($id, $nouvelEtat)) {

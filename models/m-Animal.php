@@ -41,7 +41,7 @@ class Animal
     {
         //récupère le soigneur attitré ainsi que le soigneur remplaçant de l'animal
         $db = Database::getConnection();
-        $sql = "SELECT P.ID_SOIGNEUR SOIGNEUR,P.ID_REMPLACANT REMPLACANT FROM Animal A, Personnel P WHERE A.ID_SOIGNEUR = P.ID_PERSONNEL AND A.ID_ANIMAL = :id_animal";
+        $sql = "SELECT P.ID_PERSONNEL SOIGNEUR,P.ID_REMPLACANT REMPLACANT FROM Animal A, Personnel P WHERE A.ID_SOIGNEUR = P.ID_PERSONNEL AND A.ID_ANIMAL = :id_animal";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ':id_animal', $id_animal);
 

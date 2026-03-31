@@ -216,6 +216,7 @@ class User
         return $r;
     }
 
+
     public function creerEtRetournerId($data)
     {
         $db = Database::getConnection();
@@ -233,7 +234,7 @@ class User
         $salaire = $data['salaire'] ?? null;
         $ID_Fonction = $data['id_fonction'] ?? null;
         $login = $data['login'] ?? null;
-        $ID_Remplacant = $data['id_remplacant'] ?? null;
+        $ID_Remplacant = $data['id_remplacant'] ?? $new_id;
         $ID_Superieur = $data['id_superieur'] ?? null;
 
         oci_bind_by_name($stid, ':id_personnel', $new_id);

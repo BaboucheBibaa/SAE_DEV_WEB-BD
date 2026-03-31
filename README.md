@@ -176,10 +176,6 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 
 ---
 
-## TODO List
-
----
-
 ## Checklist de tests fonctionnels
 
 > **Valide chaque case après avoir testé la fonctionnalité sur le site.**
@@ -192,41 +188,48 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 - ✅ Modification d'un animal (admin)
 - ✅ Suppression d'un animal (admin)
 - ✅ Affichage de l'historique des soins d'un animal
-- [ ] Ajout d'un soin (soigneur)
-- [ ] Ajout d'une distribution de nourriture (soigneur)
-- [ ] Accès et affichage du profil d'un enclos
-- [ ] Affichage de la liste des animaux d'un enclos
-- [ ] Affichage de l'historique des réparations d'un enclos
-- [ ] Ajout d'une réparation (personnel entretien)
-- [ ] Accès et affichage du dashboard administrateur
-- [ ] Gestion des employés (ajout, modification, suppression, archivage)
-- [ ] Gestion des zones (ajout, modification, suppression)
-- [ ] Gestion des boutiques (ajout, modification, suppression)
-- [ ] Accès et affichage du dashboard responsable de zone
-- [ ] Accès et affichage du dashboard responsable de boutique
-- [ ] Ajout de chiffre d'affaires journalier (responsable boutique)
-- [ ] Accès et affichage du dashboard soigneur
-- [ ] Accès et affichage du dashboard personnel entretien
-- [ ] Affichage de la liste des entretiens d'enclos (personnel entretien)
-- [ ] Moteur de recherche global (animaux, employés, zones, boutiques, enclos)
+- ✅ Ajout d'un soin (soigneur)
+- ✅ Ajout d'une distribution de nourriture (soigneur)
+- ✅ Accès et affichage du profil d'un enclos
+- ✅ Affichage de la liste des animaux d'un enclos
+- ✅ Affichage de l'historique des réparations d'un enclos
+- ✅ Ajout d'une réparation (personnel entretien)
+- ✅ Accès et affichage du dashboard administrateur
+- ✅ Gestion des employés (ajout, modification, suppression, archivage)
+  - [ ] Désarchivage non fonctionnel
+- ✅ Gestion des zones (ajout, modification, suppression)
+- ✅ Gestion des boutiques (ajout, modification, suppression)
+- ✅ Accès et affichage du dashboard responsable de zone
+  - [ ] Un responsable soigneur de zone est aussi un soigneur, ajouter ce cas-ci  
+- ✅ Accès et affichage du dashboard responsable de boutique
+- ✅ Ajout de chiffre d'affaires journalier (responsable boutique)
+- ✅ Accès et affichage du dashboard soigneur
+- ✅ Accès et affichage du dashboard personnel entretien
+- ✅ Affichage de la liste des entretiens d'enclos (personnel entretien)
+- ✅ Moteur de recherche global (animaux, employés, zones, boutiques, enclos)
+  - [ ] Faire pour les enclos
+- [ ] Moteur de recherche avec filtres spécifiques
 - [ ] Affichage et gestion des messages flash multiples
-- [ ] Vérification des droits d'accès (accès refusé si non autorisé)
+- ✅ Vérification des droits d'accès (accès refusé si non autorisé)
+
+---
+
+## TODO List
 
 ---
 
 ### Phase 1 - Améliorations Dashboard
 
 - [ ] Dashboard Responsable Boutique:
-  - [ ] Chiffre d'affaires journalier, mensuel et annuel
+  - ✅ Chiffre d'affaires journalier, mensuel et annuel
   - [ ] Statistiques
 - [ ] Dashboard Administrateur:
   - [ ] Statistiques globales
-- [ ] Dashboard employé boutique + vétérinaire ????
+- [ ] Dashboard employé boutique
 
 ### Améliorations
 
-- [ ] Gérer l'affichage des données d'un genre d'employé par une vue
-- [ ] Ajouter des opérations +/- complexes en faisant des statistiques diverses et variées dans la BD (divisions / agrégats / jointures complexes)
+- [ ] Gérer l'affichage des données du comptable par une vue
 - ✅ Ajout d'un fichier de gestion des logs (Connexion / Déconnexion au sein du site et Ajout / Maj / Suppression au sein de la BD)
 - ✅ Popup pour les fins de contrat sur le dashboard admin
   - [ ] Gérer le fait de pouvoir avoir plusieurs popups à afficher

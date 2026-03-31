@@ -28,7 +28,7 @@ class CA
         //Quel est le CA du jour pour une boutique donnée ? (CA journalier)
         $db = Database::getConnection();
 
-        $sql = "SELECT MONTANT AS total_ca FROM CHIFFRE_AFFAIRES WHERE ID_BOUTIQUE = :id_boutique AND DATE_CA_JOURNALIER = TRUNC(SYSDATE-1)";
+        $sql = "SELECT MONTANT AS total_ca FROM CHIFFRE_AFFAIRES WHERE ID_BOUTIQUE = :id_boutique AND DATE_CA_JOURNALIER = TRUNC(SYSDATE)";
 
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ':id_boutique', $idBoutique);

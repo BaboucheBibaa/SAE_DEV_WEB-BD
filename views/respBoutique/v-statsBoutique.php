@@ -31,11 +31,12 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h6 class="text-muted mb-2">CA de la dernière journée</h6>
-                                <h3 class="mb-0"><?= empty($caJournalier['TOTAL_CA'])    ? '0' : htmlspecialchars($caJournalier['TOTAL_CA']) ?> EUR</h3>
+                                <h6 class="text-muted mb-2">CA du jour</h6>
+                                <h3 class="mb-0"><?= empty($caJournalier['TOTAL_CA'])    ? 'Non posté' : htmlspecialchars($caJournalier['TOTAL_CA']) ?> EUR</h3>
                             </div>
                         </div>
-                        <small class="text-muted">Comparaison avec hier</small>
+                        <small class="text-muted">Aujourd'hui</small>
+
                     </div>
                 </div>
             </div>
@@ -74,35 +75,7 @@
                                 <h3 class="mb-0"><?= empty($caMoyenAnnuel['MOYENNE_CA'])    ? '0' : htmlspecialchars($caMoyenAnnuel['MOYENNE_CA']) ?> EUR</h3>
                             </div>
                         </div>
-                        <small class="text-muted">En comparaison avec le CA Moyen Global <?php echo htmlspecialchars($caMoyenGlobal['MOYENNE_CA']); ?> EUR</small>
-
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <h6 class="text-muted mb-2">CA Maximum Annuel</h6>
-                                <h3 class="mb-0"><?= empty($minMaxAnnuel['MAX_CA'])    ? '0' : htmlspecialchars($minMaxAnnuel['MAX_CA']) ?> EUR</h3>
-                            </div>
-                        </div>
-                        <small class="text-muted">En comparaison avec le CA Minimum Global <?php echo htmlspecialchars($minMaxGlobal['MAX_CA']); ?> EUR</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-xl-3">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <h6 class="text-muted mb-2">CA Minimum Annuel</h6>
-                                <h3 class="mb-0"><?= empty($minMaxAnnuel['MIN_CA'])    ? '0' : htmlspecialchars($minMaxAnnuel['MIN_CA']) ?> EUR</h3>
-                            </div>
-                        </div>
-                        <small class="text-muted">En comparaison avec le CA Minimum Global <?php echo htmlspecialchars($minMaxGlobal['MIN_CA']); ?> EUR</small>
-
+                        <small class="text-muted">Moyenne sur l'année en cours</small>
                     </div>
                 </div>
             </div>

@@ -47,18 +47,22 @@ class ServiceSoin
 
     public function ajoutSoin()
     {
-
+        $estImplique = isset($_POST['estImplique']) ? $_POST['estImplique'] : 'non';
         $idAnimal = isset($_POST['ID_ANIMAL']) && $_POST['ID_ANIMAL'] !== '' ? intval($_POST['ID_ANIMAL']) : null;
         $dateSoin = $_POST['DATE_SOIN'] ?? null;
         $descriptionSoin = $_POST['DESCRIPTION_SOIN'] ?? null;
-        $idPersonnel = $_SESSION['user']['ID_PERSONNEL'];
+        //Si le membre du personnel est impliqué dans le soin alors on l'ajoute sinon non donc null
+        $idPersonnel = $estImplique == 'oui' ? $_SESSION['user']['ID_PERSONNEL'] : null;
+
+        $idVeterinaire = isset($_POST['ID_VETERINAIRE']) ? $_POST['ID_VETERINAIRE'] : null;
 
         //gestion si un soigneur qui n'est pas le soigneur attitré d'un animal décide d'ajouter un soin sur un animal qu'il ne gère pas
         $soigneurEtRemplacant = $this->Animal->recupSoigneurEtRemplacant($idAnimal);
         if ($soigneurEtRemplacant['SOIGNEUR'] != $_SESSION['user']['ID_PERSONNEL'] || $soigneurEtRemplacant['REMPLACANT'] != $_SESSION['user']['ID_REMPLACANT']) {
             return null;
         }
-        if (!$idAnimal || !$dateSoin || !$descriptionSoin || !$idPersonnel) {
+        //le personnel ET le vétérinaire ne peuvent être null en même temps
+        if (!$idAnimal || !$dateSoin || !$descriptionSoin || (!$idPersonnel && !$idVeterinaire)) {
             return null;
         }
 
@@ -66,7 +70,8 @@ class ServiceSoin
             'ID_ANIMAL' => $idAnimal,
             'DATE_SOIN' => $dateSoin,
             'DESCRIPTION_SOIN' => $descriptionSoin,
-            'ID_PERSONNEL' => $idPersonnel
+            'ID_PERSONNEL' => $idPersonnel,
+            'ID_VETERINAIRE' => $idVeterinaire
         ];
         return $this->HistoriqueSoins->creer($data);
     }

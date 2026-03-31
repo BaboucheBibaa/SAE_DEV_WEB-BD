@@ -6,8 +6,8 @@ class Zone
         /*Récupère toutes les zones du zoo
         */
         $db = Database::getConnection();
-        $sql = "SELECT *
-                FROM ZONE";
+        $sql = "SELECT Z.*,P.NOM, P.PRENOM
+                FROM ZONE Z JOIN PERSONNEL P ON Z.ID_MANAGER = P.ID_PERSONNEL";
         $stid = oci_parse($db, $sql);
         $r = oci_execute($stid);
         if (!$r) {

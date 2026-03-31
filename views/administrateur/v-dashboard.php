@@ -211,8 +211,8 @@
                                                 <td><?= htmlspecialchars($zone['ID_ZONE'] ?? 'N/A') ?></td>
                                                 <td><strong><?= htmlspecialchars($zone['NOM_ZONE'] ?? 'N/A') ?></strong></td>
                                                 <td>
-                                                    <?php if (!empty($zone['NOM_MANAGER'])): ?>
-                                                        <span class="badge bg-warning text-dark"><?= htmlspecialchars($zone['NOM_MANAGER']) ?></span>
+                                                    <?php if (!empty($zone['NOM'])): ?>
+                                                        <span class="badge bg-warning text-dark"><?= htmlspecialchars($zone['NOM']).' '. htmlspecialchars($zone['PRENOM']) ?></span>
                                                     <?php else: ?>
                                                         <span class="badge bg-secondary">Non assigné</span>
                                                     <?php endif; ?>

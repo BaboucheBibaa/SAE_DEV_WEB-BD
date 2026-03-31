@@ -22,7 +22,7 @@
                                     id="animalSelect"
                                     name="ID_ANIMAL"
                                     required
-                                    aria-label="Sélectionner un animal">
+                                    aria-label="Sélectionner un animal" required>
                                     <option value="">-- Sélectionner un animal --</option>
                                     <?php if (isset($animaux) && is_array($animaux)): ?>
                                         <?php foreach ($animaux as $animal): ?>
@@ -80,8 +80,7 @@
                                 </small>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="estImplique" value="oui" id="flexCheckChecked" checked>
-                                <input type="hidden" name="estImplique" value="non">
+                                <input class="form-check-input" type="checkbox" name="estImplique" value='oui' id="flexCheckChecked" checked>
                                 <label class="form-check-label" for="flexCheckDefault">
                                     Êtes-vous impliqué dans le soin de l'animal ?
                                 </label>

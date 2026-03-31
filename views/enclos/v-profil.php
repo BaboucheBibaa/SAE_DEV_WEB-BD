@@ -50,6 +50,8 @@
                                 <span class="badge bg-warning text-dark">
                                     <?= htmlspecialchars($enclos['NOM_ZONE'] ?? 'Non spécifiée') ?>
                                 </span>
+                                <a href="index.php?action=profilZone&id=<?= htmlspecialchars($enclos['ID_ZONE'])?>" class="btn btn-sm btn-outline-info"> Voir le profil de la zone </a>
+
                             </div>
                         </div>
                     </div>

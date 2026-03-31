@@ -30,11 +30,12 @@ class Soigneurs extends BaseController
     {
         $this->requireRole(SOIGNEUR);
         $result = $this->serviceSoin->ajoutSoin();
-
-        if ($result) {
-            //$this->redirectWithMessage('formAjoutSoin', 'Soin ajouté avec succès.', 'success');
-        } else {
-            //$this->redirectWithMessage('formAjoutSoin', 'Erreur lors de l\'ajout du soin.', 'error');
+        if ($result == 1) {
+            $this->redirectWithMessage('formAjoutSoin', 'Soin ajouté avec succès.', 'success');
+        } else if ($result == 2) {
+            $this->redirectWithMessage('formAjoutSoin', 'Un soin a déjà été fait ce jour-ci pour cet animal.', 'error');
+        } else { // null
+            $this->redirectWithMessage('formAjoutSoin', "Erreur lors de l'ajout du soin.", 'error');
         }
     }
     public function formCreationAjoutNourriture()

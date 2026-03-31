@@ -238,7 +238,7 @@ COLUMN ID_Boutique       FORMAT 9999
 COLUMN ID_Manager        FORMAT 9999
 COLUMN ID_Zone           FORMAT 9999
 COLUMN Nom_Boutique      FORMAT A25
-COLUMN Description_Boutique FORMAT A40
+COLUMN Description_Boutique FORMAT A30
 COLUMN ID_Boutique       FORMAT 9999
 COLUMN Date_CA_Journalier FORMAT A12
 COLUMN Montant           FORMAT 999999.99
@@ -290,7 +290,7 @@ COLUMN Longitude_Enclos      FORMAT 9999
 COLUMN ID_Personnel          FORMAT 9999
 COLUMN ID_Prestataire        FORMAT 9999
 COLUMN Date_Fin              FORMAT A12
-COLUMN Nature_Reparation     FORMAT A40
+COLUMN Nature_Reparation     FORMAT A30
 COLUMN Cout_Reparation       FORMAT 999999.99
 
 COMMIT;

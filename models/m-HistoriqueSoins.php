@@ -85,10 +85,16 @@ class HistoriqueSoins
         return $result;
     }
 
+
+    /**
+     * Summary of creer
+     * retourne 2 ou 1 en fonction de la réussite de l'insertion
+     *
+     */
     public function creer($data)
     {
         $db = Database::getConnection();
-        $sql = "INSERT INTO SOIN (ID_PERSONNEL, ID_VETERINAIRE,ID_ANIMAL, DATE_SOIN, DESCRIPTION_SOIN) VALUES (:id_personnel, :id_veterinaire, :id_animal, TO_DATE(:date_soin, 'YYYY-MM-DD'), :description_soin)";
+        $sql = "INSERT INTO SOIN (ID_SOIGNEUR, ID_VETERINAIRE,ID_ANIMAL, DATE_SOIN, DESCRIPTION_SOIN) VALUES (:id_personnel, :id_veterinaire, :id_animal, TO_DATE(:date_soin, 'YYYY-MM-DD'), :description_soin)";
         $stid = oci_parse($db, $sql);
         oci_bind_by_name($stid, ":id_personnel", $data['ID_PERSONNEL']);
         oci_bind_by_name($stid, ":id_veterinaire", $data['ID_VETERINAIRE']);
@@ -99,7 +105,7 @@ class HistoriqueSoins
         $r = oci_execute($stid);
         if (!$r) {
             $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+            return 2;
         }
         return $r;
     }

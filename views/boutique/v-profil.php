@@ -46,8 +46,8 @@
                         <div class="col-12">
                             <label class="text-muted small fw-bold">Description</label>
                             <p class="mb-0">
-                                <?= !empty($boutique['DESCRIPTION_BOUTIQUE']) 
-                                    ? htmlspecialchars($boutique['DESCRIPTION_BOUTIQUE']) 
+                                <?= !empty($boutique['DESCRIPTION_BOUTIQUE'])
+                                    ? htmlspecialchars($boutique['DESCRIPTION_BOUTIQUE'])
                                     : '<em class="text-muted">Aucune description disponible</em>' ?>
                             </p>
                         </div>
@@ -63,9 +63,9 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <?php 
+                    <?php
                     $employes = $boutique['EMPLOYES'] ?? [];
-                    if (!empty($employes)): 
+                    if (!empty($employes)):
                     ?>
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
@@ -78,16 +78,16 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($employes as $employe): ?>
-                                    <tr>
-                                        <td><?= htmlspecialchars($employe['NOM'] ?? '') ?></td>
-                                        <td><?= htmlspecialchars($employe['PRENOM'] ?? '') ?></td>
-                                        <td>
-                                            <a href="index.php?action=profil&id=<?= $employe['ID_PERSONNEL'] ?>" 
-                                               class="btn btn-sm btn-outline-primary">
-                                                <i class="bi bi-eye"></i> Voir profil
-                                            </a>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td><?= htmlspecialchars($employe['NOM'] ?? '') ?></td>
+                                            <td><?= htmlspecialchars($employe['PRENOM'] ?? '') ?></td>
+                                            <td>
+                                                <a href="index.php?action=profil&id=<?= $employe['ID_PERSONNEL'] ?>"
+                                                    class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i> Voir profil
+                                                </a>
+                                            </td>
+                                        </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -120,8 +120,8 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="text-muted">Responsable</span>
                         <span class="small">
-                            <?= !empty($boutique['NOM_MANAGER']) 
-                                ? htmlspecialchars($boutique['NOM_MANAGER']." ".$boutique['PRENOM_MANAGER']) 
+                            <?= !empty($boutique['NOM_MANAGER'])
+                                ? htmlspecialchars($boutique['NOM_MANAGER'] . " " . $boutique['PRENOM_MANAGER'])
                                 : '<em class="text-muted">Non assigné</em>' ?>
                         </span>
                     </div>
@@ -138,15 +138,10 @@
                 <div class="card-body d-flex flex-column gap-2">
 
                     <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == RESPBOUTIQUE): ?>
-                        <a href="index.php?action=statsBoutique&id=<?= $boutique['ID_BOUTIQUE'] ?>" 
-                           class="btn btn-sm btn-outline-primary">
+                        <a href="index.php?action=statsBoutique&id=<?= $boutique['ID_BOUTIQUE'] ?>"
+                            class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-bar-chart"></i> Statistiques
                         </a>
-                    <?php endif; ?>
-                    <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
-                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDelete">
-                            <i class="bi bi-trash"></i> Supprimer
-                        </button>
                     <?php endif; ?>
                 </div>
             </div>
@@ -156,30 +151,30 @@
 
 <!-- Delete Confirmation Modal -->
 <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
-<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger bg-opacity-10">
-                <h5 class="modal-title" id="confirmDeleteLabel">
-                    <i class="bi bi-exclamation-triangle text-danger"></i> Confirmation de suppression
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Êtes-vous sûr de vouloir supprimer la boutique 
-                   <strong><?= htmlspecialchars($boutique['NOM_BOUTIQUE'] ?? '') ?></strong> ?
-                </p>
-                <p class="text-muted small">Cette action est irréversible.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <form method="POST" action="index.php" style="display: inline;">
-                    <input type="hidden" name="action" value="deleteBoutique">
-                    <input type="hidden" name="id" value="<?= $boutique['ID_BOUTIQUE'] ?>">
-                    <button type="submit" class="btn btn-danger">Supprimer</button>
-                </form>
+    <div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger bg-opacity-10">
+                    <h5 class="modal-title" id="confirmDeleteLabel">
+                        <i class="bi bi-exclamation-triangle text-danger"></i> Confirmation de suppression
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer la boutique
+                        <strong><?= htmlspecialchars($boutique['NOM_BOUTIQUE'] ?? '') ?></strong> ?
+                    </p>
+                    <p class="text-muted small">Cette action est irréversible.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <form method="POST" action="index.php" style="display: inline;">
+                        <input type="hidden" name="action" value="deleteBoutique">
+                        <input type="hidden" name="id" value="<?= $boutique['ID_BOUTIQUE'] ?>">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 <?php endif; ?>
