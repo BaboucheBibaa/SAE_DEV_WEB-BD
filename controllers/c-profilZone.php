@@ -1,6 +1,6 @@
 <?php
 
-class ProfilZone extends BaseController {
+class ProfilZoneController extends BaseController {
 
     private $serviceZone;
     private $serviceEnclos;
@@ -10,7 +10,13 @@ class ProfilZone extends BaseController {
         $this->serviceEnclos = new ServiceEnclos();
     }
 
-    public function profileZone($id_zone) {
+    /**
+     * Affiche le profil d'une zone avec ses enclos
+     *
+     * @param int $id_zone Identifiant de la zone
+     * @return void
+     */
+    public function profileZone(int $id_zone): void {
         if ($id_zone === null) {
             $this->redirectWithMessage('home', 'Zone non trouvée.', 'error');
         }

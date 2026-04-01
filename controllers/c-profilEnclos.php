@@ -10,7 +10,14 @@ class EnclosController extends BaseController {
         $this->serviceReparation = new ServiceReparation();
         $this->serviceEnclos = new ServiceEnclos();
     }
-    public function profilEnclos($latitude, $longitude) {
+    /**
+     * Affiche le profil d'un enclos avec ses animaux et réparations
+     *
+     * @param float $latitude Latitude de l'enclos
+     * @param float $longitude Longitude de l'enclos
+     * @return void
+     */
+    public function profilEnclos(float $latitude, float $longitude): void {
         if ($latitude === null || $longitude === null) {
             $this->redirectWithMessage('home', 'Enclos non trouvé.', 'error');
         }

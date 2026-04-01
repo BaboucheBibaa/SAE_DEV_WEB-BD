@@ -1,8 +1,14 @@
 <?php
 // Ce fichier affiche la page de moteur de recherche
+// Ce fichier affiche la page de moteur de recherche
 $searchTerm = $searchTerm ?? '';
 $results = $results ?? [];
 $message = $message ?? '';
+// Filtres avancés récupérés depuis l'URL
+$filter_espece = $_GET['filter_espece'] ?? '';
+$filter_zone = $_GET['filter_zone'] ?? '';
+$filter_regime = $_GET['filter_regime'] ?? '';
+$filter_type_enclos = $_GET['filter_type_enclos'] ?? '';
 ?>
 
 <main class="container my-5 flex-grow-1">
@@ -13,6 +19,8 @@ $message = $message ?? '';
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title mb-4">Recherche Globale</h5>
+
+                    <!-- FORMULAIRE PRINCIPAL -->
                     <form method="GET" action="index.php" class="mb-3">
                         <input type="hidden" name="action" value="search">
                         <input type="hidden" name="search_action" value="recherche_globale">
@@ -29,6 +37,63 @@ $message = $message ?? '';
                                 <i class="bi bi-search"></i> Rechercher
                             </button>
                         </div>
+
+                        <!-- 🔽 FILTRES AVANCÉS -->
+                        <div class="card p-3 bg-light border">
+                            <h6 class="mb-3"><i class="bi bi-funnel"></i> Filtres avancés</h6>
+
+                            <div class="row g-3">
+
+                                <!-- Filtre Espèce -->
+                                <div class="col-md-3">
+                                    <label class="form-label">Espèce</label>
+                                    <input type="text" name="filter_espece" class="form-control"
+                                        placeholder="Ex : Lion"
+                                        value="<?= htmlspecialchars($filter_espece) ?>">
+                                </div>
+
+                                <!-- Filtre Zone -->
+
+                                <div class="col-md-3">
+                                    <label class="form-label">Zone</label>
+                                    <select name="filter_zone" class="form-select">
+                                        <option value="">Sélectionnez une zone</option>
+
+                                        <?php foreach ($zones as $z): ?>
+                                            <option value="<?= htmlspecialchars($z['ID_ZONE']) ?>">
+                                                <?= htmlspecialchars($z['NOM_ZONE']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+
+                                <!-- Filtre Régime alimentaire -->
+                                <div class="col-md-3">
+                                    <label class="form-label">Régime alimentaire</label>
+                                    <select name="filter_regime" class="form-select">
+                                        <option value="">Tous</option>
+                                        <option value="Carnivore" <?= $filter_regime === "Carnivore" ? "selected" : "" ?>>Carnivore</option>
+                                        <option value="Herbivore" <?= $filter_regime === "Herbivore" ? "selected" : "" ?>>Herbivore</option>
+                                        <option value="Omnivore" <?= $filter_regime === "Omnivore" ? "selected" : "" ?>>Omnivore</option>
+                                    </select>
+                                </div>
+
+                                <!-- Filtre Type d'enclos -->
+                                <div class="col-md-3">
+                                    <label class="form-label">Type d'enclos</label>
+                                    <input type="text" name="filter_type_enclos" class="form-control"
+                                        placeholder="Ex : Extérieur"
+                                        value="<?= htmlspecialchars($filter_type_enclos) ?>">
+                                </div>
+                            </div>
+
+                            <div class="mt-3 text-end">
+                                <button class="btn btn-secondary" type="submit">
+                                    <i class="bi bi-funnel"></i> Appliquer les filtres
+                                </button>
+                            </div>
+                        </div>
                     </form>
 
                     <!-- Message d'information -->
@@ -39,8 +104,8 @@ $message = $message ?? '';
                         </div>
                     <?php endif; ?>
 
-                    <!-- Résultats de la recherche globale -->
-                    <?php if (!empty($searchTerm)): ?>
+                    <!-- Résultats -->
+                    <?php if (!empty($searchTerm) || !empty($filter_espece) || !empty($filter_zone) || !empty($filter_regime) || !empty($filter_type_enclos)): ?>
                         <div class="search-results">
                             <!-- Animaux -->
                             <?php if (!empty($results['animals'])): ?>
@@ -67,7 +132,7 @@ $message = $message ?? '';
                                     </div>
                                 </div>
                             <?php endif; ?>
-
+                            <!-- (Les autres sections restent identiques) -->
                             <!-- Espèces -->
                             <?php if (!empty($results['especes'])): ?>
                                 <div class="mb-4">
@@ -77,17 +142,16 @@ $message = $message ?? '';
                                     </h5>
                                     <div class="list-group">
                                         <?php foreach ($results['especes'] as $espece): ?>
-                                            <div class="list-group-item">
-                                                <h6 class="mb-1"><?= htmlspecialchars($espece['NOM_ESPECE'] ?? 'N/A') ?></h6>
+                                            <a href="index.php?action=profilEspece&id=<?= $espece['ID_ESPECE'] ?>" class="list-group-item list-group-item-action">
+                                                <h6 class=" mb-1"><?= htmlspecialchars($espece['NOM_ESPECE'] ?? 'N/A') ?></h6>
                                                 <p class="mb-0 text-muted">
                                                     <small><?= htmlspecialchars($espece['NOM_LATIN_ESPECE'] ?? 'N/A') ?></small>
                                                 </p>
-                                            </div>
+                                            </a>
                                         <?php endforeach; ?>
                                     </div>
                                 </div>
                             <?php endif; ?>
-
                             <!-- Zones -->
                             <?php if (!empty($results['zones'])): ?>
                                 <div class="mb-4">
@@ -106,7 +170,24 @@ $message = $message ?? '';
                                     </div>
                                 </div>
                             <?php endif; ?>
-
+                            <!-- Enclos -->
+                            <?php if (!empty($results['enclos'])): ?>
+                                <div class="mb-4">
+                                    <h5 class="mb-3">
+                                        <i class="bi bi-paw"></i> Enclos
+                                        <span class="badge bg-primary"><?= count($results['enclos']) ?></span>
+                                    </h5>
+                                    <div class="list-group">
+                                        <?php foreach ($results['enclos'] as $enclos): ?>
+                                            <a href="index.php?action=profilEnclos&latitude=<?= $enclos['LATITUDE'] ?>&longitude=<?= $enclos['LONGITUDE'] ?>" class="list-group-item list-group-item-action">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h6 class="mb-1"><?= htmlspecialchars($enclos['TYPE_ENCLOS']) ?></h6>
+                                                </div>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                             <!-- Employés -->
                             <?php if (!empty($results['employes'])): ?>
                                 <div class="mb-4">
@@ -130,7 +211,6 @@ $message = $message ?? '';
                                     </div>
                                 </div>
                             <?php endif; ?>
-
                             <!-- Boutiques -->
                             <?php if (!empty($results['boutiques'])): ?>
                                 <div class="mb-4">
@@ -156,7 +236,7 @@ $message = $message ?? '';
                     <?php else: ?>
                         <div class="alert alert-light text-center py-5" role="alert">
                             <i class="bi bi-search" style="font-size: 3rem; opacity: 0.3;"></i>
-                            <p class="mt-3 text-muted">Commencez votre recherche en entrant un terme ci-dessus</p>
+                            <p class="mt-3 text-muted">Commencez votre recherche en entrant un terme ou en utilisant les filtres</p>
                         </div>
                     <?php endif; ?>
                 </div>

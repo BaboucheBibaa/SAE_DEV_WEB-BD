@@ -12,7 +12,12 @@ class RespBoutiqueController extends BaseController
         $this->serviceCA = new ServiceCA();
     }
 
-    public function afficherPage()
+    /**
+     * Affiche le tableau de bord du responsable de boutique
+     *
+     * @return void
+     */
+    public function afficherPage(): void
     {
         $this->requireRole(RESPBOUTIQUE);
 
@@ -36,7 +41,12 @@ class RespBoutiqueController extends BaseController
         ]);
     }
 
-    public function afficherStatsBoutique()
+    /**
+     * Affiche les statistiques de la boutique (CA journalier, mensuel, annuel)
+     *
+     * @return void
+     */
+    public function afficherStatsBoutique(): void
     {
         $this->requireRole(RESPBOUTIQUE);
 
@@ -44,8 +54,8 @@ class RespBoutiqueController extends BaseController
         $boutique = $this->serviceBoutique->getBoutiqueParManager($_SESSION['user']['ID_PERSONNEL']);
         $caJournalier = $this->serviceCA->getCAJournalier($boutique['ID_BOUTIQUE']);
         $caMensuel = $this->serviceCA->getCAMensuel($boutique['ID_BOUTIQUE']);
-        $caAnnuel = $this->serviceCA->sommeCA($boutique['ID_BOUTIQUE'], date('Y'));
-        $caMoyenAnnuel = $this->serviceCA->moyenneCA($boutique['ID_BOUTIQUE'],date('Y'));
+        $caAnnuel = $this->serviceCA->getSommeCA($boutique['ID_BOUTIQUE'], date('Y'));
+        $caMoyenAnnuel = $this->serviceCA->getMoyenneCA($boutique['ID_BOUTIQUE'],date('Y'));
         $title = "Statistiques de la boutique";
         $this->render('respBoutique/v-statsBoutique', [
             'user' => $user,
@@ -58,7 +68,12 @@ class RespBoutiqueController extends BaseController
         ]);
     }
 
-    public function afficherFormCA(){
+    /**
+     * Affiche le formulaire d'ajout du chiffre d'affaires journalier
+     *
+     * @return void
+     */
+    public function afficherFormCA(): void{
         $this->requireRole(RESPBOUTIQUE);
 
         $user = $this->serviceEmployee->getEmployeeParID($_SESSION['user']['ID_PERSONNEL']);
@@ -71,7 +86,12 @@ class RespBoutiqueController extends BaseController
         ]);
     }
 
-    public function ajoutCA()
+    /**
+     * Traite l'ajout du chiffre d'affaires journalier avec validation des données
+     *
+     * @return void
+     */
+    public function ajoutCA(): void
     {
         $this->requireRole(RESPBOUTIQUE);
 

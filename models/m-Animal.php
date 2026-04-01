@@ -1,234 +1,179 @@
 <?php
-class Animal
+class Animal extends BaseModel
 {
-
-
-    public  function recupNomParID($id)
+    /**
+     * Récupère le nom d'un animal par son ID
+     */
+    public function getNomParID($id)
     {
-        $db = Database::getConnection();
-
         $query = "SELECT NOM_ANIMAL FROM Animal WHERE ID_ANIMAL = :id_animal";
-        $stid = oci_parse($db, $query);
-        oci_bind_by_name($stid, ':id_animal', $id);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        $result = oci_fetch_assoc($stid);
-        return $result ? $result['NOM_ANIMAL'] : null;
+        return $this->executeQuery($query, [':id_animal' => $id]);
     }
-    public function recupParID($id)
+
+    /**
+     * Récupère un animal avec son espèce par ID
+     */
+    public function getParID($id)
     {
-        $db = Database::getConnection();
-
-        $query = "SELECT A.*,E.NOM_ESPECE FROM Animal A LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE WHERE A.ID_ANIMAL = :id_animal";
-        $stid = oci_parse($db, $query);
-        oci_bind_by_name($stid, ':id_animal', $id);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        return oci_fetch_assoc($stid);
+        $query = "SELECT A.*, E.NOM_ESPECE FROM Animal A 
+                 LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE 
+                 WHERE A.ID_ANIMAL = :id_animal";
+        return $this->executeQuery($query, [':id_animal' => $id]);
     }
 
-    public function recupSoigneurEtRemplacant($id_animal)
+    /**
+     * Récupère le soigneur et remplaçant d'un animal
+     */
+    public function getSoigneurEtRemplacant($id_animal)
     {
-        //récupère le soigneur attitré ainsi que le soigneur remplaçant de l'animal
-        $db = Database::getConnection();
-        $sql = "SELECT P.ID_PERSONNEL SOIGNEUR,P.ID_REMPLACANT REMPLACANT FROM Animal A, Personnel P WHERE A.ID_SOIGNEUR = P.ID_PERSONNEL AND A.ID_ANIMAL = :id_animal";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id_animal', $id_animal);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        $result = oci_fetch_assoc($stid);
-        return $result;
+        $query = "SELECT P.ID_PERSONNEL SOIGNEUR, P.ID_REMPLACANT REMPLACANT 
+                 FROM Animal A, Personnel P 
+                 WHERE A.ID_SOIGNEUR = P.ID_PERSONNEL AND A.ID_ANIMAL = :id_animal";
+        return $this->executeQuery($query, [':id_animal' => $id_animal]);
     }
 
-    public function toutRecup()
+    /**
+     * Récupère tous les animaux avec leurs espèces
+     */
+    public function getAll()
     {
-        $db = Database::getConnection();
-        $sql = "SELECT A.*,E.NOM_ESPECE FROM Animal A LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE";
-        $stid = oci_parse($db, $sql);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        $result = [];
-        //OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC sont des constantes qui définissent le comportement du tableau retourné dans $result
-        //la première constante fait en sorte qu'elle soit sous la forme d'un seul tableau et la 2eme fait en sorte que les index soient associatifs (clé => valeur)
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
+        $query = "SELECT A.*, E.NOM_ESPECE FROM Animal A 
+                 LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE";
+        return $this->executeQueryAll($query);
     }
-    public function recupParCoordonnees($latitude, $longitude)
+
+    /**
+     * Récupère les animaux par coordonnées d'enclos
+     */
+    public function getParCoordonnees($latitude, $longitude)
     {
-        $db = Database::getConnection();
-
-        $query = "SELECT A.* FROM Animal A WHERE A.LATITUDE_ENCLOS = :latitude AND A.LONGITUDE_ENCLOS = :longitude";
-        $stid = oci_parse($db, $query);
-        oci_bind_by_name($stid, ':latitude', $latitude);
-        oci_bind_by_name($stid, ':longitude', $longitude);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        $result = [];
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
+        $query = "SELECT A.* FROM Animal A 
+                 WHERE A.LATITUDE_ENCLOS = :latitude AND A.LONGITUDE_ENCLOS = :longitude";
+        return $this->executeQueryAll($query, [
+            ':latitude' => $latitude,
+            ':longitude' => $longitude
+        ]);
     }
-    public function recupTousParSoigneurs($id_soigneur)
+
+    /**
+     * Récupère tous les animaux d'un soigneur
+     */
+    public function getAllSoigneurs($id_soigneur)
     {
-        /* Récupère tous les animaux ou le soigneur $id_soigneur est responsable */
-        $db = Database::getConnection();
-        $query = "SELECT A.*,E.NOM_ESPECE
-            FROM Animal A JOIN Espece E ON A.ID_Espece = E.ID_Espece WHERE A.ID_Soigneur = :id_soigneur;";
-
-        $stid = oci_parse($db, $query);
-        oci_bind_by_name($stid, ':id_soigneur', $id_soigneur);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        $result = [];
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
+        $query = "SELECT A.*, E.NOM_ESPECE FROM Animal A 
+                 JOIN Espece E ON A.ID_Espece = E.ID_Espece 
+                 WHERE A.ID_Soigneur = :id_soigneur";
+        return $this->executeQueryAll($query, [':id_soigneur' => $id_soigneur]);
     }
-    public function recupParZone($id_zone)
+
+    /**
+     * Récupère tous les animaux d'une zone
+     */
+    public function getAllParZone($id_zone)
     {
-        $db = Database::getConnection();
-
-        $query = "SELECT
-                A.*,E.NOM_ESPECE 
-                FROM Animal A 
-                LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE 
-                    WHERE (A.LATITUDE_ENCLOS,A.LONGITUDE_ENCLOS) IN 
-                        (SELECT LATITUDE,LONGITUDE FROM Enclos WHERE ID_ZONE = :id_zone
-    )";
-        $stid = oci_parse($db, $query);
-        oci_bind_by_name($stid, ':id_zone', $id_zone);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        $result = [];
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
+        $query = "SELECT A.*, E.NOM_ESPECE FROM Animal A 
+                 LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE 
+                 WHERE (A.LATITUDE_ENCLOS, A.LONGITUDE_ENCLOS) IN 
+                    (SELECT LATITUDE, LONGITUDE FROM Enclos WHERE ID_ZONE = :id_zone)";
+        return $this->executeQueryAll($query, [':id_zone' => $id_zone]);
     }
+
+    /**
+     * Crée un nouvel animal
+     */
     public function creer($data)
     {
-        $db = Database::getConnection();
+        $data['poids'] = str_replace('.', ',', $data['poids']);
 
-        $sql = "INSERT INTO Animal (ID_ANIMAL, NOM_ANIMAL, DATE_NAISSANCE, POIDS, REGIME_ALIMENTAIRE, ID_ESPECE, LATITUDE_ENCLOS, LONGITUDE_ENCLOS, ID_SOIGNEUR) 
-                VALUES ((SELECT NVL(MAX(ID_ANIMAL), 0) + 1 FROM Animal), :nom_animal, TO_DATE(:date_naissance, 'YYYY-MM-DD'), :poids, :regime_alimentaire, :id_espece, :latitude_enclos, :longitude_enclos, :id_soigneur)";
+        $query = "INSERT INTO Animal (ID_ANIMAL, NOM_ANIMAL, DATE_NAISSANCE, POIDS, REGIME_ALIMENTAIRE, ID_ESPECE, LATITUDE_ENCLOS, LONGITUDE_ENCLOS, ID_SOIGNEUR) 
+                 VALUES ((SELECT NVL(MAX(ID_ANIMAL), 0) + 1 FROM Animal), :nom_animal, TO_DATE(:date_naissance, 'YYYY-MM-DD'), :poids, :regime_alimentaire, :id_espece, :latitude_enclos, :longitude_enclos, :id_soigneur)";
 
-        $stid = oci_parse($db, $sql);
-
-        $data['poids'] = str_replace('.',',',$data['poids']);
-
-        oci_bind_by_name($stid, ':nom_animal', $data['nom_animal']);
-        oci_bind_by_name($stid, ':date_naissance', $data['date_naissance']);
-        oci_bind_by_name($stid, ':poids', $data['poids']);
-        oci_bind_by_name($stid, ':regime_alimentaire', $data['regime_alimentaire']);
-        oci_bind_by_name($stid, ':id_espece', $data['id_espece']);
-        oci_bind_by_name($stid, ':latitude_enclos', $data['latitude_enclos']);
-        oci_bind_by_name($stid, ':longitude_enclos', $data['longitude_enclos']);
-        oci_bind_by_name($stid, ':id_soigneur', $data['id_soigneur']);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        return $r;
+        return $this->executeModify($query, [
+            ':nom_animal' => $data['nom_animal'],
+            ':date_naissance' => $data['date_naissance'],
+            ':poids' => $data['poids'],
+            ':regime_alimentaire' => $data['regime_alimentaire'],
+            ':id_espece' => $data['id_espece'],
+            ':latitude_enclos' => $data['latitude_enclos'],
+            ':longitude_enclos' => $data['longitude_enclos'],
+            ':id_soigneur' => $data['id_soigneur']
+        ]);
     }
+
+    /**
+     * Met à jour un animal
+     */
     public function maj($id, $data)
     {
-        $db = Database::getConnection();
+        // Normaliser le poids
+        $data['poids'] = str_replace('.', ',', $data['poids']);
 
-        $sql = "UPDATE Animal SET 
-                NOM_ANIMAL = :nom_animal,
-                DATE_NAISSANCE = TO_DATE(:date_naissance, 'YYYY-MM-DD'),
-                POIDS = :poids,
-                REGIME_ALIMENTAIRE = :regime_alimentaire,
-                ID_ESPECE = :id_espece,
-                LATITUDE_ENCLOS = :latitude_enclos,
-                LONGITUDE_ENCLOS = :longitude_enclos
-                WHERE ID_ANIMAL = :id_animal";
+        $query = "UPDATE Animal SET 
+                 NOM_ANIMAL = :nom_animal,
+                 DATE_NAISSANCE = TO_DATE(:date_naissance, 'YYYY-MM-DD'),
+                 POIDS = :poids,
+                 REGIME_ALIMENTAIRE = :regime_alimentaire,
+                 ID_ESPECE = :id_espece,
+                 LATITUDE_ENCLOS = :latitude_enclos,
+                 LONGITUDE_ENCLOS = :longitude_enclos
+                 WHERE ID_ANIMAL = :id_animal";
 
-        $stid = oci_parse($db, $sql);
-
-        $data['poids'] = str_replace('.',',',$data['poids']);
-
-        oci_bind_by_name($stid, ':id_animal', $id);
-        oci_bind_by_name($stid, ':nom_animal', $data['nom_animal']);
-        oci_bind_by_name($stid, ':date_naissance', $data['date_naissance']);
-        oci_bind_by_name($stid, ':poids', $data['poids']);
-        oci_bind_by_name($stid, ':regime_alimentaire', $data['regime_alimentaire']);
-        oci_bind_by_name($stid, ':id_espece', $data['id_espece']);
-        oci_bind_by_name($stid, ':latitude_enclos', $data['latitude_enclos']);
-        oci_bind_by_name($stid, ':longitude_enclos', $data['longitude_enclos']);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        return $r;
+        return $this->executeModify($query, [
+            ':id_animal' => $id,
+            ':nom_animal' => $data['nom_animal'],
+            ':date_naissance' => $data['date_naissance'],
+            ':poids' => $data['poids'],
+            ':regime_alimentaire' => $data['regime_alimentaire'],
+            ':id_espece' => $data['id_espece'],
+            ':latitude_enclos' => $data['latitude_enclos'],
+            ':longitude_enclos' => $data['longitude_enclos']
+        ]);
     }
+
+    /**
+     * Supprime un animal
+     */
     public function suppr($id)
     {
-        $db = Database::getConnection();
-
-        $sql = "DELETE FROM Animal WHERE ID_ANIMAL = :id_animal";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id_animal', $id);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        return $r;
+        $query = "DELETE FROM Animal WHERE ID_ANIMAL = :id_animal";
+        return $this->executeModify($query, [':id_animal' => $id]);
     }
 
-    public function moteurRechercheRecup($searchTerm)
+    /**
+     * Recherche d'animaux avec filtres dynamiques
+     */
+    public function moteurRechercheRecup($searchTerm, $filters = [])
     {
-        $db = Database::getConnection();
+        $sql = "SELECT * FROM ANIMAL WHERE 1=1";
+        $params = [];
 
-        $sql = "SELECT * FROM ANIMAL WHERE LOWER(NOM_ANIMAL) LIKE LOWER(:searchTerm)";
-        $stid = oci_parse($db, $sql);
-        $likeTerm = '%' . $searchTerm . '%';
-        oci_bind_by_name($stid, ':searchTerm', $likeTerm);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+        if (!empty($searchTerm)) {
+            $sql .= " AND (LOWER(NOM_ANIMAL) LIKE LOWER(:searchTerm))";
+            $params[':searchTerm'] = "%" . $searchTerm . "%";
         }
 
-        $result = [];
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
+        if (!empty($filters['espece'])) {
+            $sql .= " AND ID_ESPECE IN (SELECT ID_ESPECE FROM ESPECE WHERE LOWER(NOM_ESPECE) LIKE LOWER(:espece))";
+            $params[':espece'] = "%" . $filters['espece'] . "%";
+        }
+
+        if (!empty($filters['zone'])) {
+            $sql .= " AND EXISTS (SELECT 1 FROM ENCLOS e JOIN ZONE z ON z.ID_ZONE = e.ID_ZONE 
+                     WHERE e.LATITUDE = LATITUDE_ENCLOS AND e.LONGITUDE = LONGITUDE_ENCLOS 
+                     AND LOWER(z.NOM_ZONE) LIKE LOWER(:zone))";
+            $params[':zone'] = "%" . $filters['zone'] . "%";
+        }
+
+        if (!empty($filters['regime'])) {
+            $sql .= " AND LOWER(REGIME_ALIMENTAIRE) LIKE LOWER(:regime)";
+            $params[':regime'] = "%" . $filters['regime'] . "%";
+        }
+
+        if (!empty($filters['type_enclos'])) {
+            $sql .= " AND (LATITUDE_ENCLOS, LONGITUDE_ENCLOS) IN (SELECT LATITUDE, LONGITUDE FROM ENCLOS WHERE LOWER(TYPE_ENCLOS) LIKE LOWER(:type_enclos))";
+            $params[':type_enclos'] = "%" . $filters['type_enclos'] . "%";
+        }
+
+        return $this->executeQueryAll($sql, $params);
     }
 }

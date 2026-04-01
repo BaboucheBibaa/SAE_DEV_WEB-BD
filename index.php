@@ -14,11 +14,14 @@ require_once 'config/myparams.inc.php';
 
 require_once 'config/database.php';
 
+require_once 'models/BaseModel.php';
+
 require_once 'models/m-Parrainage.php';
 require_once 'models/m-Compatibilite.php';
 require_once 'models/m-Enclos.php';
 require_once 'models/m-Reparation.php';
-require_once 'models/m-HistoriqueSoins.php';
+require_once 'models/m-Soin.php';
+require_once 'models/m-Nourriture.php';
 require_once 'models/m-Fonction.php';
 require_once 'models/m-Boutique.php';
 require_once 'models/m-Animal.php';
@@ -42,6 +45,7 @@ require_once 'services/ServiceCA.php';
 require_once 'services/ServiceParrainage.php';
 require_once 'services/ServiceEnclos.php';
 require_once 'services/ServiceReparation.php';
+require_once 'services/ServiceEspece.php';
 
 require_once 'controllers/c-base.php';
 require_once 'controllers/c-soigneurs.php';
@@ -57,6 +61,7 @@ require_once 'controllers/c-search.php';
 require_once 'controllers/c-profilZone.php';
 require_once 'controllers/c-personnelEntretien.php';
 require_once 'controllers/c-profilBoutique.php';
+require_once 'controllers/c-espece.php';
 
 if (!file_exists('logs.txt')) {
     touch('logs.txt');
@@ -64,7 +69,6 @@ if (!file_exists('logs.txt')) {
 
 //toutes les pages se chargeront par index.php via la méthode GET action, une seule page sera affichée
 $action = $_GET['action'] ?? 'home';
-
 
 // On instancie UNIQUEMENT les contrôleurs nécessaires au fonctionnement de la page demandée par GET.
 switch ($action) {
@@ -77,6 +81,9 @@ switch ($action) {
     case 'profil':
     case 'updatePassword':
         $controller = new ProfilController();
+        break;
+    case 'profilEspece':
+        $controller = new EspeceController();
         break;
     case 'adminDashboard':
     case 'supprEmployee':
@@ -100,6 +107,10 @@ switch ($action) {
     case 'editionAnimal':
     case 'majAnimal':
     case 'supprAnimal':
+    case 'supprimerCA':
+    case 'supprimerSoin':
+    case 'supprimerNourriture':
+    case 'supprimerEspece':
         $controller = new AdminController();
         break;
     case 'respZoneDashboard':
@@ -124,7 +135,7 @@ switch ($action) {
         $controller = new SearchController();
         break;
     case 'profilZone':
-        $controller = new ProfilZone();
+        $controller = new ProfilZoneController();
         break;
     case 'soigneursDashboard':
     case 'formAjoutSoin':
@@ -134,7 +145,7 @@ switch ($action) {
     case 'addNourriture':
     case 'listerSoins':
     case 'statsSoigneurs':
-        $controller = new Soigneurs();
+        $controller = new SoigneursController();
         break;
     case 'personnelEntretienDashboard':
     case 'formAjoutEntretien':
@@ -268,6 +279,9 @@ switch ($action) {
         $controller->supprAnimal($_GET['id']);
         break;
 
+    case 'supprimerCA':
+        $controller->supprCA($_GET['idBoutique'],urldecode($_GET['date']));
+        break;
     case 'profilEnclos':
         $controller->profilEnclos($_GET['latitude'], $_GET['longitude']);
         break;
@@ -344,6 +358,19 @@ switch ($action) {
 
     case 'statsSoigneurs':
         $controller->statsSoigneurs();
+        break;
+
+    case 'supprimerSoin':
+        $controller->supprSoin($_GET['idAnimal'],urldecode($_GET['dateSoin']));
+        break;
+    case 'supprimerNourriture':
+        $controller->supprNourriture($_GET['idAnimal'],$_GET['idSoigneur'],urldecode($_GET['dateNourrit']));
+        break;
+    case 'supprimerEspece':
+        $controller->supprEspece($_GET['id']);
+        break;
+    case 'profilEspece':
+        $controller->profilEspece($_GET['id']);
         break;
     case 'search':
         $controller->gererRequete();

@@ -9,21 +9,33 @@ class ConnexionController extends BaseController
         $this->serviceEmployee = new ServiceEmployee();
         $this->Utils = new Utils();
     }
-    public function home()
+    /**
+     * Affiche la page d'accueil du site
+     * @return void Affiche la vue d'accueil
+     */
+    public function home(): void
     {
         $title = "Accueil - Zoo'land";
         $this->render('v-home', ['title' => $title]);
     }
 
-    public function afficheConnexion()
+    /**
+     * Affiche le formulaire de connexion
+     * @return void Affiche le formulaire de login
+     */
+    public function afficheConnexion(): void
     {
-
         $title = "Connexion";
 
         $this->render('connexion/v-login', ['title' => $title]);
     }
 
-    public function connexion()
+    /**
+     * Traite la tentative de connexion utilisateur
+     * Valide les identifiants et crée la session utilisateur
+     * @return void Redirige vers le profil si succès, réaffiche le formulaire sinon
+     */
+    public function connexion(): void
     {
         $login = $_POST['login'] ?? '';
         $password = $_POST['password'] ?? '';
@@ -57,7 +69,11 @@ class ConnexionController extends BaseController
         ]);
     }
 
-    public function deconnexion()
+    /**
+     * Déconnecte l'utilisateur et détruit sa session
+     * @return void Redirige vers l'accueil avec message de confirmation
+     */
+    public function deconnexion(): void
     {
         $userId = $_SESSION['user']['ID_PERSONNEL'] ?? 'inconnu';
         $this->logEvent(

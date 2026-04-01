@@ -19,11 +19,21 @@ class ServiceSearch
     }
 
     /**
-     * Recherche globale dans tous les modèles
+     * Effectue une recherche globale dans tous les modèles (animaux, espèces, zones, employés, boutiques, enclos)
+     * @param string $searchTerm Terme de recherche
+     * @param array $filters Filtres optionnels (espèce, zone, régime, type_enclos)
+     * @return array|null Résultats de recherche par type ou null si pas de résultats
      */
-    public function recherchGlobale($searchTerm, $tables = null)
+    public function recherchGlobale($searchTerm, $filters = [])
     {
-        if (empty($searchTerm)) {
+        // Si aucun terme et aucun filtre, on ne cherche rien
+        if (
+            empty($searchTerm)
+            && empty($filters['espece'])
+            && empty($filters['zone'])
+            && empty($filters['regime'])
+            && empty($filters['type_enclos'])
+        ) {
             return null;
         }
 
@@ -31,13 +41,13 @@ class ServiceSearch
 
         $results = [];
 
-        // Recherche via les modèles (retournent déjà des tableaux)
-        $results['animals'] = $this->Animal->moteurRechercheRecup($searchTerm);
-        $results['especes'] = $this->Espece->moteurRechercheRecup($searchTerm);
-        $results['zones'] = $this->Zone->moteurRechercheRecup($searchTerm);
-        $results['employes'] = $this->User->moteurRechercheRecup($searchTerm);
-        $results['boutiques'] = $this->Boutique->moteurRechercheRecup($searchTerm);
-        $results['enclos'] = $this->Enclos->moteurRechercheRecup($searchTerm);
+        // On transmet les filtres aux modèles
+        $results['animals'] = $this->Animal->moteurRechercheRecup($searchTerm, $filters);
+        $results['especes'] = $this->Espece->moteurRechercheRecup($searchTerm, $filters);
+        $results['zones'] = $this->Zone->moteurRechercheRecup($searchTerm, $filters);
+        $results['employes'] = $this->User->moteurRechercheRecup($searchTerm, $filters);
+        $results['boutiques'] = $this->Boutique->moteurRechercheRecup($searchTerm, $filters);
+        $results['enclos'] = $this->Enclos->moteurRechercheRecup($searchTerm, $filters);
 
         return $results;
     }

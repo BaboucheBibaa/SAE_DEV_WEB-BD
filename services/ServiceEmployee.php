@@ -14,18 +14,27 @@ class ServiceEmployee
         $this->Utils = new Utils();
     }
     //Getters
+    /**
+     * Récupère tous les employés avec filtrage optionnel sur le statut d'archivage
+     * @param string $filtreArchive 'archives', 'actifs' ou 'tous' par défaut
+     * @return array|null Tableau des employés ou null
+     */
     public function getTousEmployees($filtreArchive = 'tous')
     {
         //Récupère les employés selon le filtre d'archivage
         switch ($filtreArchive) {
             case 'archives':
-                return $this->User->toutRecupParArchive(0);
+                return $this->User->getAll(0);
             case 'actifs':
-                return $this->User->toutRecupParArchive(1);
+                return $this->User->getAll(1);
             default:
-                return $this->User->toutRecupParArchive(null);
+                return $this->User->getAll(null);
         }
     }
+    /**
+     * Récupère l'ID du dernier employé ajouté à la base de données
+     * @return int|null ID du dernier employé ou null
+     */
     public function getLastInsertId()
     
     {
@@ -33,47 +42,81 @@ class ServiceEmployee
         return $this->User->getLastInsertId()['LAST_ID'];
     }
 
+    /**
+     * Récupère les soigneurs supervisés par un responsable
+     * @param int $id ID du responsable (soigneur supérieur)
+     * @return array|null Tableau des soigneurs ou null
+     */
     public function getSoigneursParSuperieur($id){
-        return $this->User->recupSoigneursParSuperieur($id);
+        return $this->User->getSoigneursParSuperieur($id);
 
     }
 
+    /**
+     * Récupère les employés ayant une fonction spécifique
+     * @param int $id_fonction ID de la fonction
+     * @return array|null Tableau des employés avec cette fonction ou null
+     */
     public function getEmployeeParFonction($id_fonction){
-        return $this->User->recupParFonction($id_fonction);
+        return $this->User->getParFonction($id_fonction);
     }
+    /**
+     * Récupère les contrats de travail d'un employé
+     * @param int $id ID de l'employé
+     * @return array|null Tableau des contrats ou null
+     */
     public function getContratsParID($id)
     {
         if (!$id) {
             return null;
         }
         //Récupère les contrats de travail d'un employé en fonction de son id
-        return $this->ContratTravail->recupParPersonnel($id);
+        return $this->ContratTravail->getParPersonnel($id);
     }
+    /**
+     * Récupère un employé par son ID
+     * @param int $id ID de l'employé
+     * @return array|null Données de l'employé ou null
+     */
     public function getEmployeeParID($id)
     {
         if (!$id) {
             return null;
         }
         //Récupère un employé de la base de données en fonction de l'id passé en paramètre
-        return $this->User->recupParID($id);
+        return $this->User->getParID($id);
     }
+    /**
+     * Récupère un employé par son login (identifiant de connexion)
+     * @param string $login Login de l'employé
+     * @return array|null Données de l'employé ou null
+     */
     public function getEmployeeParLogs($login)
     {
         if (!$login) {
             return null;
         }
         //Récupère un employé de la base de données en fonction du login passé en paramètre
-        return $this->User->recupParLogs($login);
+        return $this->User->getParLogs($login);
     }
 
+    /**
+     * Récupère les contrats de travail se terminant dans les 30 prochains jours
+     * @return array|null Tableau des contrats proches de l'expiration ou null
+     */
     public function getFinsDeContrats()
     {
         // Récupère les contrats de travail qui se terminent dans les 30 prochains jours
-        return $this->ContratTravail->finDeContrats();
+        return $this->ContratTravail->getFinDeContrats();
     }
 
     //Ajout/MAJ/Suppression d'un employé + vérification dans l'ajout/modification d'un employé avec regex
 
+    /**
+     * Vérifie les données du formulaire d'ajout/modification d'employé
+     * @param string $champ Suffixe du champ POST ('cree' ou 'modif')
+     * @return int 0 si valide, 2-6 si erreur (nom, prénom, mail, salaire, login)
+     */
     public function verificationForm($champ)
     {
         //ne doit pas retourner 1 car on peut confondre avec le retour du boolean de la fonction de création ou de modification d'un employé, c'est pour ça que les codes d'erreur commencent à 2
@@ -94,6 +137,11 @@ class ServiceEmployee
         }
         return 0;
     }
+    /**
+     * Supprime un employé de la base de données
+     * @param int $id ID de l'employé à supprimer
+     * @return bool|null Résultat de la suppression
+     */
     public function supprEmployee($id)
     {
         if (!$id) {
@@ -102,22 +150,28 @@ class ServiceEmployee
         //Supprime un employé de la base de données en fonction de l'id passé en paramètre
         return $this->User->suppr($id);
     }
+    /**
+     * Ajoute un nouvel employé et crée son contrat de travail
+     * @return int ID du nouvel employé
+     * @throws ValidationException Si validation échoue ou erreur serveur
+     */
     public function ajoutEmployee()
     {
-        //Ajoute un nouvel employé à la base de données en récupérant les données du formulaire de création d'employé + création de son contrat de travail
-
-        // Vérifier que la fonction est bien définie, sinon utiliser une fonction par défaut (ne devrait jamais arriver avec required)
+        // Vérifier que la fonction est bien définie, sinon utiliser une fonction par défaut
         $id_fonction = $_POST['id_fonction_cree'] ?? null;
         if (empty($id_fonction)) {
-            $fonctions = $this->Fonction->recupToutesLesFonctions();
+            $fonctions = $this->Fonction->getAll();
             $id_fonction = !empty($fonctions) ? $fonctions[0]['ID_FONCTION'] : null;
         }
 
+        // Valide les données du formulaire
         $validationCode = $this->verificationForm('cree');
         if ($validationCode != 0) {
-            return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
+            // Retourne le code d'erreur au lieu de lancer une exception
+            return $validationCode;
         }
 
+        // Prépare les données
         $data = [
             'nom' => $_POST['nom_cree'] ?? null,
             'prenom' => $_POST['prenom_cree'] ?? null,
@@ -131,20 +185,19 @@ class ServiceEmployee
             'id_superieur' => !empty($_POST['id_superieur_cree']) ? $_POST['id_superieur_cree'] : null
         ];
 
-
-        //Création + récupération de son ID pour pouvoir créer son contrat de travail
-        $newEmployeeId = $this->User->creerEtRetournerId($data);
+        // Essaie de créer l'employé
+        $newEmployeeId = $this->User->creer($data);
         if (!$newEmployeeId) {
+            // Retourne 0 en cas d'erreur serveur
             return 0;
         }
 
-        //Date de début de contrat dans le formulaire de création de contrat, sinon date du jour ou date d'entrée de l'employé dans le formulaire
+        // Prépare les données du contrat
         $dateDebutContrat = $_POST['date_debut_contrat_cree'] ?? null;
         if (empty($dateDebutContrat)) {
             $dateDebutContrat = $_POST['date_entree_cree'] ?? date('Y-m-d');
         }
 
-        //création du contrat de travail de l'employé
         $contratData = [
             'ID_PERSONNEL' => $newEmployeeId,
             'ID_FONCTION' => $id_fonction,
@@ -152,14 +205,27 @@ class ServiceEmployee
             'DATE_FIN' => $_POST['date_fin_contrat_cree'] ?? null
         ];
 
-        return $this->ContratTravail->creer($contratData);
+        // Crée le contrat
+        $contratResult = $this->ContratTravail->creer($contratData);
+        if (!$contratResult) {
+            // Retourne 0 en cas d'erreur serveur
+            return 0;
+        }
+
+        // Retour du succès : l'ID du nouvel employé
+        return $newEmployeeId;
     }
+    /**
+     * Met à jour les données d'un employé
+     * @param int $id ID de l'employé à modifier
+     * @return int|bool|null Code d'erreur validation ou résultat de modification
+     */
     public function majEmployee($id)
     {
         //Met à jour les données d'un employé dans la base de données en fonction de l'id passé en paramètre
 
         // récup les données de l'employé via son ID
-        $employee = $this->User->recupParID($id);
+        $employee = $this->User->getParID($id);
 
         //on modifie le champ id_fonction_modif pour qu'il contienne l'id de la fonction correspondant au nom de la fonction sélectionnée dans le form
         $nom_fonction = $_POST['role_modif'] ?? null;
@@ -167,7 +233,7 @@ class ServiceEmployee
 
         // Si un nom de fonction est fourni, récupérer son ID
         if (!empty($nom_fonction)) {
-            $id_fonction = $this->Fonction->recupIDFonctionParNom($nom_fonction);
+            $id_fonction = $this->Fonction->getIDParNom($nom_fonction);
             $id_fonction_final = $id_fonction['ID_FONCTION'];
         }
 
@@ -197,6 +263,12 @@ class ServiceEmployee
         return $this->User->maj($id, $data);
     }
 
+    /**
+     * Met à jour le mot de passe d'un employé
+     * @param int $id ID de l'employé
+     * @param string $MDP Nouveau mot de passe (sera hashé)
+     * @return bool|null Résultat de la mise à jour
+     */
     public function majPassword($id,$MDP)
     {
         if (!$id || !$MDP) {
@@ -206,6 +278,12 @@ class ServiceEmployee
         return $this->User->majPassword($id, $MDP);
     }
 
+    /**
+     * Met à jour le statut d'archivage d'un employé
+     * @param int $id ID de l'employé
+     * @param bool $estArchive True pour archiver, false pour désarchiver
+     * @return bool|null Résultat de la mise à jour
+     */
     public function majArchiveEmployee($id, $estArchive)
     {
         if (!$id || !isset($estArchive)) {
@@ -216,21 +294,26 @@ class ServiceEmployee
     }
 
     //Fonctions retournant des données nécessaires pour des affichages de formulaires
+    /**
+     * Récupère les données pour le formulaire d'édition d'un employé
+     * @param int $id ID de l'employé à éditer
+     * @return array|null Tableau contenant employé, rôles, liste employés ou null
+     */
     public function dataEditionEmployee($id)
     {
         //Retourne les données nécessaires à l'affichage du formulaire d'édition d'un employé en fonction de l'id passé en paramètre
         if (!$id) {
             return null;
         }
-        $liste_roles = $this->Fonction->recupToutesLesFonctions();
-        $liste_employes = $this->User->toutRecup();
-        $employee = $this->User->recupParID($id);
+        $liste_roles = $this->Fonction->getAll();
+        $liste_employes = $this->User->getAll();
+        $employee = $this->User->getParID($id);
 
         if (!$employee) {
             return null; // Employé non trouvé
         }
         //Récupération pour affichage par défaut du rôle actuel de l'employé
-        $job = $this->Fonction->recupNomFonctionParID($employee['ID_FONCTION']);
+        $job = $this->Fonction->getNomFonctionParID($employee['ID_FONCTION']);
 
         $title = "Modifier un Employé";
 
@@ -242,11 +325,15 @@ class ServiceEmployee
             'job' => $job
         ];
     }
+    /**
+     * Récupère les données pour le formulaire de création d'un employé
+     * @return array|null Tableau contenant fonctions, employés, mot de passe généré ou null
+     */
     public function dataCreationEmployee()
     {
         //Retourne les données nécessaires à l'affichage du formulaire de création d'un employé
-        $liste_fonctions = $this->Fonction->recupToutesLesFonctions();
-        $liste_employes = $this->User->toutRecup();
+        $liste_fonctions = $this->Fonction->getAll();
+        $liste_employes = $this->User->getAll();
         $generatedPassword = $this->Utils->generatePassword(10);
         if (!$liste_fonctions || !$liste_employes) {
             return null; // Erreur lors de la récupération des données nécessaires à la création d'un employé

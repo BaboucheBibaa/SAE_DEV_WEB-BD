@@ -15,41 +15,66 @@ class ServiceAnimal
         $this->User = new User();
     }
     //Getters
+    /**
+     * Récupère tous les animaux de la base de données
+     * @return array|null Tableau de tous les animaux ou null si erreur
+     */
     public function getTousAnimaux()
     {
-        $animaux = $this->Animal->toutRecup();
+        $animaux = $this->Animal->getAll();
         if (!$animaux) {
             return null;
         }
         return $animaux;
     }
+    /**
+     * Récupère un animal par son ID
+     * @param int $id ID de l'animal
+     * @return array|null Données de l'animal ou null si non trouvé
+     */
     public function getAnimalParID($id)
     {
-        $animal = $this->Animal->recupParID($id);
+        $animal = $this->Animal->getParID($id);
         if (!$animal) {
             return null;
         }
         return $animal;
     }
+    /**
+     * Récupère un animal par ses coordonnées GPS
+     * @param float $latitude Latitude de l'enclos
+     * @param float $longitude Longitude de l'enclos
+     * @return array|null Données de l'animal ou null si non trouvé
+     */
     public function getAnimalParCoordonnees($latitude, $longitude)
     {
-        $animal = $this->Animal->recupParCoordonnees($latitude, $longitude);
+        $animal = $this->Animal->getParCoordonnees($latitude, $longitude);
         if (!$animal) {
             return null;
         }
         return $animal;
     }
+    /**
+     * Récupère l'espèce d'un animal par l'ID de l'espèce
+     * @param int $id ID de l'espèce
+     * @return array|null Données de l'espèce ou null si non trouvée
+     */
     public function getEspeceAnimalParID($id)
     {
-        $espece = $this->Espece->recupParID($id);
+        $espece = $this->Espece->getParID($id);
         if (!$espece) {
             return null;
         }
         return $espece;
     }
+    /**
+     * Récupère tous les animaux d'une zone
+     * @param int $id_zone ID de la zone
+     * @return array|null Tableau des animaux de la zone ou null si erreur
+     */
     public function getAnimauxParZone($id_zone)
     {
-        $animaux = $this->Animal->recupParZone($id_zone);
+        $animaux = $this->Animal->getAllParZone($id_zone);
         if (!$animaux) {
             return null;
         }
@@ -58,6 +83,11 @@ class ServiceAnimal
 
     //Ajout/MAJ/Suppression d'un animal + validation des données du formulaire
 
+    /**
+     * Valide les données du formulaire d'ajout/modification d'animal
+     * @param string $champ Suffixe du champ POST ('cree' ou 'modif')
+     * @return int 0 si valide, 2 si erreur nom, 3 si erreur poids
+     */
     public function verificationForm($champ)
     {
         //ne doit pas retourner 1 car on peut confondre avec le retour du boolean de la fonction de création ou de modification d'un animal, c'est pour ça que les codes d'erreur commencent à 2
@@ -70,6 +100,10 @@ class ServiceAnimal
         return 0;
     }
 
+    /**
+     * Ajoute un nouvel animal à la base de données
+     * @return int|bool Code d'erreur validation (2, 3) ou résultat de création
+     */
     public function ajoutAnimal()
     {
         $validationCode = $this->verificationForm('cree');
@@ -91,19 +125,25 @@ class ServiceAnimal
 
         return $this->Animal->creer($data);
     }
+    /**
+     * Met à jour les données d'un animal
+     * @param int $id ID de l'animal à modifier
+     * @return int|bool Code d'erreur validation (2, 3) ou résultat de modification
+     */
     public function majAnimal($id)
     {
         $validationCode = $this->verificationForm('modif');
         if ($validationCode != 0) {
             return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
         };
-
-        $poids = str_replace('.', ',', $_POST['poids_modif']);
+        if (isset($_POST['poids_modif'])) {
+            $poids = str_replace('.', ',', $_POST['poids_modif']);
+        }
         //Met à jour les données d'un animal
         $data = [
             'nom_animal' => $_POST['nom_animal_modif'] ?? null,
             'date_naissance' => $_POST['date_naissance_modif'] ?? null,
-            'poids' => $_POST['poids_modif'] ?? null,
+            'poids' => $poids ?? null,
             'regime_alimentaire' => $_POST['regime_alimentaire_modif'] ?? null,
             'id_soigneur' => $_POST['id_soigneur'] ?? null,
             'id_espece' => $_POST['id_espece_modif'] ?? null,
@@ -112,15 +152,23 @@ class ServiceAnimal
         ];
         return $this->Animal->maj($id, $data);
     }
+    /**
+     * Supprime un animal de la base de données
+     * @param int $id ID de l'animal à supprimer
+     * @return bool|null Résultat de la suppression
+     */
     public function supprAnimal($id)
     {
         //Supprime un animal de la base de données
         return $this->Animal->suppr($id);
     }
 
-
-
     //Retourne les données nécessaires à des affichages de formulaires
+    /**
+     * Récupère les données pour le formulaire d'édition d'un animal
+     * @param int $id ID de l'animal à éditer
+     * @return array|null Tableau contenannt animal, espèces, zones, enclos, soigneurs ou null si erreur
+     */
     public function dataEditionAnimal($id)
     {
         //Retourne les données nécessaires à l'affichage du formulaire d'édition d'un animal en fonction de l'id passé en paramètre
@@ -129,26 +177,26 @@ class ServiceAnimal
         }
 
         //données de l'animal
-        $animal = $this->Animal->recupParID($id);
+        $animal = $this->Animal->getParID($id);
         if (!$animal) {
             return null; // Animal non trouvé
         }
 
         //données quant à tout ce qui concerne les espèces / zones / soigneurs
-        $especes = $this->Espece->toutRecup();
-        $zones = $this->Zone->toutRecup();
-        $soigneurs = $this->User->recupParFonction(SOIGNEUR);
+        $especes = $this->Espece->getAll();
+        $zones = $this->Zone->getAll();
+        $soigneurs = $this->User->getParFonction(SOIGNEUR);
 
         if (!empty($animal['LATITUDE_ENCLOS']) && !empty($animal['LONGITUDE_ENCLOS'])) {
-            $id_zone_selected = $this->Zone->recupZoneParEnclos($animal['LATITUDE_ENCLOS'], $animal['LONGITUDE_ENCLOS']);
+            $id_zone_selected = $this->Zone->getParEnclos($animal['LATITUDE_ENCLOS'], $animal['LONGITUDE_ENCLOS']);
         }
 
-        $soigneur_attire = $this->User->recupParID($animal['ID_SOIGNEUR']);
-        $especeAnimal = $this->Espece->recupParID($animal['ID_ESPECE']);
+        $soigneur_attire = $this->User->getParID($animal['ID_SOIGNEUR']);
+        $especeAnimal = $this->Espece->getParID($animal['ID_ESPECE']);
         // Charger les enclos de la zone sélectionnée
         $enclos = [];
         if (!empty($id_zone_selected)) {
-            $enclos = $this->Enclos->recupEnclosZone($id_zone_selected);
+            $enclos = $this->Enclos->getParZone($id_zone_selected);
         }
 
         $animal['POIDS'] = str_replace(',', '.', $animal['POIDS']);
@@ -165,12 +213,16 @@ class ServiceAnimal
             'especeAnimal' => $especeAnimal
         ];
     }
+    /**
+     * Récupère les données pour le formulaire de création d'un nouvel animal
+     * @return array|null Tableau contenant espèces, zones, soigneurs, enclos ou null si erreur
+     */
     public function dataCreationAnimal()
     {
         //Retourne les données nécessaires à l'affichage du formulaire de création d'un nouvel animal
-        $especes = $this->Espece->toutRecup();
-        $zones = $this->Zone->toutRecup();
-        $soigneurs = $this->User->recupParFonction(SOIGNEUR);
+        $especes = $this->Espece->getAll();
+        $zones = $this->Zone->getAll();
+        $soigneurs = $this->User->getParFonction(SOIGNEUR);
 
         if (empty($especes) || empty($zones)) {
             return null; // Impossible de créer un animal sans espèces ou zones
@@ -191,7 +243,7 @@ class ServiceAnimal
         // Charger les enclos si une zone est sélectionnée
         $enclos = [];
         if (!empty($formData['id_zone'])) {
-            $enclos = $this->Enclos->recupEnclosZone($formData['id_zone']);
+            $enclos = $this->Enclos->getParZone($formData['id_zone']);
         }
 
         $title = "Créer un Animal";

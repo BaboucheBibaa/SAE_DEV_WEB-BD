@@ -73,7 +73,7 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
-                                                        <a href="index.php?action=profil&id=<?= $employee['ID_PERSONNEL'] ?>" class="btn btn-outline-primary" title="Voir le profil">
+                                                        <a href="index.php?action=profil&id=<?= $employee['ID_PERSONNEL'] ?>" class="btn btn-outline-info" title="Voir le profil">
                                                             <i class="bi bi-eye"></i>
                                                         </a>
                                                         <a href="index.php?action=editionEmployee&id=<?= $employee['ID_PERSONNEL'] ?>" class="btn btn-outline-warning" title="Modifier">
@@ -107,6 +107,69 @@
                 </div>
             </div>
 
+            <!-- Liste des Espèces -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEspeces">
+                        <i class="bi bi-paw me-2"></i> Liste des Espèces (<?= count($especes) ?>)
+                    </button>
+                </h2>
+                <div id="collapseEspeces" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="mb-3">
+                            <a href="index.php?action=creationEspece" class="btn btn-success">
+                                <i class="bi bi-plus-circle"></i> Ajouter une Espèce
+                            </a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom de l'espèce</th>
+                                        <th>Nom latin de l'espèce</th>
+                                        <th>Est-elle menacée ?</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($especes)): ?>
+                                        <?php foreach ($especes as $espece): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($espece['ID_ESPECE'] ?? '') ?></td>
+                                                <td><strong><?= htmlspecialchars($espece['NOM_ESPECE'] ?? '') ?></strong></td>
+                                                <td><?= htmlspecialchars($espece['NOM_LATIN_ESPECE'] ?? '') ?></td>
+                                                <td><?= htmlspecialchars($espece['EST_MENACEE']) == 1 ? "Oui" : "Non" ?></td>
+
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="btn-group btn-group-sm" role="group">
+                                                        <a href="index.php?action=profilEspece&id=<?= $espece['ID_ESPECE'] ?>" class="btn btn-outline-info" title="Voir le profil">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                        <a href="index.php?action=editionEspece&id=<?= $espece['ID_ESPECE'] ?>" class="btn btn-outline-warning" title="Modifier">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </a>
+                                                        <a href="index.php?action=supprimerEspece&id=<?= $espece['ID_ESPECE'] ?>" class="btn btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette espèce ?')" title="Supprimer">
+                                                            <i class="bi bi-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">Aucune espèce trouvée</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <!-- Liste des Animaux -->
             <div class="accordion-item">
                 <h2 class="accordion-header">
@@ -128,14 +191,12 @@
                                         <th>ID</th>
                                         <th>Nom</th>
                                         <th>Enclos</th>
-                                        <th>Statut</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php if (!empty($animals)): ?>
                                         <?php foreach ($animals as $animal): ?>
-                                            <?php $estArchiveAnimal = (int) ($animal['ESTARCHIVE'] ?? 1); ?>
                                             <tr>
                                                 <td><?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?></td>
                                                 <td><strong><?= htmlspecialchars($animal['NOM_ANIMAL'] ?? '') ?></strong></td>
@@ -146,16 +207,9 @@
                                                         <span class="badge bg-secondary">Non assigné</span>
                                                     <?php endif; ?>
                                                 </td>
-                                                <td>
-                                                    <?php if ($estArchiveAnimal === 1): ?>
-                                                        <span class="badge bg-primary">Actif</span>
-                                                    <?php else: ?>
-                                                        <span class="badge bg-secondary">Archivé</span>
-                                                    <?php endif; ?>
-                                                </td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
-                                                        <a href="index.php?action=profilAnimal&id=<?= $animal['ID_ANIMAL'] ?>" class="btn btn-outline-primary" title="Voir le profil">
+                                                        <a href="index.php?action=profilAnimal&id=<?= $animal['ID_ANIMAL'] ?>" class="btn btn-outline-info" title="Voir le profil">
                                                             <i class="bi bi-eye"></i>
                                                         </a>
                                                         <a href="index.php?action=editionAnimal&id=<?= $animal['ID_ANIMAL'] ?>" class="btn btn-outline-warning" title="Modifier">
@@ -212,7 +266,7 @@
                                                 <td><strong><?= htmlspecialchars($zone['NOM_ZONE'] ?? 'N/A') ?></strong></td>
                                                 <td>
                                                     <?php if (!empty($zone['NOM'])): ?>
-                                                        <span class="badge bg-warning text-dark"><?= htmlspecialchars($zone['NOM']).' '. htmlspecialchars($zone['PRENOM']) ?></span>
+                                                        <span class="badge bg-warning text-dark"><?= htmlspecialchars($zone['NOM']) . ' ' . htmlspecialchars($zone['PRENOM']) ?></span>
                                                     <?php else: ?>
                                                         <span class="badge bg-secondary">Non assigné</span>
                                                     <?php endif; ?>

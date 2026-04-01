@@ -9,8 +9,8 @@ CREATE TABLE Fonction (
 -- TABLE PERSONNEL
 CREATE TABLE Personnel (
     ID_Personnel NUMBER,
-    ID_Remplacant NUMBER NOT NULL, -- Référence à lui-même si aucun remplaçant attitré
-    ID_Superieur NUMBER NOT NULL, -- Référence à lui-même si aucun supérieur hiérarchique
+    ID_Remplacant NUMBER, -- Référence à lui-même si aucun remplaçant attitré
+    ID_Superieur NUMBER, -- Référence à lui-même si aucun supérieur hiérarchique
     ID_Fonction NUMBER NOT NULL,
     Nom VARCHAR2(50),
     Prenom VARCHAR2(50),
@@ -23,7 +23,7 @@ CREATE TABLE Personnel (
     CONSTRAINT PK_Personnel PRIMARY KEY (ID_Personnel),
     CONSTRAINT FK_Remplacant FOREIGN KEY (ID_Remplacant) REFERENCES Personnel(ID_Personnel) ON DELETE SET NULL,
     CONSTRAINT FK_Superieur FOREIGN KEY (ID_Superieur) REFERENCES Personnel(ID_Personnel) ON DELETE SET NULL,
-    CONSTRAINT FK_Fonction FOREIGN KEY (ID_Fonction) REFERENCES Fonction(ID_Fonction) ON DELETE CASCADE
+    CONSTRAINT FK_Fonction FOREIGN KEY (ID_Fonction) REFERENCES Fonction(ID_Fonction)
 );
 
 -- TABLE CONTRAT_TRAVAIL
@@ -35,27 +35,27 @@ CREATE TABLE Contrat_Travail (
     Date_Fin DATE,
     CONSTRAINT PK_Contrat_Travail PRIMARY KEY (ID_Contrat),
     CONSTRAINT FK_Contrat_Personnel FOREIGN KEY (ID_Personnel) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE,
-    CONSTRAINT FK_Contrat_Fonction FOREIGN KEY (ID_Fonction) REFERENCES Fonction(ID_Fonction) ON DELETE CASCADE
+    CONSTRAINT FK_Contrat_Fonction FOREIGN KEY (ID_Fonction) REFERENCES Fonction(ID_Fonction)
 );
 
 -- TABLE ZONE
 CREATE TABLE Zone (
     ID_Zone NUMBER,
     Nom_Zone VARCHAR2(100),
-    ID_Manager NUMBER NOT NULL, --Chaque zone a obligatoirement un manager qui est membre du personnel
+    ID_Manager NUMBER, --Chaque zone a un manager (null si le manager est supprimé)
     CONSTRAINT PK_Zone PRIMARY KEY (ID_Zone),
-    CONSTRAINT FK_Zone_Manager FOREIGN KEY (ID_Manager) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE
+    CONSTRAINT FK_Zone_Manager FOREIGN KEY (ID_Manager) REFERENCES Personnel(ID_Personnel) ON DELETE SET NULL
 );
 
 -- TABLE BOUTIQUE
 CREATE TABLE Boutique (
     ID_Boutique NUMBER,
-    ID_Manager NUMBER NOT NULL, --Chaque boutique a obligatoirement un manager qui est membre du personnel
+    ID_Manager NUMBER, --Chaque boutique a obligatoirement un manager qui est membre du personnel
     ID_Zone NUMBER NOT NULL,
     Nom_Boutique VARCHAR2(100),
     Description_Boutique VARCHAR2(200),
     CONSTRAINT PK_Boutique PRIMARY KEY (ID_Boutique),
-    CONSTRAINT FK_Boutique_Manager FOREIGN KEY (ID_Manager) REFERENCES Personnel(ID_Personnel) ON DELETE CASCADE,
+    CONSTRAINT FK_Boutique_Manager FOREIGN KEY (ID_Manager) REFERENCES Personnel(ID_Personnel) ON DELETE SET NULL,
     CONSTRAINT FK_Boutique_Zone FOREIGN KEY (ID_Zone) REFERENCES Zone(ID_Zone) ON DELETE CASCADE
 );
 
@@ -105,9 +105,9 @@ CREATE TABLE Animal (
     Nom_Animal VARCHAR2(50),
     Poids NUMBER(6,2),
     Regime_Alimentaire VARCHAR2(50),
-    ID_Soigneur NUMBER NOT NULL,
+    ID_Soigneur NUMBER,
     CONSTRAINT PK_Animal PRIMARY KEY (ID_Animal),
-    CONSTRAINT PK_Animal_Personnel FOREIGN KEY (ID_Soigneur) REFERENCES Personnel(ID_Personnel),
+    CONSTRAINT PK_Animal_Personnel FOREIGN KEY (ID_Soigneur) REFERENCES Personnel(ID_Personnel) ON DELETE SET NULL,
     CONSTRAINT FK_Animal_Enclos FOREIGN KEY (Latitude_Enclos, Longitude_Enclos) REFERENCES Enclos(Latitude, Longitude) ON DELETE CASCADE,
     CONSTRAINT FK_Animal_Espece FOREIGN KEY (ID_Espece) REFERENCES Espece(ID_Espece) ON DELETE CASCADE
 );

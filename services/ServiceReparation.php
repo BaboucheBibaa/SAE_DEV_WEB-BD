@@ -8,23 +8,47 @@ class ServiceReparation
         $this->Reparation = new Reparation();
     }
 
+    /**
+     * Récupère toutes les réparations/entretiens enregistrés
+     * @return array|null Tableau de toutes les réparations ou null
+     */
+    public function getAll(){
+        return $this->Reparation->getAll();
+    }
+
+    /**
+     * Récupère les réparations effectuées par un member du personnel
+     * @param int $idPersonnel ID du member du personnel
+     * @return array|null Tableau des réparations ou null
+     */
     public function getReparationsParPersonnel($idPersonnel)
     {
-        $reparations = $this->Reparation->recupReparationParPersonnel($idPersonnel);
+        $reparations = $this->Reparation->getParPersonnel($idPersonnel);
         if (!$reparations) {
             return null;
         }
         return $reparations;
     }
+    /**
+     * Récupère les réparations d'un enclos par ses coordonnées GPS
+     * @param float $latitude Latitude de l'enclos
+     * @param float $longitude Longitude de l'enclos
+     * @return array|null Tableau des réparations ou null
+     */
     public function getReparationsParEnclos($latitude, $longitude)
     {
-        $reparations = $this->Reparation->recupReparationsParEnclos($latitude, $longitude);
+        $reparations = $this->Reparation->getParEnclos($latitude, $longitude);
         if (!$reparations) {
             return null;
         }
         return $reparations;
     }
 
+    /**
+     * Ajoute une nouvelle réparation/entretien
+     * Vérifie les données POST et crée l'enregistrement
+     * @return bool|null Résultat de la création
+     */
     public function ajoutEntretien()
     {
         $dateDebut = $_POST['DATE_DEBUT_REPARATION'] ?? null;

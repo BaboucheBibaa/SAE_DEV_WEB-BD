@@ -99,6 +99,57 @@
                     <?php endif; ?>
                 </div>
             </div>
+
+
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-cash text-primary"></i> Chiffre d'affaires de la boutique
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <?php
+                    $employes = $boutique['EMPLOYES'] ?? [];
+                    if (!empty($employes)):
+                    ?>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Montant</th>
+                                        <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
+                                            <th scope="col">Actions</th>
+                                        <?php endif; ?>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($CAs as $CA): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($CA['DATE_CA_JOURNALIER'] ?? '') ?></td>
+                                            <td><?= htmlspecialchars($CA['MONTANT'] ?? '') ?></td>
+                                            <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
+                                                <td scope="col">
+                                                    <a href="index.php?action=supprimerCA&date=<?= urlencode($CA['DATE_CA_JOURNALIER'])?>&idBoutique=<?= $CA['ID_BOUTIQUE'] ?>"
+                                                    class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-trash"></i> Supprimer
+                                                </a></td>
+                                            <?php endif; ?>
+
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <p class="text-muted text-center mb-0">
+                            <i class="bi bi-inbox"></i> Aucun personnel affecté à cette boutique
+                        </p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
         </div>
 
         <!-- Right Column: Summary -->
@@ -128,7 +179,6 @@
                 </div>
             </div>
 
-            <!-- Quick Actions Card -->
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white border-bottom">
                     <h6 class="mb-0 fw-bold text-primary">
@@ -137,44 +187,12 @@
                 </div>
                 <div class="card-body d-flex flex-column gap-2">
 
-                    <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == RESPBOUTIQUE): ?>
-                        <a href="index.php?action=statsBoutique&id=<?= $boutique['ID_BOUTIQUE'] ?>"
-                            class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-bar-chart"></i> Statistiques
-                        </a>
-                    <?php endif; ?>
+                    <a href="index.php?action=statsBoutique&id=<?= $boutique['ID_BOUTIQUE'] ?>"
+                        class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-bar-chart"></i> Statistiques
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Delete Confirmation Modal -->
-<?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
-    <div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-danger bg-opacity-10">
-                    <h5 class="modal-title" id="confirmDeleteLabel">
-                        <i class="bi bi-exclamation-triangle text-danger"></i> Confirmation de suppression
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Êtes-vous sûr de vouloir supprimer la boutique
-                        <strong><?= htmlspecialchars($boutique['NOM_BOUTIQUE'] ?? '') ?></strong> ?
-                    </p>
-                    <p class="text-muted small">Cette action est irréversible.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <form method="POST" action="index.php" style="display: inline;">
-                        <input type="hidden" name="action" value="deleteBoutique">
-                        <input type="hidden" name="id" value="<?= $boutique['ID_BOUTIQUE'] ?>">
-                        <button type="submit" class="btn btn-danger">Supprimer</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>

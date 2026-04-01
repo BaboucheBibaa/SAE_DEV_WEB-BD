@@ -1,84 +1,40 @@
 <?php
-class Fonction
+class Fonction extends BaseModel
 {
 
     /**
      * Récupère tous les rôles (pour les listes déroulantes)
      */
-    public function recupToutesLesFonctions()
+    public function getAll()
     {
-        $db = Database::getConnection();
-
-        $stid = oci_parse($db, 'SELECT ID_FONCTION, NOM_FONCTION FROM FONCTION');
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        $result = [];
-        //OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC sont des constantes qui définissent le comportement du tableau retourné dans $result
-        //la première constante fait en sorte qu'elle soit sous la forme d'un seul tableau et la 2eme fait en sorte que les index soient associatifs (clé => valeur)
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
+        $sql = 'SELECT ID_FONCTION, NOM_FONCTION FROM FONCTION';
+        return $this->executeQueryAll($sql);
     }
+
     /**
      * Récupère l'ID d'un rôle par son nom
      */
-    public function recupIDFonctionParNom($nom_fonction)
+    public function getIDParNom($nom_fonction)
     {
-        $db = Database::getConnection();
-
         $sql = "SELECT ID_FONCTION FROM FONCTION WHERE NOM_FONCTION = :nom_fonction";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':nom_fonction', $nom_fonction);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        return oci_fetch_assoc($stid);
+        return $this->executeQuery($sql, [':nom_fonction' => $nom_fonction]);
     }
 
     /**
      * Récupère le nom d'un rôle par son ID
      */
-    public function recupNomFonctionParID($id_fonction)
+    public function getNomFonctionParID($id_fonction)
     {
-        $db = Database::getConnection();
-
         $sql = "SELECT NOM_FONCTION FROM FONCTION WHERE ID_FONCTION = :id_fonction";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id_fonction', $id_fonction);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        $result = oci_fetch_assoc($stid);
+        $result = $this->executeQuery($sql, [':id_fonction' => $id_fonction]);
 
         // Si aucun résultat, retourner un tableau vide pour éviter les erreurs
         return $result ? $result : ['NOM_FONCTION' => ''];
     }
 
-
     public function moteurRechercheRecup($searchTerm)
     {
-        $db = Database::getConnection();
-
         $sql = "SELECT NOM_FONCTION FROM FONCTION WHERE LOWER(NOM_FONCTION) LIKE LOWER(:searchTerm)";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':searchTerm', $searchTerm);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        return oci_fetch_assoc($stid);
+        return $this->executeQuery($sql, [':searchTerm' => $searchTerm]);
     }
 }

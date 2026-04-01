@@ -7,7 +7,13 @@ class BoutiqueProfilController extends BaseController {
         $this->serviceBoutique = new ServiceBoutique();
         $this->serviceZone = new ServiceZone();
     }
-    public function profilBoutique($id) {
+    /**
+     * Affiche le profil complet d'une boutique avec ses employés et chiffres d'affaires
+     *
+     * @param int $id Identifiant de la boutique
+     * @return void
+     */
+    public function profilBoutique(int $id): void {
         if ($id === null) {
             $this->redirectWithMessage('home', 'Boutique non trouvée.', 'error');
         }
@@ -27,8 +33,9 @@ class BoutiqueProfilController extends BaseController {
         $boutique['NOM_MANAGER'] = $manager['NOM'];
         $boutique['PRENOM_MANAGER'] = $manager['PRENOM'];
         $boutique['NOM_ZONE'] = $zone['NOM_ZONE'];
+        $CAs = $this->serviceBoutique->getCA($id);
         $title = "Profil de la boutique - Zoo'land";
         
-        $this->render('boutique/v-profil', ['title' => $title, 'boutique' => $boutique]);
+        $this->render('boutique/v-profil', ['title' => $title, 'boutique' => $boutique,'CAs'=>$CAs]);
     }
 }

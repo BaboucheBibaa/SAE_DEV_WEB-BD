@@ -15,7 +15,12 @@ class RespSoigneurController extends BaseController
         $this->serviceEnclos = new ServiceEnclos();
     }
 
-    public function afficherPage()
+    /**
+     * Affiche le tableau de bord du responsable de zone avec statistiques des employés
+     *
+     * @return void
+     */
+    public function afficherPage(): void
     {
         $this->requireRole(RESPSOIG);
 

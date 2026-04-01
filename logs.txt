@@ -86,3 +86,43 @@
 [2026-03-31 13:56:13] [CONNEXION] Connexion réussie: login=ddupond, id=4
 [2026-03-31 13:56:31] [DECONNEXION] Déconnexion utilisateur id=4
 [2026-03-31 13:56:35] [CONNEXION] Connexion réussie: login=mchicken, id=9
+[2026-04-01 12:22:30] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-01 12:22:30] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-01 12:39:30] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:44:59] [SUPPRESSION_BD] Employé supprimé: id=2
+[2026-04-01 12:45:55] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:46:50] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:47:10] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:48:51] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:49:21] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:50:03] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:50:09] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:53:53] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:54:26] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:59:00] [SUPPRESSION_BD] Employé supprimé: id=5
+[2026-04-01 13:00:47] [SUPPRESSION_BD] Employé supprimé: id=5
+[2026-04-01 13:00:52] [SUPPRESSION_BD] Employé supprimé: id=5
+[2026-04-01 13:04:25] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-01 13:04:31] [CONNEXION] Connexion réussie: login=mpoulet, id=8
+[2026-04-01 13:08:36] [DECONNEXION] Déconnexion utilisateur id=8
+[2026-04-01 13:08:44] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-01 15:25:15] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-01 16:09:44] [SUPPRESSION_BD] Chiffre affaires supprimé: id=1 date=01/03/26
+[2026-04-01 16:09:53] [SUPPRESSION_BD] Chiffre affaires supprimé: id=1 date=02/03/26
+[2026-04-01 16:12:22] [SUPPRESSION_BD] Chiffre affaires supprimé: id=1 date=03/03/26
+[2026-04-01 16:12:26] [SUPPRESSION_BD] Chiffre affaires supprimé: id=1 date=06/03/26
+[2026-04-01 16:33:40] [DELETE_BD] Parrainage supprimé pour l'animal id= et visiteur id=
+[2026-04-01 16:35:08] [DELETE_BD] Parrainage supprimé pour l'animal id=3 et visiteur id=2
+[2026-04-01 16:35:49] [DELETE_BD] Parrainage supprimé pour l'animal id=3 et visiteur id=1
+[2026-04-01 16:57:18] [SUPPRESSION_BD] Soin supprimé: id=3 date=
+[2026-04-01 17:24:42] [SUPPRESSION_BD] Soin supprimé: id=3 date=10/03/26
+[2026-04-01 17:25:25] [SUPPRESSION_BD] Soin supprimé: id=3 date=10/03/26
+[2026-04-01 17:27:13] [SUPPRESSION_BD] Soin supprimé: id=3 date=10/03/26
+[2026-04-01 17:32:22] [SUPPRESSION_BD] Soin supprimé: id=3 date=10/03/26
+[2026-04-01 17:32:46] [SUPPRESSION_BD] Soin supprimé: id=3 date=10/03/26
+[2026-04-01 17:36:53] [DELETE_BD] Parrainage supprimé pour l'animal id=3 et visiteur id=4
+[2026-04-01 17:52:31] [SUPPRESSION_BD] Nourriture donnée supprimée: id=3 soigneur=17 date=20/03/26
+[2026-04-01 18:22:01] [SUPPRESSION_BD] Espèce supprimée: id=6
+[2026-04-01 18:26:34] [SUPPRESSION_BD] Espèce supprimée: id=1
+[2026-04-01 18:27:11] [SUPPRESSION_BD] Espèce supprimée: id=2
+[2026-04-01 21:55:29] [SUPPRESSION_BD] Zone supprimée: id=1

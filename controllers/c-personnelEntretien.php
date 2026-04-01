@@ -9,20 +9,35 @@ class PersonnelEntretienController extends BaseController
         $this->serviceReparation = new ServiceReparation();
     }
 
-    public function dashboard()
+    /**
+     * Affiche le tableau de bord du personnel d'entretien
+     *
+     * @return void
+     */
+    public function dashboard(): void
     {
         $this->requireRole(ENTRETIEN);
         $title = "Espace Personnel d'Entretien - Zoo'land";
         $this->render('personnelEntretien/v-dashboard', ['title' => $title]);
     }
 
-    public function formAjoutEntretien() {
+    /**
+     * Affiche le formulaire d'ajout d'une tâche d'entretien
+     *
+     * @return void
+     */
+    public function formAjoutEntretien(): void {
         $this->requireRole(ENTRETIEN);
         $title = "Ajouter une Tâche d'Entretien - Zoo'land";
         $this->render('personnelEntretien/v-formAjoutEntretien', ['title' => $title]);
     }
 
-    public function ajoutEntretien()
+    /**
+     * Traite l'ajout d'une nouvelle tâche d'entretien
+     *
+     * @return void
+     */
+    public function ajoutEntretien(): void
     {
         $this->requireRole(ENTRETIEN);
         if ($this->serviceReparation->ajoutEntretien()) {
@@ -40,7 +55,12 @@ class PersonnelEntretienController extends BaseController
         }
     }
 
-    public function supprimerEntretien()
+    /**
+     * Supprime une tâche d'entretien
+     *
+     * @return void
+     */
+    public function supprimerEntretien(): void
     {
         // Logique pour supprimer une tâche d'entretien
         $this->logEvent(
@@ -49,7 +69,12 @@ class PersonnelEntretienController extends BaseController
         );
     }
 
-    public function listerEntretiens()
+    /**
+     * Affiche la liste des tâches d'entretien du personnel connecté
+     *
+     * @return void
+     */
+    public function listerEntretiens(): void
     {
         $this->requireRole(ENTRETIEN);
         $title = "Liste des Entretiens - Zoo'land";

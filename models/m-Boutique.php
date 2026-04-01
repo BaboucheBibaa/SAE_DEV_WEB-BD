@@ -1,167 +1,96 @@
 <?php
-class Boutique
+class Boutique extends BaseModel
 {
-    public function toutRecup()
+    public function getAll()
     {
         /*Récupère toutes les boutiques
         */
-        $db = Database::getConnection();
         $sql = "SELECT *
                 FROM Boutique";
-        $stid = oci_parse($db, $sql);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        $boutiques = [];
-        oci_fetch_all($stid, $boutiques, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $boutiques;
+        return $this->executeQueryAll($sql);
     }
-    public function recupEmployeesBoutique($id_boutique)
+
+    /*Récupère le chiffre d'affaire d'une boutique
+        */
+    public function getAllCA($id_boutique)
     {
-        $db = Database::getConnection();
+        $sql = "SELECT CA.*
+                FROM CHIFFRE_AFFAIRES CA JOIN BOUTIQUE B ON B.ID_BOUTIQUE = CA.ID_BOUTIQUE WHERE B.ID_BOUTIQUE = :id_boutique";
+        return $this->executeQueryAll($sql, [':id_boutique' => $id_boutique]);
+    }
+
+    public function getEmployees($id_boutique)
+    {
         $sql = "SELECT P.NOM, P.PRENOM, P.ID_PERSONNEL
                 FROM PERSONNEL P
                 JOIN TRAVAILLE_DANS_LA_BOUTIQUE B ON P.ID_PERSONNEL = B.ID_PERSONNEL
                 WHERE B.ID_BOUTIQUE = :id_boutique";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id_boutique', $id_boutique);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        $employes = [];
-        oci_fetch_all($stid, $employes, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $employes;
+        return $this->executeQueryAll($sql, [':id_boutique' => $id_boutique]);
     }
-    public function recupParID($id)
+
+    public function getParID($id)
     {
-        $db = Database::getConnection();
         $sql = "SELECT * FROM Boutique WHERE ID_BOUTIQUE = :id";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id', $id);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        return oci_fetch_assoc($stid);
+        return $this->executeQuery($sql, [':id' => $id]);
     }
-    public function recupParManager($id_manager)
+
+    public function getParManager($id_manager)
     {
-        $db = Database::getConnection();
         $sql = "SELECT B.*,Z.NOM_ZONE FROM Boutique B JOIN ZONE Z ON B.ID_ZONE = Z.ID_ZONE WHERE B.ID_MANAGER = :id_manager";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id_manager', $id_manager);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        return oci_fetch_assoc($stid);
+        return $this->executeQuery($sql, [':id_manager' => $id_manager]);
     }
-    public function recupNomManagerParBoutique($id_boutique)
+
+    public function getNomManager($id_boutique)
     {
-        $db = Database::getConnection();
         $sql = "SELECT P.NOM AS NOM, P.PRENOM  AS PRENOM
                 FROM PERSONNEL P
                 JOIN BOUTIQUE B ON P.ID_PERSONNEL = B.ID_MANAGER
                 WHERE B.ID_BOUTIQUE = :id_boutique";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id_boutique', $id_boutique);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        $result = oci_fetch_assoc($stid);
-        return $result ? $result : null;
+        return $this->executeQuery($sql, [':id_boutique' => $id_boutique]);
     }
+
     public function creer($data)
     {
-        $db = Database::getConnection();
         $sql = "INSERT INTO Boutique (ID_BOUTIQUE,ID_MANAGER,ID_ZONE,NOM_BOUTIQUE,DESCRIPTION_BOUTIQUE) 
             VALUES ((SELECT NVL(MAX(ID_BOUTIQUE), 0) + 1 FROM Boutique), :id_manager, :id_zone, :nom_boutique, :description_boutique)";
-        $stid = oci_parse($db, $sql);
-
-        $id_manager = $data['id_manager'] ?? null;
-        $id_zone = $data['id_zone'] ?? null;
-        $nom_boutique = $data['nom_boutique'] ?? null;
-        $description_boutique = $data['description_boutique'] ?? null;
-
-        oci_bind_by_name($stid, ':id_manager', $id_manager);
-        oci_bind_by_name($stid, ':id_zone', $id_zone);
-        oci_bind_by_name($stid, ':nom_boutique', $nom_boutique);
-        oci_bind_by_name($stid, ':description_boutique', $description_boutique);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        return $r;
+        return $this->executeModify($sql, [
+            ':id_manager' => $data['id_manager'],
+            ':id_zone' => $data['id_zone'],
+            ':nom_boutique' => $data['nom_boutique'],
+            ':description_boutique' => $data['description_boutique']
+        ]);
     }
+
     public function maj($id, $data)
     {
-        $db = Database::getConnection();
         $sql = 'UPDATE Boutique 
             SET ID_MANAGER = :id_manager, ID_ZONE = :id_zone, NOM_BOUTIQUE = :nom_boutique, DESCRIPTION_BOUTIQUE = :description_boutique
             WHERE ID_BOUTIQUE = :id';
-        $stid = oci_parse($db, $sql);
 
         $id_manager = $data['id_manager'] ?? null;
         $id_zone = $data['id_zone'] ?? null;
         $nom_boutique = $data['nom_boutique'] ?? null;
         $description_boutique = $data['description_boutique'] ?? null;
 
-        oci_bind_by_name($stid, ':id_manager', $id_manager);
-        oci_bind_by_name($stid, ':id_zone', $id_zone);
-        oci_bind_by_name($stid, ':nom_boutique', $nom_boutique);
-        oci_bind_by_name($stid, ':description_boutique', $description_boutique);
-        oci_bind_by_name($stid, ':id', $id);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        return $r;
+        return $this->executeModify($sql, [
+            ':id_manager' => $id_manager,
+            ':id_zone' => $id_zone,
+            ':nom_boutique' => $nom_boutique,
+            ':description_boutique' => $description_boutique,
+            ':id' => $id
+        ]);
     }
+
     public function suppr($id)
     {
-        $db = Database::getConnection();
         $sql = "DELETE FROM Boutique WHERE ID_BOUTIQUE = :id";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id', $id);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        return $r;
+        return $this->executeModify($sql, [':id' => $id]);
     }
+
     public function moteurRechercheRecup($searchTerm)
     {
-        $db = Database::getConnection();
-
         $sql = "SELECT * FROM BOUTIQUE WHERE LOWER(NOM_BOUTIQUE) LIKE LOWER(:searchTerm)";
-        $stid = oci_parse($db, $sql);
         $likeTerm = '%' . $searchTerm . '%';
-        oci_bind_by_name($stid, ':searchTerm', $likeTerm);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        $result = [];
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
+        return $this->executeQueryAll($sql, [':searchTerm' => $likeTerm]);
     }
 }

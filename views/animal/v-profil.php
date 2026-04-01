@@ -165,7 +165,7 @@
                 </h2>
                 <div id="collapseNourriture" class="accordion-collapse collapse">
                     <div class="accordion-body">
-                        <?php if (!empty($nourriture) && isset($nourriture[0])): ?>
+                        <?php if (!empty($nourritures) && isset($nourritures[0])): ?>
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover">
                                     <thead class="table-light">
@@ -173,24 +173,34 @@
                                             <th>Date de nourriture</th>
                                             <th>Personnel</th>
                                             <th>Dose (kg)</th>
+                                            <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
+                                                <th>Actions</th>
+                                            <?php endif; ?>
+
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $count = count($nourriture);
-                                        for ($i = 0; $i < $count; $i++) {
-                                            $dateNourrit = htmlspecialchars($nourriture[$i]['DATE_NOURRIT'] ?? '');
-                                            $nomPersonnel = htmlspecialchars($nourriture[$i]['NOM'] ?? 'Non spécifié');
-                                            $prenomPersonnel = htmlspecialchars($nourriture[$i]['PRENOM'] ?? '');
-                                            $dose = htmlspecialchars($nourriture[$i]['DOSE_NOURRITURE'] ?? '');
-
-                                            echo "<tr>";
-                                            echo "<td><strong>{$dateNourrit}</strong></td>";
-                                            echo "<td>{$nomPersonnel} {$prenomPersonnel}</td>";
-                                            echo "<td><span class='badge bg-success'>{$dose} kg</span></td>";
-                                            echo "</tr>";
-                                        }
+                                        foreach ($nourritures as $nourriture):
+                                            $dateNourrit = htmlspecialchars($nourriture['DATE_NOURRIT'] ?? '');
+                                            $nomPersonnel = htmlspecialchars($nourriture['NOM'] ?? 'Non spécifié');
+                                            $prenomPersonnel = htmlspecialchars($nourriture['PRENOM'] ?? '');
+                                            $dose = htmlspecialchars($nourriture['DOSE_NOURRITURE'] ?? '');
                                         ?>
+                                            <tr>
+                                                <td><strong><?= $dateNourrit ?></strong></td>
+                                                <td><?= $nomPersonnel . " " . $prenomPersonnel ?></td>
+                                                <td><span class='badge bg-success'><?= $dose ?> kg</span></td>
+                                                <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
+                                                    <td> <a href="index.php?action=supprimerNourriture&idAnimal=<?= $nourriture['ID_ANIMAL'] ?>&dateNourrit=<?= urlencode($nourriture['DATE_NOURRIT']) ?>&idSoigneur=<?= $nourriture['ID_PERSONNEL'] ?>" class='btn btn-outline-danger' onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce soin ?')">
+                                                            <i class='bi bi-trash'></i> Supprimer
+                                                        </a>
+                                                    </td>
+
+                                                <?php endif; ?>
+
+                                            </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -220,24 +230,30 @@
                                             <th>Date du soin</th>
                                             <th>Personnel</th>
                                             <th>Description</th>
+                                            <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
+                                                <th>Actions</th>
+                                            <?php endif; ?>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        $count = count($soins);
-                                        for ($i = 0; $i < $count; $i++) {
-                                            $dateSoin = htmlspecialchars($soins[$i]['DATE_SOIN'] ?? '');
-                                            $nomPersonnel = htmlspecialchars($soins[$i]['NOM'] ?? 'Non spécifié');
-                                            $prenomPersonnel = htmlspecialchars($soins[$i]['PRENOM'] ?? '');
-                                            $description = htmlspecialchars($soins[$i]['DESCRIPTION_SOIN'] ?? 'Non spécifiée');
+                                        <?php foreach ($soins as $soin): ?>
+                                            <tr>
+                                                <td><strong><?= htmlspecialchars($soin['DATE_SOIN'] ?? ''); ?></strong></td>
+                                                <td><?= htmlspecialchars($soin['NOM'] ?? 'Non spécifié') . " " . htmlspecialchars($soin['NOM'] ?? 'Non spécifié'); ?></td>
+                                                <td><span class='badge bg-info'><?= htmlspecialchars($soin['DESCRIPTION_SOIN'] ?? 'Non spécifiée'); ?></span></td>
 
-                                            echo "<tr>";
-                                            echo "<td><strong>{$dateSoin}</strong></td>";
-                                            echo "<td>{$nomPersonnel} {$prenomPersonnel}</td>";
-                                            echo "<td><span class='badge bg-info'>{$description}</span></td>";
-                                            echo "</tr>";
-                                        }
-                                        ?>
+                                                <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
+                                                    <td>
+                                                        <a href="index.php?action=supprimerSoin&idAnimal=<?= $animal['ID_ANIMAL'] ?>&dateSoin=<?= urlencode($soin['DATE_SOIN']) ?>" class='btn btn-outline-danger' onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce soin ?')">
+                                                            <i class='bi bi-trash'></i> Supprimer
+                                                        </a>
+                                                    </td>
+                                                <?php endif; ?>
+
+                                            </tr>
+                                        <?php endforeach; ?>
+
+
                                     </tbody>
                                 </table>
                             </div>
@@ -266,14 +282,14 @@
                                         <tr>
                                             <th>Nom du Visiteur</th>
                                             <th>Niveau de Parrainage</th>
-                                            <?php if ($canEdit): ?>
-                                                <th class="text-center">Actions</th>
+                                            <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
+                                                <th>Actions</th>
                                             <?php endif; ?>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        foreach ($parrains as $parrain) {
+                                        foreach ($parrains as $parrain):
                                             $id_visiteur = htmlspecialchars($parrain['ID_VISITEUR'] ?? '');
                                             $nomVisiteur = htmlspecialchars($parrain['NOM_VISITEUR'] ?? 'Non spécifié');
                                             $niveau = htmlspecialchars($parrain['LIBELLE'] ?? 'Non spécifié');
@@ -290,27 +306,19 @@
                                                 $badgeClass = 'bg-dark';
                                             } elseif (stripos($niveau, 'bronze') !== false) {
                                                 $badgeClass = 'bg-danger';
-                                            }
+                                            } ?>
 
-                                            echo "<tr>";
-                                            echo "<td><strong>{$nomVisiteur}</strong></td>";
-                                            echo "<td><span class='badge {$badgeClass}'>{$niveau}</span></td>";
-
-                                            if (isset($_SESSION['user']['ID_FONCTION']) && ($_SESSION['user']['ID_FONCTION'] == RESPSOIG || $_SESSION['user']['ID_FONCTION'] == ADMINID)) {
-                                                echo "<td class='text-center'>";
-                                                echo "<form action='index.php?action=supprimerParrainage' method='POST' style='display:inline;'>";
-                                                echo "<input type='hidden' name='id_animal' value='" . htmlspecialchars($animal['ID_ANIMAL'] ?? '') . "'>";
-                                                echo "<input type='hidden' name='id_visiteur' value='{$id_visiteur}'>";
-                                                echo "<button type='submit' class='btn btn-sm btn-danger' onclick=\"return confirm('Êtes-vous sûr de vouloir supprimer ce parrainage ?');\">";
-                                                echo "<i class='bi bi-trash'></i> Supprimer";
-                                                echo "</button>";
-                                                echo "</form>";
-                                                echo "</td>";
-                                            }
-
-                                            echo "</tr>";
-                                        }
-                                        ?>
+                                            <tr>
+                                                <td><strong><?= $nomVisiteur; ?></strong></td>
+                                                <td><span class='badge <?= $badgeClass ?>'><?= $niveau ?></span>
+                                                    <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
+                                                <td><a href="index.php?action=supprimerParrainage&idAnimal=<?= $animal['ID_ANIMAL']  ?>&idVisiteur=<?= $parrain['ID_VISITEUR'] ?>" class='btn btn-outline-danger' onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?')" title='Supprimer'>
+                                                        <i class='bi bi-trash'></i>Supprimer
+                                                    </a>
+                                                <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>

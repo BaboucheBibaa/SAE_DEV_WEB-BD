@@ -1,59 +1,47 @@
 <?php
-class Espece
+class Espece extends BaseModel
 {
-    public function toutRecup()
+    public function getAll()
     {
-        $db = Database::getConnection();
         $sql = "SELECT * FROM Espece ORDER BY NOM_ESPECE";
-        $stid = oci_parse($db, $sql);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        $result = [];
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
+        return $this->executeQueryAll($sql);
     }
 
-    public function recupParID($id)
+    public function getParID($id)
     {
-        $db = Database::getConnection();
-
         $query = "SELECT * FROM Espece WHERE ID_ESPECE = :id_espece";
-        $stid = oci_parse($db, $query);
-        oci_bind_by_name($stid, ':id_espece', $id);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        return oci_fetch_assoc($stid);
+        return $this->executeQuery($query, [':id_espece' => $id]);
     }
 
-
+    public function suppr($id_espece)
+    {
+        $query = "DELETE FROM ESPECE WHERE ID_ESPECE = :id_espece";
+        return $this->executeModify($query, [':id_espece' => $id_espece]);
+    }
 
     public function moteurRechercheRecup($searchTerm)
     {
-        $db = Database::getConnection();
-
         $sql = "SELECT * FROM ESPECE WHERE LOWER(NOM_ESPECE) LIKE LOWER(:searchTerm)";
-        $stid = oci_parse($db, $sql);
         $likeTerm = '%' . $searchTerm . '%';
-        oci_bind_by_name($stid, ':searchTerm', $likeTerm);
+        return $this->executeQueryAll($sql, [':searchTerm' => $likeTerm]);
+    }
 
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        
-        $result = [];
-        oci_fetch_all($stid, $result, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $result;
+    public function getEspecesCompatibles($id_espece)
+    {
+        $query = "SELECT e.ID_ESPECE, e.NOM_ESPECE, e.NOM_LATIN_ESPECE, e.EST_MENACEE 
+                 FROM Espece e
+                 INNER JOIN Est_Compatible_Avec ecc ON e.ID_ESPECE = ecc.ID_ESPECE2
+                 WHERE ecc.ID_ESPECE1 = :id_espece
+                 ORDER BY e.NOM_ESPECE";
+        return $this->executeQueryAll($query, [':id_espece' => $id_espece]);
+    }
+
+    public function getAnimauxParEspece($id_espece)
+    {
+        $query = "SELECT ID_ANIMAL, NOM_ANIMAL, POIDS, DATE_NAISSANCE 
+                 FROM Animal 
+                 WHERE ID_ESPECE = :id_espece
+                 ORDER BY NOM_ANIMAL";
+        return $this->executeQueryAll($query, [':id_espece' => $id_espece]);
     }
 }

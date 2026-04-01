@@ -10,7 +10,13 @@ class ProfilController extends BaseController
         $this->serviceEmployee = new ServiceEmployee();
     }
 
-    public function profil($id)
+    /**
+     * Affiche le profil d'un utilisateur
+     * Inclut l'historique des contrats de travail
+     * @param int $id ID de l'utilisateur (peut être ignoré si passé en GET)
+     * @return void Affiche le profil ou redirige si utilisateur introuvable
+     */
+    public function profil(int $id): void
     {
         $id_user = $_GET['id'] ?? null;
         if ($id_user === null) {
@@ -39,7 +45,12 @@ class ProfilController extends BaseController
         ]);
     }
 
-    public function updatePassword()
+    /**
+     * Met à jour le mot de passe de l'utilisateur connecté
+     * Valide l'ancien mot de passe et la confirmation du nouveau
+     * @return void Redirige avec message de succès ou erreur
+     */
+    public function updatePassword(): void
     {
         // Met à jour le MDP de l'utilisateur connecté
         if (empty($_SESSION['user'])) {

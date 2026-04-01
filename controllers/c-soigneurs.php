@@ -1,6 +1,6 @@
 <?php
 
-class Soigneurs extends BaseController
+class SoigneursController extends BaseController
 {
     private $serviceSoin;
     private $serviceEmployee;
@@ -10,14 +10,24 @@ class Soigneurs extends BaseController
         $this->serviceEmployee = new ServiceEmployee();
     }
 
-    public function index()
+    /**
+     * Affiche le tableau de bord de l'espace soigneurs
+     * Accessible uniquement aux soigneurs
+     * @return void Affiche la vue d'index
+     */
+    public function index(): void
     {
         $this->requireRole(SOIGNEUR);
         $title = "Espace Soigneurs - Zoo'land";
         $this->render('soigneurs/v-index', ['title' => $title]);
     }
 
-    public function formCreationSoin()
+    /**
+     * Affiche le formulaire d'ajout d'un soin
+     * Liste les animaux du soigneur et les vétérinaires disponibles
+     * @return void Affiche le formulaire
+     */
+    public function formCreationSoin(): void
     {
         $this->requireRole(SOIGNEUR);
         $title = "Ajouter un Soin - Zoo'land";
@@ -26,7 +36,11 @@ class Soigneurs extends BaseController
         $this->render('soigneurs/v-formAjoutSoin', ['title' => $title, 'animaux' => $animaux, 'veterinaires' => $veterinaires]);
     }
 
-    public function ajoutSoin()
+    /**
+     * Traite l'ajout d'un soin pour un animal
+     * @return void Redirige avec message de succès ou erreur
+     */
+    public function ajoutSoin(): void
     {
         $this->requireRole(SOIGNEUR);
         $result = $this->serviceSoin->ajoutSoin();
@@ -38,7 +52,12 @@ class Soigneurs extends BaseController
             $this->redirectWithMessage('formAjoutSoin', "Erreur lors de l'ajout du soin.", 'error');
         }
     }
-    public function formCreationAjoutNourriture()
+    /**
+     * Affiche le formulaire d'ajout de nourriture
+     * Liste les animaux du soigneur
+     * @return void Affiche le formulaire
+     */
+    public function formCreationAjoutNourriture(): void
     {
         $this->requireRole(SOIGNEUR);
         $title = "Ajouter une Dose de Nourriture - Zoo'land";
@@ -46,7 +65,11 @@ class Soigneurs extends BaseController
         $this->render('soigneurs/v-formAjoutNourriture', ['title' => $title, 'animaux' => $animaux]);
     }
 
-    public function ajoutNourriture()
+    /**
+     * Enregistre une dose de nourriture pour un animal
+     * @return void Redirige avec message de succès ou erreur
+     */
+    public function ajoutNourriture(): void
     {
         $this->requireRole(SOIGNEUR);
         if ($this->serviceSoin->ajoutNourriture()) {
@@ -64,7 +87,11 @@ class Soigneurs extends BaseController
         }
     }
 
-    public function listerSoins()
+    /**
+     * Affiche l'historique des soins du soigneur connecté
+     * @return void Affiche la liste des soins
+     */
+    public function listerSoins(): void
     {
         $this->requireRole(SOIGNEUR);
         $title = "Historique des soins - Zoo'land";
@@ -72,7 +99,11 @@ class Soigneurs extends BaseController
         $this->render('soigneurs/v-listeSoins', ['title' => $title, 'soins' => $soins]);
     }
 
-    public function statsSoigneurs()
+    /**
+     * Affiche les statistiques des soins par soigneur
+     * @return void Affiche le graphique statistique
+     */
+    public function statsSoigneurs(): void
     {
         $this->requireRole(SOIGNEUR);
         $title = "Statistiques des Soigneurs - Zoo'land";

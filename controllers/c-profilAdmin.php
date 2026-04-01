@@ -5,6 +5,13 @@ class AdminController extends BaseController
     private $serviceZone;
     private $serviceBoutique;
     private $serviceAnimal;
+    private $serviceReparation;
+    private $serviceParrainage;
+    private $serviceCA;
+    private $serviceEnclos;
+    private $serviceSoin;
+
+    private $serviceEspece;
 
     //constructeur de la classe
     public function __construct()
@@ -13,12 +20,23 @@ class AdminController extends BaseController
         $this->serviceZone = new ServiceZone();
         $this->serviceBoutique = new ServiceBoutique();
         $this->serviceAnimal = new ServiceAnimal();
+        $this->serviceReparation = new ServiceReparation();
+        $this->serviceParrainage = new ServiceParrainage();
+        $this->serviceCA = new ServiceCA();
+        $this->serviceEnclos = new ServiceEnclos();
+        $this->serviceSoin = new ServiceSoin();
+        $this->serviceEspece = new ServiceEspece();
     }
 
     //  Dashboard admin
 
 
-    public function popUpsAdmins()
+    /**
+     * Affiche les alertes pour les contrats de travail qui se terminent bientôt
+     *
+     * @return void
+     */
+    public function popUpsAdmins(): void
     {
         $this->requireRole(ADMINID);
         $finsDeContrats = $this->serviceEmployee->getFinsDeContrats();
@@ -31,7 +49,13 @@ class AdminController extends BaseController
             $_SESSION['flash'] = ['type' => 'warning', 'message' => $message];
         }
     }
-    public function profilAdmin()
+
+    /**
+     * Affiche le tableau de bord administrateur avec les filtres d'archivage
+     *
+     * @return void
+     */
+    public function profilAdmin(): void
     {
         $this->requireRole(ADMINID);
         $this->popUpsAdmins();
@@ -45,6 +69,7 @@ class AdminController extends BaseController
         $zones = $this->serviceZone->getToutesLesZones();
         $boutiques = $this->serviceBoutique->getToutesLesBoutiques();
         $animals = $this->serviceAnimal->getTousAnimaux();
+        $especes = $this->serviceEspece->getAll();
         if ($employees === null || $zones === null || $boutiques === null || $animals === null) {
             $this->redirectWithMessage('home', 'Erreur lors de la récupération des données pour le dashboard admin.', 'error');
         }
@@ -54,13 +79,19 @@ class AdminController extends BaseController
             'filtreArchive' => $filtreArchive,
             'zones' => $zones,
             'boutiques' => $boutiques,
-            'animals' => $animals
+            'animals' => $animals,
+            'especes' => $especes
         ]);
     }
 
     //  Employés
 
-    public function formCreationEmployee()
+    /**
+     * Affiche le formulaire de création d'un employé
+     *
+     * @return void
+     */
+    public function formCreationEmployee(): void
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceEmployee->dataCreationEmployee();
@@ -79,18 +110,16 @@ class AdminController extends BaseController
         }
     }
 
-    public function ajoutEmployee()
+    /**
+     * Traite l'ajout d'un nouvel employé et gère les erreurs de validation
+     *
+     * @return void
+     */
+    public function ajoutEmployee(): void
     {
         $this->requireRole(ADMINID);
+
         switch ($this->serviceEmployee->ajoutEmployee()) {
-            //valeurs de retour de la fonction ajoutEmployee: 0 ou 1 car retourne un boolean
-            case 1:
-                $this->logEvent(
-                    'INSERTION_BD',
-                    "Nouvel employé ajouté: id={$this->serviceEmployee->getLastInsertId()}"
-                );
-                $this->redirectWithMessage('adminDashboard', 'Employé ajouté avec succès.', 'success');
-                break;
             case 0:
                 $this->logEvent(
                     'ERREUR',
@@ -98,30 +127,48 @@ class AdminController extends BaseController
                 );
                 $this->redirectWithMessage('creationEmployee', 'Erreur lors de l\'ajout de l\'employé.', 'error');
                 break;
-            //autres cas ici : valeurs de retour de la validation de formulaire
-            //pas de message dans les logs pour ces erreurs car c'est côté utilisateur et non côt serveur
+            case 1:
+                $newEmployeeId = $this->serviceEmployee->getLastInsertId();
+                $this->logEvent(
+                    'INSERTION_BD',
+                    "Nouvel employé ajouté: id={$newEmployeeId}"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Employé ajouté avec succès.', 'success');
+                break;
             case 2:
-                $this->redirectWithMessage('creationEmployee', 'Erreur : Nom invalide.', 'error');
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Nom invalide.'];
+                $this->redirect('creationEmployee');
                 break;
             case 3:
-                $this->redirectWithMessage('creationEmployee', 'Erreur : Prénom invalide.', 'error');
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Prénom invalide.'];
+                $this->redirect('creationEmployee');
                 break;
             case 4:
-                $this->redirectWithMessage('creationEmployee', 'Erreur: Email invalide.', 'error');
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Email invalide.'];
+                $this->redirect('creationEmployee');
                 break;
             case 5:
-                $this->redirectWithMessage('creationEmployee', 'Erreur: Salaire invalide.', 'error');
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Salaire invalide.'];
+                $this->redirect('creationEmployee');
                 break;
             case 6:
-                $this->redirectWithMessage('creationEmployee', 'Erreur: Login invalide.', 'error');
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Login invalide.'];
+                $this->redirect('creationEmployee');
                 break;
             default:
-                $this->redirectWithMessage('creationEmployee', 'Erreur inconnue lors de l\'ajout de l\'employé.', 'error');
+                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur inconnue lors de l\'ajout de l\'employé.'];
+                $this->redirect('creationEmployee');
                 break;
         }
     }
 
-    public function formEditionEmployee($id)
+    /**
+     * Affiche le formulaire d'édition d'un employé
+     *
+     * @param int $id Identifiant de l'employé à éditer
+     * @return void
+     */
+    public function formEditionEmployee(int $id): void
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceEmployee->dataEditionEmployee($id);
@@ -135,7 +182,13 @@ class AdminController extends BaseController
         }
     }
 
-    public function majEmployee($id)
+    /**
+     * Met à jour les informations d'un employé
+     *
+     * @param int $id Identifiant de l'employé à mettre à jour
+     * @return void
+     */
+    public function majEmployee(int $id): void
     {
         $this->requireRole(ADMINID);
         switch ($this->serviceEmployee->majEmployee($id)) {
@@ -184,7 +237,13 @@ class AdminController extends BaseController
         }
     }
 
-    public function supprEmployee($id)
+    /**
+     * Supprime un employé de la base de données
+     *
+     * @param int $id Identifiant de l'employé à supprimer
+     * @return void
+     */
+    public function supprEmployee(int $id): void
     {
         $this->requireRole(ADMINID);
         if ($this->serviceEmployee->supprEmployee($id)) {
@@ -202,7 +261,13 @@ class AdminController extends BaseController
         }
     }
 
-    public function archiverEmployee($id)
+    /**
+     * Archive ou désarchive un employé
+     *
+     * @param int $id Identifiant de l'employé à archiver/désarchiver
+     * @return void
+     */
+    public function archiverEmployee(int $id): void
     {
         $this->requireRole(ADMINID);
 
@@ -249,7 +314,12 @@ class AdminController extends BaseController
 
     //  Boutiques
 
-    public function formCreationBoutique()
+    /**
+     * Affiche le formulaire de création d'une boutique
+     *
+     * @return void
+     */
+    public function formCreationBoutique(): void
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceBoutique->dataCreationBoutique();
@@ -260,7 +330,12 @@ class AdminController extends BaseController
         }
     }
 
-    public function ajoutBoutique()
+    /**
+     * Traite l'ajout d'une nouvelle boutique
+     *
+     * @return void
+     */
+    public function ajoutBoutique(): void
     {
         $this->requireRole(ADMINID);
         if ($this->serviceBoutique->ajoutBoutique()) {
@@ -278,7 +353,13 @@ class AdminController extends BaseController
         }
     }
 
-    public function formEditionBoutique($id)
+    /**
+     * Affiche le formulaire d'édition d'une boutique
+     *
+     * @param int $id Identifiant de la boutique à éditer
+     * @return void
+     */
+    public function formEditionBoutique(int $id): void
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceBoutique->dataEditionBoutique($id);
@@ -289,7 +370,13 @@ class AdminController extends BaseController
         }
     }
 
-    public function majBoutique($id)
+    /**
+     * Met à jour les informations d'une boutique
+     *
+     * @param int $id Identifiant de la boutique à mettre à jour
+     * @return void
+     */
+    public function majBoutique(int $id): void
     {
         $this->requireRole(ADMINID);
         if ($this->serviceBoutique->majBoutique($id)) {
@@ -307,7 +394,13 @@ class AdminController extends BaseController
         }
     }
 
-    public function supprBoutique($id)
+    /**
+     * Supprime une boutique de la base de données
+     *
+     * @param int $id Identifiant de la boutique à supprimer
+     * @return void
+     */
+    public function supprBoutique(int $id): void
     {
         $this->requireRole(ADMINID);
         if ($this->serviceBoutique->supprBoutique($id)) {
@@ -329,7 +422,12 @@ class AdminController extends BaseController
 
     //  Zones
 
-    public function formCreationZone()
+    /**
+     * Affiche le formulaire de création d'une zone
+     *
+     * @return void
+     */
+    public function formCreationZone(): void
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceZone->dataCreationZone();
@@ -340,7 +438,12 @@ class AdminController extends BaseController
         }
     }
 
-    public function ajoutZone()
+    /**
+     * Traite l'ajout d'une nouvelle zone
+     *
+     * @return void
+     */
+    public function ajoutZone(): void
     {
         $this->requireRole(ADMINID);
         if ($this->serviceZone->ajoutZone()) {
@@ -359,7 +462,13 @@ class AdminController extends BaseController
         }
     }
 
-    public function formEditionZone($id)
+    /**
+     * Affiche le formulaire d'édition d'une zone
+     *
+     * @param int $id Identifiant de la zone à éditer
+     * @return void
+     */
+    public function formEditionZone(int $id): void
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceZone->dataEditionZone($id);
@@ -370,7 +479,13 @@ class AdminController extends BaseController
         }
     }
 
-    public function majZone($id)
+    /**
+     * Met à jour les informations d'une zone
+     *
+     * @param int $id Identifiant de la zone à mettre à jour
+     * @return void
+     */
+    public function majZone(int $id): void
     {
         $this->requireRole(ADMINID);
         if ($this->serviceZone->majZone($id)) {
@@ -388,7 +503,13 @@ class AdminController extends BaseController
         }
     }
 
-    public function supprZone($id)
+    /**
+     * Supprime une zone de la base de données
+     *
+     * @param int $id Identifiant de la zone à supprimer
+     * @return void
+     */
+    public function supprZone(int $id): void
     {
         $this->requireRole(ADMINID);
         if ($this->serviceZone->supprZone($id)) {
@@ -412,10 +533,11 @@ class AdminController extends BaseController
 
 
     /**
-     * 
-     * Affiche le formulaire de création d'un animal pour un administrateur
+     * Affiche le formulaire de création d'un animal
+     *
+     * @return void
      */
-    public function formCreationAnimal()
+    public function formCreationAnimal(): void
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceAnimal->dataCreationAnimal();
@@ -428,10 +550,11 @@ class AdminController extends BaseController
 
 
     /**
-     * 
-     * Gère l'insertion en BD d'un animal
+     * Traite l'ajout d'un nouvel animal
+     *
+     * @return void
      */
-    public function ajoutAnimal()
+    public function ajoutAnimal(): void
     {
 
         $this->requireRole(ADMINID);
@@ -457,9 +580,12 @@ class AdminController extends BaseController
     }
 
     /**
-     * Permet d'afficher le formulaire d'édition de l'animal $id
+     * Affiche le formulaire d'édition d'un animal
+     *
+     * @param int $id Identifiant de l'animal à éditer
+     * @return void
      */
-    public function formEditionAnimal($id)
+    public function formEditionAnimal(int $id): void
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceAnimal->dataEditionAnimal($id);
@@ -473,7 +599,13 @@ class AdminController extends BaseController
         }
     }
 
-    public function majAnimal($id)
+    /**
+     * Met à jour les informations d'un animal
+     *
+     * @param int $id Identifiant de l'animal à mettre à jour
+     * @return void
+     */
+    public function majAnimal(int $id): void
     {
         $this->requireRole(ADMINID);
         $result = $this->serviceAnimal->majAnimal($id);
@@ -501,7 +633,13 @@ class AdminController extends BaseController
         }
     }
 
-    public function supprAnimal($id)
+    /**
+     * Supprime un animal de la base de données
+     *
+     * @param int $id Identifiant de l'animal à supprimer
+     * @return void
+     */
+    public function supprAnimal(int $id): void
     {
         $this->requireRole(ADMINID);
         if ($this->serviceAnimal->supprAnimal($id)) {
@@ -516,6 +654,106 @@ class AdminController extends BaseController
                 "Erreur lors de la suppression de l'animal id={$id}"
             );
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de l\'animal.', 'error');
+        }
+    }
+
+    /**
+     * Supprime un chiffre d'affaires d'une boutique
+     *
+     * @param int $id_boutique Identifiant de la boutique
+     * @param string $date_ca Date du chiffre d'affaires au format YYYY-MM-DD
+     * @return void
+     */
+    public function supprCA(int $id_boutique, string $date_ca): void
+    {
+        $this->requireRole(ADMINID);
+        if ($this->serviceCA->supprCA($id_boutique, $date_ca)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Chiffre affaires supprimé: id={$id_boutique} date={$date_ca}"
+            );
+            $this->redirectWithMessage("profilBoutique&id={$id_boutique}", "Chiffre d'affaires supprimé avec succès.", 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression du chiffre d'\'affaires id={$id_boutique} date={$date_ca}"
+            );
+            $this->redirectWithMessage("profilBoutique&id={$id_boutique}", 'Erreur lors de la suppression du chiffre d\'affaires.', 'error');
+        }
+    }
+
+    /**
+     * Supprime un soin d'un animal
+     *
+     * @param int $id_animal Identifiant de l'animal
+     * @param string $date_soin Date du soin au format YYYY-MM-DD
+     * @return void
+     */
+    public function supprSoin(int $id_animal, string $date_soin): void
+    {
+        $this->requireRole(ADMINID);
+        if ($this->serviceSoin->supprimerSoin($id_animal, $date_soin)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Soin supprimé: id={$id_animal} date={$date_soin}"
+            );
+            $this->redirectWithMessage("profilAnimal&id={$id_animal}", "Soin supprimé avec succès.", 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression du soin id={$id_animal} date={$date_soin}"
+            );
+            $this->redirectWithMessage("profilAnimal&id={$id_animal}", 'Erreur lors de la suppression du soin.', 'error');
+        }
+    }
+
+    /**
+     * Supprime une nourriture donnée à un animal
+     *
+     * @param int $id_animal Identifiant de l'animal
+     * @param int $id_soigneur Identifiant du soigneur
+     * @param string $date_nourrit Date de la nourriture au format YYYY-MM-DD
+     * @return void
+     */
+    public function supprNourriture(int $id_animal, int $id_soigneur, string $date_nourrit): void
+    {
+        $this->requireRole(ADMINID);
+        if ($this->serviceSoin->supprimerNourriture($id_animal, $id_soigneur, $date_nourrit)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Nourriture donnée supprimée: id={$id_animal} soigneur={$id_soigneur} date={$date_nourrit}"
+            );
+            $this->redirectWithMessage("profilAnimal&id={$id_animal}", "Nourriture donnée supprimée avec succès.", 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression de la nourriture donnée id={$id_animal} soigneur={$id_soigneur} date={$date_nourrit}"
+            );
+            $this->redirectWithMessage("profilAnimal&id={$id_animal}", 'Erreur lors de la suppression de la nourriture donnée.', 'error');
+        }
+    }
+
+    /**
+     * Supprime une espèce de la base de données
+     *
+     * @param int $id_espece Identifiant de l'espèce à supprimer
+     * @return void
+     */
+    public function supprEspece(int $id_espece): void
+    {
+        $this->requireRole(ADMINID);
+        if ($this->serviceEspece->supprimerEspece($id_espece)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Espèce supprimée: id={$id_espece}"
+            );
+            $this->redirectWithMessage("adminDashboard", "Espèce supprimée avec succès.", 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression de l\'espèce id={$id_espece} "
+            );
+            $this->redirectWithMessage("adminDashboard", 'Erreur lors de la suppression de l\'espèce.', 'error');
         }
     }
 }

@@ -3,11 +3,18 @@
 class SearchController extends BaseController
 {
     private $serviceSearch;
+    private $serviceZone;
     public function __construct()
     {
         $this->serviceSearch = new ServiceSearch();
+        $this->serviceZone = new ServiceZone();
     }
-    public function gererRequete()
+    /**
+     * Route la requête de recherche vers l'action appropriée
+     * Détermine si c'est une recherche ou un affichage de la page
+     * @return void Affiche la page ou les résultats
+     */
+    public function gererRequete(): void
     {
         $action = $_GET['search_action'] ?? 'affiche';
 
@@ -34,15 +41,37 @@ class SearchController extends BaseController
     private function rechercheGlobale()
     {
         $searchTerm = $_GET['q'] ?? '';
+
+        // Filtres avancés
+        $filter_espece = $_GET['filter_espece'] ?? '';
+        $filter_zone = $_GET['filter_zone'] ?? '';
+        $filter_regime = $_GET['filter_regime'] ?? '';
+        $filter_type_enclos = $_GET['filter_type_enclos'] ?? '';
+
         $results = [];
         $message = '';
 
-        if (empty($searchTerm)) {
-            $message = 'Veuillez entrer un terme de recherche.';
+        // Si aucun terme ni filtre -> message
+        if (
+            empty($searchTerm) &&
+            empty($filter_espece) &&
+            empty($filter_zone) &&
+            empty($filter_regime) &&
+            empty($filter_type_enclos)
+        ) {
+            $message = 'Veuillez entrer un terme ou appliquer un filtre.';
         } else {
-            $results = $this->serviceSearch->recherchGlobale($searchTerm);
-            
-            // Compte le total de résultats
+            $filters = [
+                'espece' => $_GET['filter_espece'] ?? '',
+                'zone' => $_GET['filter_zone'] ?? '',
+                'regime' => $_GET['filter_regime'] ?? '',
+                'type_enclos' => $_GET['filter_type_enclos'] ?? ''
+            ];
+
+            $results = $this->serviceSearch->recherchGlobale($_GET['q'] ?? '', $filters);
+
+
+            // Compter les résultats
             $totalResults = 0;
             foreach ($results as $category) {
                 if (is_array($category)) {
@@ -51,15 +80,22 @@ class SearchController extends BaseController
             }
 
             if ($totalResults === 0) {
-                $message = 'Aucun résultat trouvé pour "' . htmlspecialchars($searchTerm) . '".';
+                $message = 'Aucun résultat trouvé.';
             }
         }
+
+        $zones = $this->serviceZone->getToutesLesZones();
 
         $this->render('test-moteur-recherche', [
             'title' => 'Résultats de Recherche - Zoo\'land',
             'searchTerm' => $searchTerm,
             'results' => $results,
-            'message' => $message
+            'message' => $message,
+            'filter_espece' => $filter_espece,
+            'filter_zone' => $filter_zone,
+            'filter_regime' => $filter_regime,
+            'filter_type_enclos' => $filter_type_enclos,
+            'zones' => $zones
         ]);
     }
 }

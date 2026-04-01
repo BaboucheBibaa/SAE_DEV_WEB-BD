@@ -1,183 +1,67 @@
 <?php
-class Zone
+class Zone extends BaseModel
 {
-    public function toutRecup()
+    public function getAll()
     {
-        /*Récupère toutes les zones du zoo
-        */
-        $db = Database::getConnection();
-        $sql = "SELECT Z.*,P.NOM, P.PRENOM
-                FROM ZONE Z JOIN PERSONNEL P ON Z.ID_MANAGER = P.ID_PERSONNEL";
-        $stid = oci_parse($db, $sql);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        $zones = [];
-        oci_fetch_all($stid, $zones, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $zones;
+        $sql = "SELECT Z.*, P.NOM, P.PRENOM FROM ZONE Z LEFT JOIN PERSONNEL P ON Z.ID_MANAGER = P.ID_PERSONNEL";
+        return $this->executeQueryAll($sql);
     }
 
-    public function recupZoneParEnclos($latitude, $longitude)
+    public function getParEnclos($latitude, $longitude)
     {
-
-        $db = Database::getConnection();
-        $sql = "SELECT Z.ID_ZONE FROM ZONE Z, ENCLOS E WHERE Z.ID_ZONE = E.ID_ZONE AND LATITUDE = :latitude AND LONGITUDE = :longitude;";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':latitude', $latitude);
-        oci_bind_by_name($stid, ':longitude', $longitude);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        return oci_fetch($stid);
+        $sql = "SELECT Z.ID_ZONE FROM ZONE Z, ENCLOS E WHERE Z.ID_ZONE = E.ID_ZONE AND LATITUDE = :latitude AND LONGITUDE = :longitude";
+        return $this->executeQuery($sql, [':latitude' => $latitude, ':longitude' => $longitude]);
     }
 
-    public function recupNomManager($id_zone)
+    public function getNomManager($id_zone)
     {
-        /*Récupère la zone dont l'employé est le manager
-        */
-        $db = Database::getConnection();
-        $sql = "SELECT PERSONNEL.NOM, PERSONNEL.PRENOM
-                FROM PERSONNEL
+        $sql = "SELECT PERSONNEL.NOM, PERSONNEL.PRENOM FROM PERSONNEL
                 JOIN ZONE ON PERSONNEL.ID_PERSONNEL = ZONE.ID_MANAGER
                 WHERE ZONE.ID_ZONE = :id_zone";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id_zone', $id_zone);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        return oci_fetch_assoc($stid);
+        return $this->executeQuery($sql, [':id_zone' => $id_zone]);
     }
 
-    public function recupZoneDuManager($id_manager)
+    public function getZoneManager($id_manager)
     {
-        /*Récupère la zone dont l'employé est le manager
-        */
-        $db = Database::getConnection();
-        $sql = "SELECT ZONE.NOM_ZONE, ZONE.ID_ZONE
-                FROM ZONE
-                WHERE ZONE.ID_MANAGER = :id_manager";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id_manager', $id_manager);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        return oci_fetch_assoc($stid);
+        $sql = "SELECT ZONE.NOM_ZONE, ZONE.ID_ZONE FROM ZONE WHERE ZONE.ID_MANAGER = :id_manager";
+        return $this->executeQuery($sql, [':id_manager' => $id_manager]);
     }
 
-    /**
-     * Récupère une zone par son ID
-     */
-    public function recupParID($id)
+    public function getParID($id)
     {
-        $db = Database::getConnection();
         $sql = "SELECT * FROM ZONE WHERE ID_ZONE = :id";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id', $id);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        return oci_fetch_assoc($stid);
+        return $this->executeQuery($sql, [':id' => $id]);
     }
 
-    /**
-     * Crée une nouvelle zone
-     */
     public function creer($data)
     {
-        $db = Database::getConnection();
         $sql = "INSERT INTO ZONE (ID_ZONE, NOM_ZONE, ID_MANAGER) 
             VALUES ((SELECT NVL(MAX(ID_ZONE), 0) + 1 FROM ZONE), :nom_zone, :id_manager)";
-        $stid = oci_parse($db, $sql);
-
-        $nom_zone = $data['nom_zone'] ?? null;
-        $id_manager = $data['id_manager'] ?? null;
-
-        oci_bind_by_name($stid, ':nom_zone', $nom_zone);
-        oci_bind_by_name($stid, ':id_manager', $id_manager);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        return $r;
+        return $this->executeModify($sql, [
+            ':nom_zone' => $data['nom_zone'] ?? null,
+            ':id_manager' => $data['id_manager'] ?? null
+        ]);
     }
 
-    /**
-     * Met à jour une zone
-     */
     public function maj($id, $data)
     {
-        $db = Database::getConnection();
-        $sql = 'UPDATE ZONE 
-            SET NOM_ZONE = :nom_zone, ID_MANAGER = :id_manager
-            WHERE ID_ZONE = :id';
-        $stid = oci_parse($db, $sql);
-
-        $nom_zone = $data['nom_zone'] ?? null;
-        $id_manager = $data['id_manager'] ?? null;
-
-        oci_bind_by_name($stid, ':nom_zone', $nom_zone);
-        oci_bind_by_name($stid, ':id_manager', $id_manager);
-        oci_bind_by_name($stid, ':id', $id);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        return $r;
+        $sql = 'UPDATE ZONE SET NOM_ZONE = :nom_zone, ID_MANAGER = :id_manager WHERE ID_ZONE = :id';
+        return $this->executeModify($sql, [
+            ':nom_zone' => $data['nom_zone'] ?? null,
+            ':id_manager' => $data['id_manager'] ?? null,
+            ':id' => $id
+        ]);
     }
 
-    /**
-     * Supprime une zone
-     */
     public function suppr($id)
     {
-        $db = Database::getConnection();
         $sql = "DELETE FROM ZONE WHERE ID_ZONE = :id";
-        $stid = oci_parse($db, $sql);
-        oci_bind_by_name($stid, ':id', $id);
-
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-
-        return $r;
+        return $this->executeModify($sql, [':id' => $id]);
     }
-
 
     public function moteurRechercheRecup($searchTerm)
     {
-        /* Récupère les zones correspondant au terme de recherche pour le moteur de recherche
-         */
-        $db = Database::getConnection();
         $sql = "SELECT ID_ZONE, NOM_ZONE FROM ZONE WHERE LOWER(NOM_ZONE) LIKE LOWER(:searchTerm)";
-        $stid = oci_parse($db, $sql);
-        $likeTerm = '%' . $searchTerm . '%';
-        oci_bind_by_name($stid, ':searchTerm', $likeTerm);
-        $r = oci_execute($stid);
-        if (!$r) {
-            $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
-        }
-        $zones = [];
-        oci_fetch_all($stid, $zones, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        return $zones;
+        return $this->executeQueryAll($sql, [':searchTerm' => '%' . $searchTerm . '%']);
     }
 }
