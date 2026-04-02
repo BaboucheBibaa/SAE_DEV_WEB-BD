@@ -18,13 +18,15 @@ class EnclosController extends BaseController {
      * @return void
      */
     public function profilEnclos(float $latitude, float $longitude): void {
-        if ($latitude === null || $longitude === null) {
+        if ($latitude == null || $longitude == null) {
             $this->redirectWithMessage('home', 'Enclos non trouvé.', 'error');
         }
 
         $enclos = $this->serviceEnclos->getEnclosParCoordonnees($latitude, $longitude);
         if (!$enclos) {
-            $this->redirectWithMessage('home', 'Enclos non trouvé.', 'error');
+            echo $latitude;
+            echo $longitude;
+            //$this->redirectWithMessage('home', 'Enclos non trouvé.', 'error');
         }
         $reparations = $this->serviceReparation->getReparationsParEnclos($latitude, $longitude);
         $animaux= $this->serviceAnimal->getAnimalParCoordonnees($latitude, $longitude);

@@ -117,9 +117,13 @@
                 <div id="collapseEspeces" class="accordion-collapse collapse">
                     <div class="accordion-body">
                         <div class="mb-3">
-                            <a href="index.php?action=creationEspece" class="btn btn-success">
+                            <a href="index.php?action=formCreationEspece" class="btn btn-success">
                                 <i class="bi bi-plus-circle"></i> Ajouter une Espèce
                             </a>
+                            <a href="index.php?action=formCreationCompatibilite" class="btn btn-success">
+                                <i class="bi bi-plus-circle"></i> Ajouter une Compatibilité entre Espèces
+                            </a>
+
                         </div>
                         <div class="table-responsive">
                             <table class="table table-sm table-hover">
@@ -299,6 +303,206 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Liste des Enclos -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEnclos">
+                        <i class="bi bi-house me-2"></i> Liste des Enclos (<?= count($enclos ?? []) ?>)
+                    </button>
+                </h2>
+                <div id="collapseEnclos" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="mb-3">
+                            <a href="index.php?action=creationEnclos" class="btn btn-success">
+                                <i class="bi bi-plus-circle"></i> Ajouter un Enclos
+                            </a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Latitude</th>
+                                        <th>Longitude</th>
+                                        <th>Zone</th>
+                                        <th>Type d'Enclos</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($enclos)): ?>
+                                        <?php foreach ($enclos as $e): ?>
+                                            <tr>
+                                                <td><strong><?= htmlspecialchars($e['LATITUDE'] ?? '') ?></strong></td>
+                                                <td><strong><?= htmlspecialchars($e['LONGITUDE'] ?? '') ?></strong></td>
+                                                <td>
+                                                    <?php if (!empty($e['NOM_ZONE'])): ?>
+                                                        <span class="badge bg-success"><?= htmlspecialchars($e['NOM_ZONE']) ?></span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-secondary">Non assignée</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td><?= htmlspecialchars($e['TYPE_ENCLOS'] ?? '-') ?></td>
+                                                <td class="text-center">
+                                                    <div class="btn-group btn-group-sm" role="group">
+                                                        <a href="index.php?action=profilEnclos&latitude=<?= $e['LATITUDE'] ?>&longitude=<?= $e['LONGITUDE'] ?>" class="btn btn-outline-info" title="Voir le profil">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                        <a href="index.php?action=editionEnclos&latitude=<?= $e['LATITUDE'] ?>&longitude=<?= $e['LONGITUDE'] ?>" class="btn btn-outline-warning" title="Modifier">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </a>
+                                                        <a href="index.php?action=supprEnclos&latitude=<?= $e['LATITUDE'] ?>&longitude=<?= $e['LONGITUDE'] ?>" class="btn btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet enclos ?')" title="Supprimer">
+                                                            <i class="bi bi-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">Aucun enclos trouvé</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liste des Prestataires -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrestataires">
+                        <i class="bi bi-briefcase me-2"></i> Liste des Prestataires (<?= count($prestataires ?? []) ?>)
+                    </button>
+                </h2>
+                <div id="collapsePrestataires" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="mb-3">
+                            <a href="index.php?action=creationPrestataire" class="btn btn-success">
+                                <i class="bi bi-plus-circle"></i> Ajouter un Prestataire
+                            </a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nom</th>
+                                        <th>Prénom</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($prestataires)): ?>
+                                        <?php foreach ($prestataires as $prestataire): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($prestataire['ID_PRESTATAIRE'] ?? '') ?></td>
+                                                <td><strong><?= htmlspecialchars($prestataire['NOM_PRESTATAIRE'] ?? '') ?></strong></td>
+                                                <td><?= htmlspecialchars($prestataire['PRENOM_PRESTATAIRE'] ?? '') ?></td>
+                                                <td class="text-center">
+                                                    <div class="btn-group btn-group-sm" role="group">
+                                                        <a href="index.php?action=profilPrestataire&id=<?= $prestataire['ID_PRESTATAIRE'] ?>" class="btn btn-outline-info" title="Voir le profil">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                        <a href="index.php?action=editionPrestataire&id=<?= $prestataire['ID_PRESTATAIRE'] ?>" class="btn btn-outline-warning" title="Modifier">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </a>
+                                                        <a href="index.php?action=supprPrestataire&id=<?= $prestataire['ID_PRESTATAIRE'] ?>" class="btn btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce prestataire ?')" title="Supprimer">
+                                                            <i class="bi bi-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted">Aucun prestataire trouvé</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Liste des Contrats de Travail -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseContrats">
+                        <i class="bi bi-file-earmark-text me-2"></i> Historique des Contrats de Travail (<?= count($contrats ?? []) ?>)
+                    </button>
+                </h2>
+                <div id="collapseContrats" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>ID Contrat</th>
+                                        <th>Employé</th>
+                                        <th>Fonction</th>
+                                        <th>Date Début</th>
+                                        <th>Date Fin</th>
+                                        <th class="text-center">Statut</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (!empty($contrats)): ?>
+                                        <?php foreach ($contrats as $contrat): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($contrat['ID_CONTRAT'] ?? '') ?></td>
+                                                <td>
+                                                    <strong><?= htmlspecialchars(($contrat['NOM'] ?? '') . ' ' . ($contrat['PRENOM'] ?? '')) ?></strong>
+                                                </td>
+                                                <td><?= htmlspecialchars($contrat['NOM_FONCTION'] ?? '-') ?></td>
+                                                <td>
+                                                    <?php
+                                                    $dateDebut = $contrat['DATE_DEBUT'] ?? null;
+                                                    echo $dateDebut;
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    $dateFin = $contrat['DATE_FIN'] ?? null;
+                                                    echo $dateFin;
+                                                    ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <?php
+                                                    $dateFin = $contrat['DATE_FIN'] ?? null;
+                                                    $timestamp = strtotime($dateFin);
+                                                    if ($timestamp && $timestamp < time()) {
+                                                        echo '<span class="badge bg-secondary">Terminé</span>';
+                                                    } else {
+                                                        echo '<span class="badge bg-info">Actif</span>';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <div class="btn-group btn-group-sm" role="group">
+                                                        <a href="index.php?action=supprContrat&id=<?= $contrat['ID_CONTRAT'] ?>" class="btn btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce contrat ?')" title="Supprimer">
+                                                            <i class="bi bi-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">Aucun contrat trouvé</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Liste des Boutiques -->
             <div class="accordion-item">

@@ -73,6 +73,14 @@ class ServiceEmployee
         //Récupère les contrats de travail d'un employé en fonction de son id
         return $this->ContratTravail->getParPersonnel($id);
     }
+
+    /**
+     * Retourne tous les contrats de travail du zoo
+     * @return array|null Tableau des contrats ou null
+     */
+    public function getAllContrats(){
+        return $this->ContratTravail->getAll();
+    }
     /**
      * Récupère un employé par son ID
      * @param int $id ID de l'employé
@@ -153,7 +161,6 @@ class ServiceEmployee
     /**
      * Ajoute un nouvel employé et crée son contrat de travail
      * @return int ID du nouvel employé
-     * @throws ValidationException Si validation échoue ou erreur serveur
      */
     public function ajoutEmployee()
     {
@@ -346,5 +353,15 @@ class ServiceEmployee
             'liste_employes' => $liste_employes,
             'generatedPassword' => $generatedPassword
         ];
+    }
+
+    /**
+     * Supprime un contrat de travail
+     * @param int $id_contrat ID du contrat
+     * @return bool Résultat de la suppression
+     */
+    public function supprContrat($id_contrat)
+    {
+        return $this->ContratTravail->suppr($id_contrat);
     }
 }

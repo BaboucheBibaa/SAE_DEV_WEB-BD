@@ -67,18 +67,26 @@
 
 								<div class="col-md-6">
 									<label for="idPrestataire" class="form-label fw-bold">
-										<i class="bi bi-person-badge"></i> ID du prestataire si impliqué
+										<i class="bi bi-person-badge"></i> Nom du prestataire si impliqué
 									</label>
-									<input
-										type="number"
+									<select
 										class="form-control form-control-lg"
 										id="idPrestataire"
 										name="ID_PRESTATAIRE"
-										min="1"
-										placeholder="Ex : 3"
-										aria-label="Identifiant du prestataire">
+										aria-label="Sélectionner un prestataire">
+										<option value="">-- Aucun prestataire --</option>
+										<?php if (!empty($prestataires)): ?>
+											<?php foreach ($prestataires as $prestataire): ?>
+												<option value="<?= htmlspecialchars($prestataire['ID_PRESTATAIRE']) ?>">
+													<?= htmlspecialchars($prestataire['NOM_PRESTATAIRE'] . ' ' . $prestataire['PRENOM_PRESTATAIRE']) ?>
+												</option>
+											<?php endforeach; ?>
+										<?php else: ?>
+											<option value="" disabled>Aucun prestataire disponible</option>
+										<?php endif; ?>
+									</select>
 									<small class="form-text text-muted d-block mt-1">
-										Laissez vide si aucun prestataire externe n'est impliqué.
+										Sélectionnez un prestataire externe si impliqué dans l'intervention.
 									</small>
 								</div>
 

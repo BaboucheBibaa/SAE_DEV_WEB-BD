@@ -84,7 +84,7 @@ class SearchController extends BaseController
             }
         }
 
-        $zones = $this->serviceZone->getToutesLesZones();
+        $zones = $this->serviceZone->getAll();
 
         $this->render('test-moteur-recherche', [
             'title' => 'Résultats de Recherche - Zoo\'land',

@@ -5,8 +5,8 @@ define("SOIGNEUR", 3);
 define("RESPBOUTIQUE", 4);
 define("EMPLOYEE_BOUTIQUE", 5);
 define("ENTRETIEN", 6);
-define("COMPTABLE",7);
-define("VETERINAIRE",8);
+define("COMPTABLE", 7);
+define("VETERINAIRE", 8);
 
 session_start();
 
@@ -16,6 +16,7 @@ require_once 'config/database.php';
 
 require_once 'models/BaseModel.php';
 
+require_once 'models/m-Prestataire.php';
 require_once 'models/m-Parrainage.php';
 require_once 'models/m-Compatibilite.php';
 require_once 'models/m-Enclos.php';
@@ -32,6 +33,7 @@ require_once 'models/m-Zone.php';
 require_once 'models/m-ContratTravail.php';
 require_once 'models/m-CA.php';
 require_once 'models/m-LogWriter.php';
+require_once 'models/m-Comptable.php';
 
 require_once 'utilities/Utils.php';
 
@@ -46,6 +48,8 @@ require_once 'services/ServiceParrainage.php';
 require_once 'services/ServiceEnclos.php';
 require_once 'services/ServiceReparation.php';
 require_once 'services/ServiceEspece.php';
+require_once 'services/ServiceCompatibilite.php';
+require_once 'services/ServiceComptable.php';
 
 require_once 'controllers/c-base.php';
 require_once 'controllers/c-soigneurs.php';
@@ -62,6 +66,7 @@ require_once 'controllers/c-profilZone.php';
 require_once 'controllers/c-personnelEntretien.php';
 require_once 'controllers/c-profilBoutique.php';
 require_once 'controllers/c-espece.php';
+require_once 'controllers/c-comptable.php';
 
 if (!file_exists('logs.txt')) {
     touch('logs.txt');
@@ -111,6 +116,28 @@ switch ($action) {
     case 'supprimerSoin':
     case 'supprimerNourriture':
     case 'supprimerEspece':
+    case 'formCreationEspece':
+    case 'ajoutEspece':
+    case 'formEditionEspece':
+    case 'updateEspece':
+    case 'formCreationCompatibilite':
+    case 'ajoutCompatibilite':
+    case 'supprCompatibilite':
+    case 'creationPrestataire':
+    case 'ajoutPrestataire':
+    case 'editionPrestataire':
+    case 'updatePrestataire':
+    case 'supprPrestataire':
+    case 'creationEnclos':
+    case 'ajoutEnclos':
+    case 'editionEnclos':
+    case 'majEnclos':
+    case 'supprEnclos':
+    case 'supprContrat':
+    case 'supprReparation':
+    case 'modifReparation':
+    case 'formEditionReparation':
+    case 'updateReparation':
         $controller = new AdminController();
         break;
     case 'respZoneDashboard':
@@ -156,6 +183,12 @@ switch ($action) {
         break;
     case 'profilBoutique':
         $controller = new BoutiqueProfilController();
+        break;
+    case 'comptableDashboard':
+    case 'statsBoutiques':
+    case 'statsZones':
+    case 'statsMasseSalariale':
+        $controller = new ComptableController();
         break;
     default:
         echo "Page introuvable";
@@ -280,7 +313,7 @@ switch ($action) {
         break;
 
     case 'supprimerCA':
-        $controller->supprCA($_GET['idBoutique'],urldecode($_GET['date']));
+        $controller->supprCA($_GET['idBoutique'], urldecode($_GET['date']));
         break;
     case 'profilEnclos':
         $controller->profilEnclos($_GET['latitude'], $_GET['longitude']);
@@ -361,17 +394,98 @@ switch ($action) {
         break;
 
     case 'supprimerSoin':
-        $controller->supprSoin($_GET['idAnimal'],urldecode($_GET['dateSoin']));
+        $controller->supprSoin($_GET['idAnimal'], urldecode($_GET['dateSoin']));
         break;
     case 'supprimerNourriture':
-        $controller->supprNourriture($_GET['idAnimal'],$_GET['idSoigneur'],urldecode($_GET['dateNourrit']));
+        $controller->supprNourriture($_GET['idAnimal'], $_GET['idSoigneur'], urldecode($_GET['dateNourrit']));
         break;
     case 'supprimerEspece':
         $controller->supprEspece($_GET['id']);
         break;
+    case 'formCreationEspece':
+        $controller->formCreationEspece();
+        break;
+    case 'ajoutEspece':
+        $controller->ajoutEspece();
+        break;
+    case 'formEditionEspece':
+        $controller->formEditionEspece($_GET['id']);
+        break;
+    case 'updateEspece':
+        $controller->updateEspece($_GET['id']);
+        break;
+    case 'formCreationCompatibilite':
+        $controller->formCreationCompatibilite();
+        break;
+    case 'ajoutCompatibilite':
+        $controller->ajoutCompatibilite();
+        break;
+    case 'supprCompatibilite':
+        $controller->supprCompatibilite();
+        break;
     case 'profilEspece':
         $controller->profilEspece($_GET['id']);
         break;
+    case 'creationPrestataire':
+        $controller->formCreationPrestataire();
+        break;
+    case 'ajoutPrestataire':
+        $controller->ajoutPrestataire();
+        break;
+    case 'editionPrestataire':
+        $controller->formEditionPrestataire($_GET['id']);
+        break;
+    case 'updatePrestataire':
+        $controller->majPrestataire($_GET['id']);
+        break;
+    case 'supprPrestataire':
+        $controller->supprPrestataire($_GET['id']);
+        break;
+
+    case 'supprContrat':
+        $controller->supprContrat($_GET['id']);
+        break;
+
+    case 'modifReparation':
+        $controller->formEditionReparation(urldecode($_GET['dateReparation']),$_GET['latitude'],$_GET['longitude']);
+    case 'creationEnclos':
+        $controller->formCreationEnclos();
+        break;
+    case 'ajoutEnclos':
+        $controller->ajoutEnclos();
+        break;
+    case 'editionEnclos':
+        $controller->formEditionEnclos();
+        break;
+    case 'majEnclos':
+        $controller->majEnclos();
+        break;
+    case 'supprEnclos':
+        $controller->supprEnclos();
+        break;
+    case 'supprReparation':
+        $controller->supprReparation(urldecode($_GET['dateReparation']),$_GET['longitude'],$_GET['latitude']);
+        break;
+    case 'formEditionReparation':
+        $controller->formEditionReparation(urldecode($_GET['date_debut']),$_GET['latitude'],$_GET['longitude']);
+        break;
+    case 'updateReparation':
+        $controller->updateReparation();
+        break;
+
+    case 'comptableDashboard':
+        $controller->dashboard();
+        break;
+    case 'statsBoutiques':
+        $controller->statsBoutiques();
+        break;
+    case 'statsZones':
+        $controller->statsZones();
+        break;
+    case 'statsMasseSalariale':
+        $controller->statsMasseSalariale();
+        break;
+
     case 'search':
         $controller->gererRequete();
         break;

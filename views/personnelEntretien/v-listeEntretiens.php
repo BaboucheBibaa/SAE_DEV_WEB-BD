@@ -35,27 +35,54 @@
 									<th>Prestataire</th>
 									<th>Nature</th>
 									<th>Cout</th>
+									<th class="text-center">Actions</th>
 								</tr>
 							</thead>
 							<tbody>
 								<?php foreach ($reparations as $reparation): ?>
 									<tr>
 										<td>
-											<?= htmlspecialchars(!empty($reparation['DATE_DEBUT_REPARATION']) ? date('d/m/Y', strtotime($reparation['DATE_DEBUT_REPARATION'])) : '-') ?>
+											<?php echo $reparation['DATE_DEBUT_REPARATION'] ?? null;?>
 										</td>
 										<td>
-											<?= htmlspecialchars(!empty($reparation['DATE_FIN']) ? date('d/m/Y', strtotime($reparation['DATE_FIN'])) : 'En cours') ?>
+											<?php echo $reparation['DATE_FIN'];?>
 										</td>
 										<td>
 											<span class="small text-muted d-block">Lat: <?= htmlspecialchars($reparation['LATITUDE_ENCLOS'] ?? '-') ?></span>
 											<span class="small text-muted d-block">Lng: <?= htmlspecialchars($reparation['LONGITUDE_ENCLOS'] ?? '-') ?></span>
 										</td>
 										<td><?= htmlspecialchars($reparation['TYPE_ENCLOS'] ?? '-') ?></td>
-										<td><?= htmlspecialchars($reparation['ID_ZONE'] ?? '-') ?></td>
-										<td><?= htmlspecialchars($reparation['ID_PRESTATAIRE'] ?? 'Interne') ?></td>
+										<td>
+											<?php if (!empty($reparation['NOM_ZONE'])): ?>
+												<span class="badge bg-success">
+													<?= htmlspecialchars($reparation['NOM_ZONE']) ?>
+												</span>
+											<?php else: ?>
+												<span class="text-muted">-</span>
+											<?php endif; ?>
+										</td>
+										<td>
+											<?php if (!empty($reparation['NOM_PRESTATAIRE'])): ?>
+												<span class="badge bg-info">
+													<?= htmlspecialchars($reparation['NOM_PRESTATAIRE']) ?>
+												</span>
+											<?php else: ?>
+												<span class="badge bg-secondary">Interne</span>
+											<?php endif; ?>
+										</td>
 										<td style="min-width: 240px;"><?= htmlspecialchars($reparation['NATURE_REPARATION'] ?? '-') ?></td>
 										<td>
 											<?= htmlspecialchars(isset($reparation['COUT_REPARATION']) ? number_format((float) $reparation['COUT_REPARATION'], 2, ',', ' ') . ' EUR' : '-') ?>
+										</td>
+										<td class="text-center">
+											<div class="btn-group btn-group-sm" role="group">
+												<a href="index.php?action=supprReparation&date_debut=<?= urlencode($reparation['DATE_DEBUT_REPARATION']) ?>&latitude=<?= $reparation['LATITUDE_ENCLOS'] ?>&longitude=<?= $reparation['LONGITUDE_ENCLOS'] ?>" 
+													onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet entretien ?')" 
+													class="btn btn-outline-danger btn-sm" 
+													title="Supprimer">
+													<i class="bi bi-trash"></i>
+												</a>
+											</div>
 										</td>
 									</tr>
 								<?php endforeach; ?>

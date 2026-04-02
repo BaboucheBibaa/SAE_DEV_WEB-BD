@@ -117,10 +117,10 @@
                             <table class="table table-hover mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Montant</th>
+                                        <th>Date</th>
+                                        <th>Montant</th>
                                         <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
-                                            <th scope="col">Actions</th>
+                                            <th>Actions</th>
                                         <?php endif; ?>
                                     </tr>
                                 </thead>
@@ -130,7 +130,7 @@
                                             <td><?= htmlspecialchars($CA['DATE_CA_JOURNALIER'] ?? '') ?></td>
                                             <td><?= htmlspecialchars($CA['MONTANT'] ?? '') ?></td>
                                             <?php if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
-                                                <td scope="col">
+                                                <td>
                                                     <a href="index.php?action=supprimerCA&date=<?= urlencode($CA['DATE_CA_JOURNALIER'])?>&idBoutique=<?= $CA['ID_BOUTIQUE'] ?>"
                                                     class="btn btn-sm btn-outline-danger">
                                                     <i class="bi bi-trash"></i> Supprimer

@@ -26,10 +26,15 @@ class PersonnelEntretienController extends BaseController
      *
      * @return void
      */
-    public function formAjoutEntretien(): void {
+    public function formAjoutEntretien(): void
+    {
         $this->requireRole(ENTRETIEN);
+        $prestataires = $this->serviceReparation->getAllPrestataires();
         $title = "Ajouter une Tâche d'Entretien - Zoo'land";
-        $this->render('personnelEntretien/v-formAjoutEntretien', ['title' => $title]);
+        $this->render('personnelEntretien/v-formAjoutEntretien', [
+            'title' => $title,
+            'prestataires' => $prestataires
+        ]);
     }
 
     /**
@@ -79,6 +84,9 @@ class PersonnelEntretienController extends BaseController
         $this->requireRole(ENTRETIEN);
         $title = "Liste des Entretiens - Zoo'land";
         $reparations = $this->serviceReparation->getReparationsParPersonnel($_SESSION['user']['ID_PERSONNEL']);
-        $this->render('personnelEntretien/v-listeEntretiens', ['title' => $title, 'reparations' => $reparations]);
+        $this->render('personnelEntretien/v-listeEntretiens', [
+            'title' => $title,
+            'reparations' => $reparations
+        ]);
     }
 }

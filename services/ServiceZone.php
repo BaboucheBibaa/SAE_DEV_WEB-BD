@@ -14,7 +14,7 @@ class ServiceZone
      * Récupère toutes les zones
      * @return array|null Tableau de toutes les zones ou null
      */
-    public function getToutesLesZones()
+    public function getAll()
     {
         //Récupère toutes les zones de la base de données
         return $this->Zone->getAll();

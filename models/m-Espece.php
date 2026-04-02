@@ -13,6 +13,39 @@ class Espece extends BaseModel
         return $this->executeQuery($query, [':id_espece' => $id]);
     }
 
+    public function creer($data)
+    {
+        $query = "INSERT INTO Espece (ID_ESPECE, NOM_ESPECE, NOM_LATIN_ESPECE, EST_MENACEE) 
+                 VALUES ((SELECT NVL(MAX(ID_ESPECE), 0) + 1 FROM Espece), :nom_espece, :nom_latin_espece, :est_menacee)";
+        return $this->executeModify($query, [
+            ':nom_espece' => $data['nom_espece'],
+            ':nom_latin_espece' => $data['nom_latin_espece'],
+            ':est_menacee' => $data['est_menacee'],
+        ]);
+    }
+
+    /**
+     * Met à jour une espèce existante
+     * 
+     * @param int $id ID de l'espèce
+     * @param array $data Données à mettre à jour
+     * @return bool Succès de l'opération
+     */
+    public function update($id, $data)
+    {
+        $query = "UPDATE Espece 
+                 SET NOM_ESPECE = :nom_espece, 
+                     NOM_LATIN_ESPECE = :nom_latin_espece, 
+                     EST_MENACEE = :est_menacee 
+                 WHERE ID_ESPECE = :id_espece";
+        return $this->executeModify($query, [
+            ':id_espece' => $id,
+            ':nom_espece' => $data['nom_espece'],
+            ':nom_latin_espece' => $data['nom_latin_espece'],
+            ':est_menacee' => $data['est_menacee'],
+        ]);
+    }
+
     public function suppr($id_espece)
     {
         $query = "DELETE FROM ESPECE WHERE ID_ESPECE = :id_espece";

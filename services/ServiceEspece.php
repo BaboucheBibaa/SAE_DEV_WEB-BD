@@ -27,6 +27,46 @@ class ServiceEspece {
     }
 
     /**
+     * Récupère une espèce par son ID (alias pour getParID)
+     * @param int $id ID de l'espèce
+     * @return array|null Données de l'espèce ou null
+     */
+    public function getEspeceParID($id){
+        return $this->getParID($id);
+    }
+
+    public function ajouterEspece(){
+            $data = [
+            'nom_espece' => $_POST['nom_espece_cree'] ?? null,
+            'nom_latin_espece' => $_POST['nom_latin_espece_cree'] ?? null,
+            'est_menacee' => $_POST['est_menacee_cree'] ?? null,
+        ];
+
+        return $this->Espece->creer($data);
+    }
+
+    /**
+     * Ajoute une nouvelle espèce
+     * @param array $data Données de l'espèce
+     * @return bool|null Résultat de la création
+     */
+    public function ajoutEspece($data)
+    {
+        return $this->Espece->creer($data);
+    }
+
+    /**
+     * Met à jour une espèce
+     * @param int $id ID de l'espèce
+     * @param array $data Données à mettre à jour
+     * @return bool|null Résultat de la mise à jour
+     */
+    public function updateEspece($id, $data)
+    {
+        return $this->Espece->update($id, $data);
+    }
+
+    /**
      * Supprime une espèce de la base de données
      * @param int $id_espece ID de l'espèce à supprimer
      * @return bool|null Résultat de la suppression

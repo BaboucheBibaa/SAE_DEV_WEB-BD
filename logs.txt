@@ -126,3 +126,43 @@
 [2026-04-01 18:26:34] [SUPPRESSION_BD] Espèce supprimée: id=1
 [2026-04-01 18:27:11] [SUPPRESSION_BD] Espèce supprimée: id=2
 [2026-04-01 21:55:29] [SUPPRESSION_BD] Zone supprimée: id=1
+[2026-04-02 05:05:28] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-02 05:35:38] [INSERTION_BD] Nouveau prestataire ajouté
+[2026-04-02 05:38:27] [UPDATE_BD] Prestataire mis à jour: id=6
+[2026-04-02 05:39:20] [SUPPRESSION_BD] Prestataire supprimé: id=6
+[2026-04-02 05:43:10] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-02 05:43:17] [CONNEXION] Connexion réussie: login=mcrampteur, id=10
+[2026-04-02 05:43:20] [DECONNEXION] Déconnexion utilisateur id=10
+[2026-04-02 05:43:25] [CONNEXION] Connexion réussie: login=mpoulet, id=8
+[2026-04-02 05:53:05] [DECONNEXION] Déconnexion utilisateur id=8
+[2026-04-02 05:53:09] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-02 06:09:44] [SUPPRESSION_BD] Contrat de travail supprimé: id=24
+[2026-04-02 06:10:20] [SUPPRESSION_BD] Employé supprimé: id=23
+[2026-04-02 06:30:38] [UPDATE_BD] Enclos mis à jour - Lat: 20, Long: 25
+[2026-04-02 06:30:58] [INSERTION_BD] Nouvel enclos ajouté - Lat: 65, Long: 30
+[2026-04-02 06:31:04] [SUPPRESSION_BD] Enclos supprimé - Lat: 65, Long: 30
+[2026-04-02 07:12:09] [SUPPRESSION_BD] Réparation supprimée - Date: 17/03/26, Lat: 20, Long: 25
+[2026-04-02 07:15:09] [SUPPRESSION_BD] Réparation supprimée - Date: 17/03/26, Lat: 20, Long: 25
+[2026-04-02 07:32:33] [INSERTION_BD] Nouvelle espèce ajoutée: Test
+[2026-04-02 07:32:44] [UPDATE_BD] Espèce mise à jour: id=14
+[2026-04-02 07:38:03] [INSERTION_BD] Compatibilité ajoutée entre espèce 14 et 1
+[2026-04-02 07:38:33] [SUPPRESSION_BD] Espèce supprimée: id=14
+[2026-04-02 08:28:32] [MODIFICATION_BD] Réparation modifiée - Date: 17/03/26, Lat: 20, Long: 25
+[2026-04-02 08:28:40] [MODIFICATION_BD] Réparation modifiée - Date: 17/03/26, Lat: 20, Long: 25
+[2026-04-02 09:33:28] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-02 09:33:36] [ERREUR] Échec connexion: login=ccomptable
+[2026-04-02 09:33:40] [ERREUR] Échec connexion: login=
+[2026-04-02 09:33:43] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-02 09:33:56] [UPDATE_BD] Employé mis à jour: id=24
+[2026-04-02 09:33:59] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-02 09:34:03] [CONNEXION] Connexion réussie: login=ccomptable, id=24
+[2026-04-02 09:48:30] [DECONNEXION] Déconnexion utilisateur id=24
+[2026-04-02 09:48:31] [ERREUR] Échec connexion: login=
+[2026-04-02 09:48:35] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-02 09:49:26] [UPDATE_BD] Employé mis à jour: id=24
+[2026-04-02 09:49:29] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-02 09:49:33] [CONNEXION] Connexion réussie: login=ccomptable, id=24
+[2026-04-02 09:55:26] [DECONNEXION] Déconnexion utilisateur id=24
+[2026-04-02 09:55:37] [CONNEXION] Connexion réussie: login=ddupont, id=3
+[2026-04-02 10:02:14] [DECONNEXION] Déconnexion utilisateur id=3
+[2026-04-02 10:02:18] [CONNEXION] Connexion réussie: login=admin, id=1

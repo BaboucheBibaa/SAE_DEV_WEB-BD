@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($title ?? "Zoo'land") ?></title> 
+    <title><?= htmlspecialchars($title ?? "Zoo'land") ?></title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
+
 <body class="d-flex flex-column min-vh-100">
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
@@ -53,6 +54,11 @@
                                 <a class="nav-link" href="index.php?action=personnelEntretienDashboard">Dashboard Personnel d'entretien</a>
                             </li>
 
+                        <?php }
+                        if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == COMPTABLE) { ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.php?action=comptableDashboard">Dashboard Comptable</a>
+                            </li>
                         <?php }
                         if (!empty($_SESSION['user'])): ?>
                             <li class="nav-item dropdown">

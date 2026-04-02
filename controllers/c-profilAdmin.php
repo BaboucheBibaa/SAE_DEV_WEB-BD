@@ -12,6 +12,7 @@ class AdminController extends BaseController
     private $serviceSoin;
 
     private $serviceEspece;
+    private $serviceCompatibilite;
 
     //constructeur de la classe
     public function __construct()
@@ -26,6 +27,7 @@ class AdminController extends BaseController
         $this->serviceEnclos = new ServiceEnclos();
         $this->serviceSoin = new ServiceSoin();
         $this->serviceEspece = new ServiceEspece();
+        $this->serviceCompatibilite = new ServiceCompatibilite();
     }
 
     //  Dashboard admin
@@ -66,10 +68,14 @@ class AdminController extends BaseController
         }
 
         $employees = $this->serviceEmployee->getTousEmployees($filtreArchive);
-        $zones = $this->serviceZone->getToutesLesZones();
+        $zones = $this->serviceZone->getAll();
         $boutiques = $this->serviceBoutique->getToutesLesBoutiques();
         $animals = $this->serviceAnimal->getTousAnimaux();
         $especes = $this->serviceEspece->getAll();
+        $prestataires = $this->serviceReparation->getAllPrestataires();
+        $contrats = $this->serviceEmployee->getAllContrats();
+        $enclos = $this->serviceEnclos->getAll();
+        $compatibilites = $this->serviceCompatibilite->getAll();
         if ($employees === null || $zones === null || $boutiques === null || $animals === null) {
             $this->redirectWithMessage('home', 'Erreur lors de la récupération des données pour le dashboard admin.', 'error');
         }
@@ -80,7 +86,11 @@ class AdminController extends BaseController
             'zones' => $zones,
             'boutiques' => $boutiques,
             'animals' => $animals,
-            'especes' => $especes
+            'especes' => $especes,
+            'prestataires' => $prestataires,
+            'contrats' => $contrats,
+            'enclos' => $enclos,
+            'compatibilites' => $compatibilites
         ]);
     }
 
@@ -754,6 +764,681 @@ class AdminController extends BaseController
                 "Erreur lors de la suppression de l\'espèce id={$id_espece} "
             );
             $this->redirectWithMessage("adminDashboard", 'Erreur lors de la suppression de l\'espèce.', 'error');
+        }
+    }
+
+    /**
+     * Affiche le formulaire de création d'une espèce
+     *
+     * @return void
+     */
+    public function formCreationEspece(): void
+    {
+        $this->requireRole(ADMINID);
+        $this->render('administrateur/v-createEspece', [
+            'title' => 'Créer une espèce'
+        ]);
+    }
+
+    /**
+     * Traite l'ajout d'une nouvelle espèce
+     *
+     * @return void
+     */
+    public function ajoutEspece(): void
+    {
+        $this->requireRole(ADMINID);
+        $data = [
+            'nom_espece' => $_POST['nom_espece'] ?? '',
+            'nom_latin_espece' => $_POST['nom_latin'] ?? '',
+            'est_menacee' => $_POST['est_menacee'] ?? ''
+        ];
+
+        if (empty($data['nom_espece']) || empty($data['nom_latin_espece']) || $data['est_menacee'] === '') {
+            $this->redirectWithMessage('formCreationEspece', 'Tous les champs sont obligatoires.', 'error');
+            return;
+        }
+
+        if ($this->serviceEspece->ajoutEspece($data)) {
+            $this->logEvent(
+                'INSERTION_BD',
+                "Nouvelle espèce ajoutée: {$data['nom_espece']}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Espèce ajoutée avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de l'ajout d'une espèce"
+            );
+            $this->redirectWithMessage('formCreationEspece', 'Erreur lors de l\'ajout de l\'espèce.', 'error');
+        }
+    }
+
+    /**
+     * Affiche le formulaire d'édition d'une espèce
+     *
+     * @param int $id Identifiant de l'espèce à éditer
+     * @return void
+     */
+    public function formEditionEspece(int $id): void
+    {
+        $this->requireRole(ADMINID);
+        $espece = $this->serviceEspece->getEspeceParID($id);
+
+        if (!$espece) {
+            $this->redirectWithMessage('adminDashboard', 'Espèce non trouvée.', 'error');
+            return;
+        }
+
+        $this->render('administrateur/v-editionEspece', [
+            'espece' => $espece,
+            'title' => 'Modifier une espèce'
+        ]);
+    }
+
+    /**
+     * Met à jour les informations d'une espèce
+     *
+     * @param int $id Identifiant de l'espèce à mettre à jour
+     * @return void
+     */
+    public function updateEspece(int $id): void
+    {
+        $this->requireRole(ADMINID);
+        $data = [
+            'nom_espece' => $_POST['nom_espece_modif'] ?? '',
+            'nom_latin_espece' => $_POST['nom_latin_modif'] ?? '',
+            'est_menacee' => $_POST['est_menacee_modif'] ?? ''
+        ];
+
+        if (empty($data['nom_espece']) || empty($data['nom_latin_espece']) || $data['est_menacee'] === '') {
+            $this->redirectWithMessage('formEditionEspece', 'Tous les champs sont obligatoires.', 'error');
+            return;
+        }
+
+        // Vérifier que l'espèce existe
+        $espece = $this->serviceEspece->getEspeceParID($id);
+        if (!$espece) {
+            $this->redirectWithMessage('adminDashboard', 'Espèce non trouvée.', 'error');
+            return;
+        }
+
+        if ($this->serviceEspece->updateEspece($id, $data)) {
+            $this->logEvent(
+                'UPDATE_BD',
+                "Espèce mise à jour: id={$id}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Espèce mise à jour avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la mise à jour de l'espèce id={$id}"
+            );
+            $this->redirectWithMessage('formEditionEspece', 'Erreur lors de la mise à jour de l\'espèce.', 'error');
+        }
+    }
+
+    // ========================
+    //  Prestataires
+    // ========================
+
+    /**
+     * Affiche le formulaire de création d'un prestataire
+     *
+     * @return void
+     */
+    public function formCreationPrestataire(): void
+    {
+        $this->requireRole(ADMINID);
+        $this->render('administrateur/v-createPrestataire', [
+            'title' => 'Créer un prestataire'
+        ]);
+    }
+
+    /**
+     * Traite l'ajout d'un nouveau prestataire
+     *
+     * @return void
+     */
+    public function ajoutPrestataire(): void
+    {
+        $this->requireRole(ADMINID);
+        if ($this->serviceReparation->ajoutPrestataire()) {
+            $this->logEvent(
+                'INSERTION_BD',
+                "Nouveau prestataire ajouté"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Prestataire ajouté avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de l'ajout d'un prestataire"
+            );
+            $this->redirectWithMessage('creationPrestataire', 'Erreur lors de l\'ajout du prestataire.', 'error');
+        }
+    }
+
+    /**
+     * Affiche le formulaire d'édition d'un prestataire
+     *
+     * @param int $id Identifiant du prestataire à éditer
+     * @return void
+     */
+    public function formEditionPrestataire(int $id): void
+    {
+        $this->requireRole(ADMINID);
+        $prestataire = $this->serviceReparation->getAllPrestataires();
+
+        // Chercher le prestataire avec l'ID spécifié
+        $prestataire_trouve = null;
+        if ($prestataire) {
+            foreach ($prestataire as $p) {
+                if ($p['ID_PRESTATAIRE'] == $id) {
+                    $prestataire_trouve = $p;
+                    break;
+                }
+            }
+        }
+
+        if ($prestataire_trouve === null) {
+            $this->redirectWithMessage('adminDashboard', 'Prestataire non trouvé.', 'error');
+        } else {
+            $this->render('administrateur/v-editionPrestataire', [
+                'prestataire' => $prestataire_trouve,
+                'title' => 'Modifier un prestataire'
+            ]);
+        }
+    }
+
+    /**
+     * Met à jour les informations d'un prestataire
+     *
+     * @param int $id Identifiant du prestataire à mettre à jour
+     * @return void
+     */
+    public function majPrestataire(int $id): void
+    {
+        $this->requireRole(ADMINID);
+        $data = [
+            'NOM_PRESTATAIRE' => $_POST['nom_modif'] ?? '',
+            'PRENOM_PRESTATAIRE' => $_POST['prenom_modif'] ?? ''
+        ];
+
+        if (empty($data['NOM_PRESTATAIRE']) || empty($data['PRENOM_PRESTATAIRE'])) {
+            $this->redirectWithMessage('editionPrestataire', 'Tous les champs sont obligatoires.', 'error');
+            return;
+        }
+
+        // Récupérer le modèle Prestataire via la service
+        $prestataire = $this->serviceReparation->getPrestataireByID($id);
+        if (!$prestataire) {
+            $this->redirectWithMessage('adminDashboard', 'Prestataire non trouvé.', 'error');
+            return;
+        }
+
+        // Appel direct au modèle via la service
+        if ($this->serviceReparation->updatePrestataire($id, $data)) {
+            $this->logEvent(
+                'UPDATE_BD',
+                "Prestataire mis à jour: id={$id}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Prestataire mis à jour avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la mise à jour du prestataire id={$id}"
+            );
+            $this->redirectWithMessage('editionPrestataire', 'Erreur lors de la mise à jour du prestataire.', 'error');
+        }
+    }
+
+    /**
+     * Supprime un prestataire de la base de données
+     *
+     * @param int $id Identifiant du prestataire à supprimer
+     * @return void
+     */
+    public function supprPrestataire(int $id): void
+    {
+        $this->requireRole(ADMINID);
+        // Vérifier que le prestataire existe
+        $prestataire = $this->serviceReparation->getPrestataireByID($id);
+
+        if (!$prestataire) {
+            $this->redirectWithMessage('adminDashboard', 'Prestataire non trouvé.', 'error');
+            return;
+        }
+
+        if ($this->serviceReparation->supprPrestataire($id)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Prestataire supprimé: id={$id}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Prestataire supprimé avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression du prestataire id={$id}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression du prestataire.', 'error');
+        }
+    }
+
+    // ========================
+    //  Contrats de travail
+    // ========================
+
+    /**
+     * Supprime un contrat de travail
+     *
+     * @param int $id_contrat Identifiant du contrat à supprimer
+     * @return void
+     */
+    public function supprContrat(int $id_contrat): void
+    {
+        $this->requireRole(ADMINID);
+
+        if ($this->serviceEmployee->supprContrat($id_contrat)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Contrat de travail supprimé: id={$id_contrat}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Contrat de travail supprimé avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression du contrat id={$id_contrat}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression du contrat.', 'error');
+        }
+    }
+
+    // ========================
+    //  Enclos
+    // ========================
+
+    /**
+     * Affiche le formulaire de création d'un enclos
+     *
+     * @return void
+     */
+    public function formCreationEnclos(): void
+    {
+        $this->requireRole(ADMINID);
+        $zones = $this->serviceZone->getAll();
+        $this->render('administrateur/v-createEnclos', [
+            'zones' => $zones,
+            'title' => 'Créer un enclos'
+        ]);
+    }
+
+    /**
+     * Traite l'ajout d'un nouvel enclos
+     *
+     * @return void
+     */
+    public function ajoutEnclos(): void
+    {
+        $this->requireRole(ADMINID);
+        $data = [
+            'LATITUDE' => $_POST['latitude'] ?? '',
+            'LONGITUDE' => $_POST['longitude'] ?? '',
+            'ID_ZONE' => $_POST['id_zone'] ?? '',
+            'TYPE_ENCLOS' => $_POST['type_enclos'] ?? ''
+        ];
+
+        if (empty($data['LATITUDE']) || empty($data['LONGITUDE']) || empty($data['ID_ZONE']) || empty($data['TYPE_ENCLOS'])) {
+            $this->redirectWithMessage('formCreationEnclos', 'Tous les champs sont obligatoires.', 'error');
+            return;
+        }
+
+        if ($this->serviceEnclos->ajoutEnclos($data)) {
+            $this->logEvent(
+                'INSERTION_BD',
+                "Nouvel enclos ajouté - Lat: {$data['LATITUDE']}, Long: {$data['LONGITUDE']}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Enclos ajouté avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de l'ajout d'un enclos"
+            );
+            $this->redirectWithMessage('formCreationEnclos', 'Erreur lors de l\'ajout de l\'enclos.', 'error');
+        }
+    }
+
+    /**
+     * Affiche le formulaire d'édition d'un enclos
+     *
+     * @return void
+     */
+    public function formEditionEnclos(): void
+    {
+        $this->requireRole(ADMINID);
+        $latitude = $_GET['latitude'] ?? null;
+        $longitude = $_GET['longitude'] ?? null;
+
+        if (!$latitude || !$longitude) {
+            $this->redirectWithMessage('adminDashboard', 'Enclos non trouvé.', 'error');
+            return;
+        }
+
+        $enclos = $this->serviceEnclos->getEnclosParCoordonnees($latitude, $longitude);
+        if (!$enclos) {
+            $this->redirectWithMessage('adminDashboard', 'Enclos non trouvé.', 'error');
+            return;
+        }
+
+        $zones = $this->serviceZone->getAll();
+        $this->render('administrateur/v-editionEnclos', [
+            'enclos' => $enclos,
+            'zones' => $zones,
+            'title' => 'Modifier un enclos'
+        ]);
+    }
+
+    /**
+     * Met à jour les informations d'un enclos
+     *
+     * @return void
+     */
+    public function majEnclos(): void
+    {
+        $this->requireRole(ADMINID);
+        $latitude = $_GET['latitude'] ?? null;
+        $longitude = $_GET['longitude'] ?? null;
+
+        if (!$latitude || !$longitude) {
+            $this->redirectWithMessage('adminDashboard', 'Enclos non trouvé.', 'error');
+            return;
+        }
+
+        $data = [
+            'ID_ZONE' => $_POST['id_zone'] ?? '',
+            'TYPE_ENCLOS' => $_POST['type_enclos'] ?? ''
+        ];
+
+        if (empty($data['ID_ZONE']) || empty($data['TYPE_ENCLOS'])) {
+            $this->redirectWithMessage('formEditionEnclos', 'Tous les champs sont obligatoires.', 'error');
+            return;
+        }
+
+        if ($this->serviceEnclos->majEnclos($latitude, $longitude, $data)) {
+            $this->logEvent(
+                'UPDATE_BD',
+                "Enclos mis à jour - Lat: {$latitude}, Long: {$longitude}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Enclos mis à jour avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la mise à jour de l'enclos Lat: {$latitude}, Long: {$longitude}"
+            );
+            $this->redirectWithMessage('formEditionEnclos', 'Erreur lors de la mise à jour de l\'enclos.', 'error');
+        }
+    }
+
+    /**
+     * Supprime un enclos de la base de données
+     *
+     * @return void
+     */
+    public function supprEnclos(): void
+    {
+        $this->requireRole(ADMINID);
+        $latitude = $_GET['latitude'] ?? null;
+        $longitude = $_GET['longitude'] ?? null;
+
+        if (!$latitude || !$longitude) {
+            $this->redirectWithMessage('adminDashboard', 'Enclos non trouvé.', 'error');
+            return;
+        }
+
+        $enclos = $this->serviceEnclos->getEnclosParCoordonnees($latitude, $longitude);
+        if (!$enclos) {
+            $this->redirectWithMessage('adminDashboard', 'Enclos non trouvé.', 'error');
+            return;
+        }
+
+        if ($this->serviceEnclos->supprEnclos($latitude, $longitude)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Enclos supprimé - Lat: {$latitude}, Long: {$longitude}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Enclos supprimé avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression de l'enclos Lat: {$latitude}, Long: {$longitude}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de l\'enclos.', 'error');
+        }
+    }
+
+    // ========================
+    //  Réparations/Entretiens
+    // ========================
+
+    /**
+     * Supprime une réparation/entretien
+     *
+     * @return void
+     */
+    public function supprReparation($dateDebut,$longitude,$latitude): void
+    {
+        $this->requireRole(ADMINID);
+        if (!$dateDebut || !$latitude || !$longitude) {
+            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation non trouvée.', 'error');
+            return;
+        }
+
+        // Vérifier que la réparation existe
+        $reparation = $this->serviceReparation->getReparation($dateDebut,$longitude,$latitude);
+
+        if (!$reparation) {
+            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation non trouvée.', 'error');
+            return;
+        }
+
+        if ($this->serviceReparation->supprReparation($dateDebut, $latitude, $longitude)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Réparation supprimée - Date: {$dateDebut}, Lat: {$latitude}, Long: {$longitude}"
+            );
+            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation supprimée avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression de la réparation Date: {$dateDebut}"
+            );
+            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Erreur lors de la suppression de la réparation.', 'error');
+        }
+    }
+
+    /**
+     * Affiche le formulaire d'édition d'une réparation/entretien
+     *
+     * @param string $date_debut Date de début de la réparation
+     * @param float $latitude Latitude de l'enclos
+     * @param float $longitude Longitude de l'enclos
+     * @return void
+     */
+    public function formEditionReparation(string $date_debut, float $latitude, float $longitude): void
+    {
+        $this->requireRole(ADMINID);
+        
+        if (!$date_debut || !is_numeric($latitude) || !is_numeric($longitude)) {
+            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation non trouvée.', 'error');
+            return;
+        }
+
+        $reparation = $this->serviceReparation->getReparation($date_debut, $longitude, $latitude);
+        $prestataires = $this->serviceReparation->getAllPrestataires();
+
+        if (!$reparation) {
+            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation non trouvée.', 'error');
+            return;
+        }
+
+        $this->render('personnelEntretien/v-editionReparation', [
+            'reparation' => $reparation,
+            'prestataires' => $prestataires,
+            'title' => 'Éditer une réparation'
+        ]);
+    }
+
+    /**
+     * Met à jour une réparation/entretien existante
+     *
+     * @return void
+     */
+    public function updateReparation(): void
+    {
+        $this->requireRole(ADMINID);
+
+        $dateDebut = $_GET['date_debut'] ?? null;
+        $latitude = $_GET['latitude'] ?? null;
+        $longitude = $_GET['longitude'] ?? null;
+
+        if (!$dateDebut || $latitude === null || $longitude === null) {
+            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation non trouvée.', 'error');
+            return;
+        }
+
+        // Vérifier que la réparation existe
+        $reparation = $this->serviceReparation->getReparation($dateDebut, $longitude, $latitude);
+        if (!$reparation) {
+            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation non trouvée.', 'error');
+            return;
+        }
+
+        $data = [
+            'DATE_DEBUT_REPARATION' => $_POST['DATE_DEBUT_REPARATION'],
+            'LONGITUDE_ENCLOS' => $longitude,
+            'LATITUDE_ENCLOS' => $latitude,
+            'ID_PRESTATAIRE' => $_POST['ID_PRESTATAIRE'] ?? null,
+            'DATE_FIN' => $_POST['DATE_FIN'] ?? null,
+            'NATURE_REPARATION' => $_POST['NATURE_REPARATION'] ?? null,
+            'COUT_REPARATION' => $_POST['COUT_REPARATION'] ?? null
+        ];
+
+        echo $data['COUT_REPARATION']."<br>";
+        echo $data['DATE_DEBUT_REPARATION']."<br>";
+        echo $data['DATE_FIN']."<br>";
+
+        if ($this->serviceReparation->updateReparation($data)) {
+            $this->logEvent(
+                'MODIFICATION_BD',
+                "Réparation modifiée - Date: {$dateDebut}, Lat: {$latitude}, Long: {$longitude}"
+            );
+            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation modifiée avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la modification de la réparation Date: {$dateDebut}"
+            );
+            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Erreur lors de la modification de la réparation.', 'error');
+        }
+    }
+
+    // ========================
+    //  Compatibilités d'Espèces
+    // ========================
+
+    /**
+     * Affiche le formulaire de création d'une compatibilité entre espèces
+     *
+     * @return void
+     */
+    public function formCreationCompatibilite(): void
+    {
+        $this->requireRole(ADMINID);
+        $especes = $this->serviceEspece->getAll();
+        $this->render('administrateur/v-createCompatibilite', [
+            'especes' => $especes,
+            'title' => 'Ajouter une compatibilité'
+        ]);
+    }
+
+    /**
+     * Traite l'ajout d'une compatibilité entre deux espèces
+     *
+     * @return void
+     */
+    public function ajoutCompatibilite(): void
+    {
+        $this->requireRole(ADMINID);
+        $id_espece1 = $_POST['id_espece1'] ?? null;
+        $id_espece2 = $_POST['id_espece2'] ?? null;
+
+        if (!$id_espece1 || !$id_espece2) {
+            $this->redirectWithMessage('formCreationCompatibilite', 'Tous les champs sont obligatoires.', 'error');
+            return;
+        }
+
+        if ($id_espece1 == $id_espece2) {
+            $this->redirectWithMessage('formCreationCompatibilite', 'Vous ne pouvez pas créer une compatibilité entre la même espèce.', 'error');
+            return;
+        }
+
+        // Vérifier que les espèces existent
+        $e1 = $this->serviceEspece->getEspeceParID($id_espece1);
+        $e2 = $this->serviceEspece->getEspeceParID($id_espece2);
+
+        if (!$e1 || !$e2) {
+            $this->redirectWithMessage('formCreationCompatibilite', 'Une ou plusieurs espèces non trouvées.', 'error');
+            return;
+        }
+
+        if ($this->serviceCompatibilite->ajoutCompatibilite()) {
+            $this->logEvent(
+                'INSERTION_BD',
+                "Compatibilité ajoutée entre espèce {$id_espece1} et {$id_espece2}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Compatibilité ajoutée avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de l'ajout d'une compatibilité"
+            );
+            $this->redirectWithMessage('formCreationCompatibilite', 'Erreur lors de l\'ajout de la compatibilité (peut-être qu\'elle existe déjà).', 'error');
+        }
+    }
+
+    /**
+     * Supprime une compatibilité entre deux espèces
+     *
+     * @return void
+     */
+    public function supprCompatibilite(): void
+    {
+        $this->requireRole(ADMINID);
+        $id_espece1 = $_GET['espece1'] ?? null;
+        $id_espece2 = $_GET['espece2'] ?? null;
+
+        if (!$id_espece1 || !$id_espece2) {
+            $this->redirectWithMessage('adminDashboard', 'Compatibilité non trouvée.', 'error');
+            return;
+        }
+
+        // Vérifier que la compatibilité existe
+        if (!$this->serviceCompatibilite->verifierCompatibilite($id_espece1, $id_espece2)) {
+            $this->redirectWithMessage('adminDashboard', 'Compatibilité non trouvée.', 'error');
+            return;
+        }
+
+        if ($this->serviceCompatibilite->supprCompatibilite($id_espece1, $id_espece2)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Compatibilité supprimée entre espèce {$id_espece1} et {$id_espece2}"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Compatibilité supprimée avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression de la compatibilité"
+            );
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de la compatibilité.', 'error');
         }
     }
 }

@@ -43,4 +43,37 @@ class ServiceEnclos
         }
         return $enclos;
     }
+
+    /**
+     * Crée un nouvel enclos
+     * @param array $data Données de l'enclos
+     * @return bool Succès de l'opération
+     */
+    public function ajoutEnclos($data)
+    {
+        return $this->Enclos->creer($data);
+    }
+
+    /**
+     * Met à jour un enclos
+     * @param float $latitude Latitude
+     * @param float $longitude Longitude
+     * @param array $data Données à mettre à jour
+     * @return bool Succès de l'opération
+     */
+    public function majEnclos($latitude, $longitude, $data)
+    {
+        return $this->Enclos->update($latitude, $longitude, $data);
+    }
+
+    /**
+     * Supprime un enclos
+     * @param float $latitude Latitude
+     * @param float $longitude Longitude
+     * @return bool Succès de l'opération
+     */
+    public function supprEnclos($latitude, $longitude)
+    {
+        return $this->Enclos->suppr($latitude, $longitude);
+    }
 }

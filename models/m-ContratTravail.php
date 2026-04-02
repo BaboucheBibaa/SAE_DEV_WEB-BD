@@ -7,6 +7,11 @@ class ContratTravail extends BaseModel
         $row = $this->executeQuery($sqlSeq);
         return $row['NEW_ID'];
     }
+    public function getAll()
+    {
+        $query = "SELECT CT.*, F.NOM_FONCTION,P.NOM FROM CONTRAT_TRAVAIL CT JOIN PERSONNEL P ON CT.ID_PERSONNEL = P.ID_PERSONNEL JOIN FONCTION F ON F.ID_FONCTION = CT.ID_FONCTION";
+        return $this->executeQueryAll($query);
+    }
 
     public function getParPersonnel($id_personnel)
     {
@@ -46,5 +51,16 @@ class ContratTravail extends BaseModel
                   WHERE CT.DATE_FIN <= SYSDATE + 30
                   ORDER BY CT.DATE_FIN ASC";
         return $this->executeQueryAll($query);
+    }
+
+    /**
+     * Supprime un contrat de travail
+     * @param int $id_contrat ID du contrat à supprimer
+     * @return bool Succès de l'opération
+     */
+    public function suppr($id_contrat)
+    {
+        $sql = "DELETE FROM CONTRAT_TRAVAIL WHERE ID_CONTRAT = :id_contrat";
+        return $this->executeModify($sql, [':id_contrat' => $id_contrat]);
     }
 }

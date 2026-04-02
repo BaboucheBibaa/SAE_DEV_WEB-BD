@@ -207,10 +207,11 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 - ✅ Accès et affichage du dashboard personnel entretien
 - ✅ Affichage de la liste des entretiens d'enclos (personnel entretien)
 - ✅ Moteur de recherche global (animaux, employés, zones, boutiques, enclos)
-- [ ] Moteur de recherche avec filtres spécifiques
+- [ ] Moteur de recherche avec filtres spécifiques MAJEUR
 - [ ] Affichage et gestion des messages flash multiples
 - ✅ Vérification des droits d'accès (accès refusé si non autorisé)
 - ✅ Supprimer un soin / Supprimer un parrainage / Supprimer une nourriture donnée
+- [ ] Supprimer une réparation depuis le profil enclos
 
 ---
 
@@ -226,7 +227,7 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 - [ ] Dashboard Administrateur:
   - [ ] Statistiques globales
 - [ ] Dashboard employé boutique
-- [ ] Profil espèce
+- ✅ Profil espèce
 
 ### Améliorations
 
@@ -234,7 +235,7 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 - ✅ Ajout d'un fichier de gestion des logs (Connexion / Déconnexion au sein du site et Ajout / Maj / Suppression au sein de la BD)
 - ✅ Popup pour les fins de contrat sur le dashboard admin
   - [ ] Gérer le fait de pouvoir avoir plusieurs popups à afficher
-- [ ] Mettre le nom du prestataire et pas son identifiant
+- [ ] Mettre le nom du prestataire et pas son identifiant dans la gestion entretien
 
 ---
 
