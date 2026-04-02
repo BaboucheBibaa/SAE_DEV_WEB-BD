@@ -1,0 +1,177 @@
+[2026-03-30 19:43:13] [DECONNEXION] DEBUG aaaa
+[2026-03-30 19:45:17] [DECONNEXION] DEBUG aaa
+[2026-03-30 19:45:37] [DECONNEXION] DEBUG aaa
+[2026-03-30 19:46:15] [DECONNEXION] DEBUG aaa
+[2026-03-30 19:46:44] [DECONNEXION] DEBUG aaa
+[2026-03-30 19:47:04] [DECONNEXION] DEBUG aaa
+[2026-03-30 19:48:20] [ERREUR] Erreur lors de l'ajout d'un animal
+[2026-03-30 19:48:46] [ERREUR] Erreur lors de l'ajout d'un animal
+[2026-03-30 19:49:22] [ERREUR] Erreur lors de l'ajout d'un animal
+[2026-03-30 19:49:37] [INSERTION_BD] Nouvel animal ajouté
+[2026-03-30 19:50:00] [DELETE_BD] Animal supprimé: id=32
+[2026-03-30 19:50:07] [DELETE_BD] Animal supprimé: id=20
+[2026-03-30 19:50:12] [DELETE_BD] Animal supprimé: id=34
+[2026-03-30 19:50:17] [DELETE_BD] Animal supprimé: id=22
+[2026-03-30 19:50:23] [DELETE_BD] Animal supprimé: id=21
+[2026-03-30 19:50:28] [DELETE_BD] Animal supprimé: id=18
+[2026-03-30 19:50:32] [DELETE_BD] Animal supprimé: id=19
+[2026-03-30 19:50:37] [DELETE_BD] Animal supprimé: id=16
+[2026-03-30 19:50:41] [DELETE_BD] Animal supprimé: id=33
+[2026-03-30 19:50:46] [DELETE_BD] Animal supprimé: id=17
+[2026-03-30 19:51:40] [INSERTION_BD] Nouvel animal ajouté
+[2026-03-30 19:51:54] [INSERTION_BD] Nouvel animal ajouté
+[2026-03-30 20:27:20] [UPDATE_BD] Animal mis à jour: id=1
+[2026-03-30 20:27:35] [UPDATE_BD] Employé mis à jour: id=3
+[2026-03-30 20:31:30] [UPDATE_BD] Animal mis à jour: id=16
+[2026-03-30 20:31:49] [UPDATE_BD] Animal mis à jour: id=17
+[2026-03-30 21:27:29] [UPDATE_BD] Animal mis à jour: id=2
+[2026-03-30 21:27:44] [UPDATE_BD] Animal mis à jour: id=2
+[2026-03-30 21:28:50] [UPDATE_BD] Animal mis à jour: id=4
+[2026-03-30 21:58:03] [UPDATE_BD] Animal mis à jour: id=4
+[2026-03-30 22:02:42] [UPDATE_BD] Animal mis à jour: id=4
+[2026-03-30 22:03:27] [UPDATE_BD] Animal mis à jour: id=4
+[2026-03-30 22:05:43] [INSERTION_BD] Nouvel animal ajouté
+[2026-03-30 22:06:19] [DELETE_BD] Animal supprimé: id=18
+[2026-03-30 22:07:39] [UPDATE_BD] Animal mis à jour: id=2
+[2026-03-30 22:24:25] [UPDATE_BD] Animal mis à jour: id=1
+[2026-03-30 22:24:34] [UPDATE_BD] Animal mis à jour: id=1
+[2026-03-30 22:27:01] [UPDATE_BD] Animal mis à jour: id=1
+[2026-03-30 22:27:19] [UPDATE_BD] Animal mis à jour: id=4
+[2026-03-30 22:28:43] [INSERTION_BD] Nouvel animal ajouté
+[2026-03-30 22:29:00] [UPDATE_BD] Animal mis à jour: id=16
+[2026-03-30 22:29:15] [DELETE_BD] Animal supprimé: id=16
+[2026-03-30 22:30:44] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-03-30 22:30:49] [CONNEXION] Connexion réussie: login=ddupond, id=4
+[2026-03-30 22:32:14] [DECONNEXION] Déconnexion utilisateur id=4
+[2026-03-30 22:32:19] [CONNEXION] Connexion réussie: login=ddupont, id=3
+[2026-03-31 08:43:40] [CONNEXION] Connexion réussie: login=ddupont, id=3
+[2026-03-31 09:12:12] [DECONNEXION] Déconnexion utilisateur id=3
+[2026-03-31 09:12:19] [CONNEXION] Connexion réussie: login=mpoulet, id=8
+[2026-03-31 09:41:38] [DECONNEXION] Déconnexion utilisateur id=8
+[2026-03-31 09:41:42] [ERREUR] Échec connexion: login=ddpont
+[2026-03-31 09:41:46] [CONNEXION] Connexion réussie: login=ddupont, id=3
+[2026-03-31 11:31:13] [INSERTION_BD] Dose de nourriture ajoutée par le soigneur id=3
+[2026-03-31 11:50:36] [DECONNEXION] Déconnexion utilisateur id=3
+[2026-03-31 11:50:40] [CONNEXION] Connexion réussie: login=mchicken, id=9
+[2026-03-31 11:57:33] [DECONNEXION] Déconnexion utilisateur id=9
+[2026-03-31 11:58:26] [ERREUR] Échec connexion: login=
+[2026-03-31 11:58:29] [CONNEXION] Connexion réussie: login=ddupond, id=4
+[2026-03-31 12:25:20] [DECONNEXION] Déconnexion utilisateur id=4
+[2026-03-31 12:25:25] [CONNEXION] Connexion réussie: login=mchicken, id=9
+[2026-03-31 12:25:59] [INSERTION_BD] Nouvelle tâche d'entretien ajoutée
+[2026-03-31 12:29:31] [DECONNEXION] Déconnexion utilisateur id=9
+[2026-03-31 12:29:36] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-03-31 12:46:58] [INSERTION_BD] Nouvel employé ajouté: id=24
+[2026-03-31 12:47:15] [UPDATE_BD] Employé mis à jour: id=24
+[2026-03-31 12:47:41] [UPDATE_BD] Employé mis à jour: id=24
+[2026-03-31 12:47:51] [UPDATE_BD] Employé mis à jour: id=24
+[2026-03-31 12:59:56] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-03-31 13:00:00] [CONNEXION] Connexion réussie: login=avauchel, id=7
+[2026-03-31 13:00:08] [DECONNEXION] Déconnexion utilisateur id=7
+[2026-03-31 13:00:13] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-03-31 13:00:25] [INSERTION_BD] Nouvelle zone ajoutée
+[2026-03-31 13:03:22] [UPDATE_BD] Zone mise à jour: id=5
+[2026-03-31 13:03:29] [SUPPRESSION_BD] Zone supprimée: id=5
+[2026-03-31 13:03:54] [INSERTION_BD] Nouvelle boutique ajoutée
+[2026-03-31 13:05:52] [SUPPRESSION_BD] Boutique supprimée: id=6
+[2026-03-31 13:06:13] [UPDATE_BD] Boutique mise à jour: id=1
+[2026-03-31 13:06:21] [UPDATE_BD] Boutique mise à jour: id=1
+[2026-03-31 13:07:03] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-03-31 13:07:07] [CONNEXION] Connexion réussie: login=avauchel, id=7
+[2026-03-31 13:09:56] [DECONNEXION] Déconnexion utilisateur id=7
+[2026-03-31 13:10:16] [CONNEXION] Connexion réussie: login=bdora, id=5
+[2026-03-31 13:10:26] [INSERTION_BD] Chiffre d'affaires journalier ajouté pour la boutique id=1 à la date 2026-03-31
+[2026-03-31 13:52:17] [INSERTION_BD] Chiffre d'affaires journalier ajouté pour la boutique id=1 à la date 2026-03-30
+[2026-03-31 13:56:08] [DECONNEXION] Déconnexion utilisateur id=5
+[2026-03-31 13:56:13] [CONNEXION] Connexion réussie: login=ddupond, id=4
+[2026-03-31 13:56:31] [DECONNEXION] Déconnexion utilisateur id=4
+[2026-03-31 13:56:35] [CONNEXION] Connexion réussie: login=mchicken, id=9
+[2026-04-01 12:22:30] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-01 12:22:30] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-01 12:39:30] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:44:59] [SUPPRESSION_BD] Employé supprimé: id=2
+[2026-04-01 12:45:55] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:46:50] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:47:10] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:48:51] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:49:21] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:50:03] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:50:09] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:53:53] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:54:26] [SUPPRESSION_BD] Employé supprimé: id=7
+[2026-04-01 12:59:00] [SUPPRESSION_BD] Employé supprimé: id=5
+[2026-04-01 13:00:47] [SUPPRESSION_BD] Employé supprimé: id=5
+[2026-04-01 13:00:52] [SUPPRESSION_BD] Employé supprimé: id=5
+[2026-04-01 13:04:25] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-01 13:04:31] [CONNEXION] Connexion réussie: login=mpoulet, id=8
+[2026-04-01 13:08:36] [DECONNEXION] Déconnexion utilisateur id=8
+[2026-04-01 13:08:44] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-01 15:25:15] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-01 16:09:44] [SUPPRESSION_BD] Chiffre affaires supprimé: id=1 date=01/03/26
+[2026-04-01 16:09:53] [SUPPRESSION_BD] Chiffre affaires supprimé: id=1 date=02/03/26
+[2026-04-01 16:12:22] [SUPPRESSION_BD] Chiffre affaires supprimé: id=1 date=03/03/26
+[2026-04-01 16:12:26] [SUPPRESSION_BD] Chiffre affaires supprimé: id=1 date=06/03/26
+[2026-04-01 16:33:40] [DELETE_BD] Parrainage supprimé pour l'animal id= et visiteur id=
+[2026-04-01 16:35:08] [DELETE_BD] Parrainage supprimé pour l'animal id=3 et visiteur id=2
+[2026-04-01 16:35:49] [DELETE_BD] Parrainage supprimé pour l'animal id=3 et visiteur id=1
+[2026-04-01 16:57:18] [SUPPRESSION_BD] Soin supprimé: id=3 date=
+[2026-04-01 17:24:42] [SUPPRESSION_BD] Soin supprimé: id=3 date=10/03/26
+[2026-04-01 17:25:25] [SUPPRESSION_BD] Soin supprimé: id=3 date=10/03/26
+[2026-04-01 17:27:13] [SUPPRESSION_BD] Soin supprimé: id=3 date=10/03/26
+[2026-04-01 17:32:22] [SUPPRESSION_BD] Soin supprimé: id=3 date=10/03/26
+[2026-04-01 17:32:46] [SUPPRESSION_BD] Soin supprimé: id=3 date=10/03/26
+[2026-04-01 17:36:53] [DELETE_BD] Parrainage supprimé pour l'animal id=3 et visiteur id=4
+[2026-04-01 17:52:31] [SUPPRESSION_BD] Nourriture donnée supprimée: id=3 soigneur=17 date=20/03/26
+[2026-04-01 18:22:01] [SUPPRESSION_BD] Espèce supprimée: id=6
+[2026-04-01 18:26:34] [SUPPRESSION_BD] Espèce supprimée: id=1
+[2026-04-01 18:27:11] [SUPPRESSION_BD] Espèce supprimée: id=2
+[2026-04-01 21:55:29] [SUPPRESSION_BD] Zone supprimée: id=1
+[2026-04-02 05:05:28] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-02 05:35:38] [INSERTION_BD] Nouveau prestataire ajouté
+[2026-04-02 05:38:27] [UPDATE_BD] Prestataire mis à jour: id=6
+[2026-04-02 05:39:20] [SUPPRESSION_BD] Prestataire supprimé: id=6
+[2026-04-02 05:43:10] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-02 05:43:17] [CONNEXION] Connexion réussie: login=mcrampteur, id=10
+[2026-04-02 05:43:20] [DECONNEXION] Déconnexion utilisateur id=10
+[2026-04-02 05:43:25] [CONNEXION] Connexion réussie: login=mpoulet, id=8
+[2026-04-02 05:53:05] [DECONNEXION] Déconnexion utilisateur id=8
+[2026-04-02 05:53:09] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-02 06:09:44] [SUPPRESSION_BD] Contrat de travail supprimé: id=24
+[2026-04-02 06:10:20] [SUPPRESSION_BD] Employé supprimé: id=23
+[2026-04-02 06:30:38] [UPDATE_BD] Enclos mis à jour - Lat: 20, Long: 25
+[2026-04-02 06:30:58] [INSERTION_BD] Nouvel enclos ajouté - Lat: 65, Long: 30
+[2026-04-02 06:31:04] [SUPPRESSION_BD] Enclos supprimé - Lat: 65, Long: 30
+[2026-04-02 07:12:09] [SUPPRESSION_BD] Réparation supprimée - Date: 17/03/26, Lat: 20, Long: 25
+[2026-04-02 07:15:09] [SUPPRESSION_BD] Réparation supprimée - Date: 17/03/26, Lat: 20, Long: 25
+[2026-04-02 07:32:33] [INSERTION_BD] Nouvelle espèce ajoutée: Test
+[2026-04-02 07:32:44] [UPDATE_BD] Espèce mise à jour: id=14
+[2026-04-02 07:38:03] [INSERTION_BD] Compatibilité ajoutée entre espèce 14 et 1
+[2026-04-02 07:38:33] [SUPPRESSION_BD] Espèce supprimée: id=14
+[2026-04-02 08:28:32] [MODIFICATION_BD] Réparation modifiée - Date: 17/03/26, Lat: 20, Long: 25
+[2026-04-02 08:28:40] [MODIFICATION_BD] Réparation modifiée - Date: 17/03/26, Lat: 20, Long: 25
+[2026-04-02 09:33:28] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-02 09:33:36] [ERREUR] Échec connexion: login=ccomptable
+[2026-04-02 09:33:40] [ERREUR] Échec connexion: login=
+[2026-04-02 09:33:43] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-02 09:33:56] [UPDATE_BD] Employé mis à jour: id=24
+[2026-04-02 09:33:59] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-02 09:34:03] [CONNEXION] Connexion réussie: login=ccomptable, id=24
+[2026-04-02 09:48:30] [DECONNEXION] Déconnexion utilisateur id=24
+[2026-04-02 09:48:31] [ERREUR] Échec connexion: login=
+[2026-04-02 09:48:35] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-02 09:49:26] [UPDATE_BD] Employé mis à jour: id=24
+[2026-04-02 09:49:29] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-02 09:49:33] [CONNEXION] Connexion réussie: login=ccomptable, id=24
+[2026-04-02 09:55:26] [DECONNEXION] Déconnexion utilisateur id=24
+[2026-04-02 09:55:37] [CONNEXION] Connexion réussie: login=ddupont, id=3
+[2026-04-02 10:02:14] [DECONNEXION] Déconnexion utilisateur id=3
+[2026-04-02 10:02:18] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-02 15:48:33] [SUPPRESSION_BD] Employé supprimé: id=25
+[2026-04-02 15:49:06] [SUPPRESSION_BD] Employé supprimé: id=24
+[2026-04-02 15:51:20] [SUPPRESSION_BD] Réparation supprimée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-02 15:55:59] [SUPPRESSION_BD] Réparation supprimée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-02 16:11:57] [UPDATE_BD] Employé mis à jour: id=1
+[2026-04-02 16:29:27] [INSERTION_BD] Lien de parenté créé : animal id=1 est parent de animal id=12
+[2026-04-02 16:29:35] [DELETE_BD] Lien de parenté supprimé : animal id=1 n'est plus parent de animal id=12
+[2026-04-02 16:32:29] [INSERTION_BD] Lien de parenté créé : animal id=2 est parent de animal id=11
+[2026-04-02 16:32:43] [DELETE_BD] Lien de parenté supprimé : animal id=2 n'est plus parent de animal id=11

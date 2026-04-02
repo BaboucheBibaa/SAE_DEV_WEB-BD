@@ -1,0 +1,393 @@
+========================================
+DOCUMENTATION EXPLICATIVE - SAE_DEV_WEB-BD
+========================================
+Version: 2.0 (Architecture moderne avec Service Layer + Exceptions)
+Dernière mise à jour: Avril 2, 2026
+
+========================================
+## Architecture MVC + SERVICE LAYER (v2.0)
+========================================
+
+La projet utilise une architecture en 5 couches découplées :
+
+                   ┌─────────────────┐
+                   │  CONTRÔLEURS    │ (Gère HTTP + Redirections)
+                   └────────┬────────┘
+                            ↓
+          ┌────────────────────────────────────┐
+          │  COUCHE SERVICE (LOGIQUE MÉTIER)   │ ← 🔑 Clé de la modularité
+          └────────────────┬───────────────────┘
+                           ↓
+                  ┌────────────────┐
+                  │    MODÈLES     │ (Requêtes BD)
+                  └────────┬───────┘
+                           ↓
+                  ┌────────────────┐
+                  │  BASE ORACLE   │
+                  └────────────────┘
+
+### 1️⃣ LE ROUTEUR (index.php)
+
+Responsabilités:
+- Point d'entrée unique de toute l'application
+- Charge TOUS les fichiers (config, modèles, services, contrôleurs)
+- Analyse l'action demandée (?action=xxxxx)
+- Crée l'instance du bon contrôleur
+- Appelle la bonne méthode
+
+### 2️⃣ LES CONTRÔLEURS
+
+Responsabilités STRICTES:
+- Vérifier les droits d'accès (via requireRole())
+- Appeler les Services (ET NON les modèles directement)
+- Gérer les try/catch des exceptions
+- Appeler render() ou redirectWithMessage()
+- Logger les événements (via logEvent())
+- NE JAMAIS faire de SQL
+
+
+### 3️⃣ LA COUCHE SERVICE (LOGIQUE MÉTIER) PRINCIPALE
+
+C'est LA différence avec une architecture MVC basique.
+
+Les Services gèrent:
+- ✅ Validation complexe des données
+- ✅ Coordination de plusieurs modèles
+- ✅ Gestion des exceptions personalisées
+- ✅ Messages d'erreur préparés pour l'utilisateur
+
+### 4️⃣ GESTION DES EXCEPTIONS (ValidationException)
+
+utilities/ValidationException.php:
+
+Une exception personnalisée qui encapsule:
+- Code d'erreur (0 = serveur, 2-6 = validation)
+- Message utilisateur (prêt à afficher)
+
+Avantages:
+- ✅ Messages centralisés dans les Services
+- ✅ Contrôleurs simplifiés (pas de switch case)
+- ✅ Distinction validation ↔ erreur serveur
+- ✅ Réutilisable partout
+
+### 5️⃣ LES MODÈLES (Couche Data)
+
+Tous les modèles étendent BaseModel.php
+
+BaseModel fournit 3 méthodes OCI centralisées:
+
+```php
+protected function executeQuery($query, $params = [])
+```
+Retourne UN seul enregistrement (oci_fetch_assoc)
+Utile pour: getParID(), getParLogin(), etc.
+
+```php
+protected function executeQueryAll($query, $params = [])
+```
+Retourne TOUS les enregistrements (oci_fetch_all avec OCI_ASSOC)
+Utile pour: getAll(), getParFonction(), etc.
+
+```php
+protected function executeModify($query, $params = [])
+```
+Exécute INSERT/UPDATE/DELETE (oci_execute)
+Utile pour: creer(), maj(), suppr()
+
+Avantages de BaseModel:
+- ✅ Réduit la duplication de code OCI
+- ✅ Gestion centralisée des erreurs
+- ✅ Cohérence dans toute l'application
+
+### 6️⃣ LES VUES
+
+Responsabilités:
+- Affichage HTML uniquement
+- Reçoivent les données via render()
+- Peuvent utiliser les données avec extract() appliqué automatiquement
+- Utilisent v-includes.php pour le layout
+- JAMAIS de SQL
+
+---
+
+## MESSAGES FLASH
+
+$_SESSION['flash'] est une norme PHP pour les messages temporaires.
+
+Permet de:
+- Créer un message dans une page
+- L'afficher dans une autre après redirection
+- Le supprimer immédiatement après affichage
+
+C'est juste une convention de nommage (aurait pu être $_SESSION['barbecue']).
+
+UTILISATION:
+
+Créer un message:
+```php
+$this->redirectWithMessage($action, $message, $type);
+// Types: 'success', 'error', 'warning', 'info'
+```
+
+EXEMPLE:
+```php
+// Contrôleur
+$this->redirectWithMessage('adminDashboard', 'Employé créé !', 'success');
+
+// Redirection vers adminDashboard
+// v-includes.php affiche automatiquement $_SESSION['flash']
+// Le message est supprimé
+```
+
+---
+
+## DONNÉES RETOURNÉES PAR OCI8
+
+### oci_fetch_assoc() → Un seul enregistrement
+```php
+// Retourne un tableau associatif
+[
+    'ID_PERSONNEL' => 1,
+    'NOM' => 'Dupont',
+    'PRENOM' => 'Jean',
+    'ID_FONCTION' => 2,
+    ...
+]
+```
+
+### oci_fetch_all() → Plusieurs enregistrements
+```php
+
+// Format LIGNE (OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC):
+[
+    0 => ['ID_PERSONNEL' => 1, 'NOM' => 'Dupont', 'PRENOM' => 'Jean'],
+    1 => ['ID_PERSONNEL' => 2, 'NOM' => 'Martin', 'PRENOM' => 'Paul'],
+    2 => ['ID_PERSONNEL' => 3, 'NOM' => 'Bernard', 'PRENOM' => 'Pierre'],
+    ...
+]
+```
+
+---
+
+## ON DELETE CASCADE
+
+Depuis v2.0, toutes les clés étrangères ont ON DELETE CASCADE.
+
+Conséquences:
+✅ Supprimer un Personnel → supprime ses contrats, soins, affectations
+✅ Supprimer un Animal → supprime ses soins, nourritures, historiques
+✅ Supprimer une Zone → supprime ses enclos
+✅ Évite les erreurs de contraintes de clés étrangères
+
+⚠️ ATTENTION: Une suppression simple peut déclencher PLUSIEURS suppressions en cascade!
+
+EXEMPLE:
+```php
+// Supprimer l'employé id=5
+// Déclenche automatiquement:
+// 1. Suppression de ses contrats
+// 2. Suppression de ses afféctations
+// 3. Suppression de ses soins
+// Tout d'un coup ↓
+$this->serviceEmployee->supprEmployee(5);
+```
+
+---
+
+## STRUCTURE COMPLÈTE DU PROJET (v2.0)
+
+```
+SAE_DEV_WEB-BD/
+├── index.php                          [Point d'entrée]
+├── DOC EXPLICATIF.txt                 [Cette doc]
+│
+├── config/
+│   ├── myparams.inc.php              [Constantes globales]
+│   └── database.php                   [Connexion Oracle]
+│
+├── models/
+│   ├── BaseModel.php                 [Foundation (executeQuery, executeQueryAll, executeModify)]
+│   ├── m-Animal.php                  [Extends BaseModel]
+│   ├── m-User.php
+│   ├── m-Zone.php
+│   ├── m-Boutique.php
+│   ├── m-Enclos.php
+│   ├── m-Espece.php
+│   ├── m-Fonction.php
+│   ├── m-ContratTravail.php
+│   └── ... [tous étendent BaseModel]
+│
+├── services/ ⭐ COUCHE MÉTIER PRINCIPALE
+│   ├── ServiceAnimal.php             [11 méthodes + try/throw]
+│   ├── ServiceBoutique.php           [6 méthodes]
+│   ├── ServiceEmployee.php           [11 méthodes]
+│   ├── ServiceZone.php               [11 méthodes]
+│   ├── ServiceSoin.php               [11 méthodes]
+│   ├── ServiceCA.php                 [8 méthodes]
+│   ├── ServiceEnclos.php             [3 méthodes]
+│   ├── ServiceEspece.php             [5 méthodes]
+│   ├── ServiceParrainage.php         [6 méthodes]
+│   ├── ServiceReparation.php         [4 méthodes]
+│   └── ServiceSearch.php             [1 méthode]
+│   
+│
+├── utilities/
+│   ├── Utils.php                     [Utilitaires (hashPassword, generatePassword)]
+│   └── ValidationException.php       [Exception personnalisée ✨ NOUVEAU]
+│
+├── controllers/
+│   ├── c-base.php                    [BaseController -> requireRole(), render(), redirect()]
+│   ├── c-profilAdmin.php             [AdminController + try/catch]
+│   ├── c-connexion.php
+│   ├── c-soigneurs.php
+│   ├── c-profil.php
+│   ├── c-search.php
+│   ├── c-profilAnimal.php
+│   ├── c-profilBoutique.php
+│   ├── c-profilZone.php
+│   ├── c-profilEnclos.php
+│   ├── c-respBoutique.php
+│   ├── c-respSoigneurs.php
+│   ├── c-personnelEntretien.php
+│   ├── c-employeBoutique.php
+│   ├── c-espece.php
+│   └── ... [tous utilisent les Services + ValidationException]
+│
+├── views/
+│   ├── v-includes.php               [Layout principal]
+│   ├── v-home.php
+│   ├── administrateur/
+│   ├── animal/
+│   ├── boutique/
+│   ├── connexion/
+│   ├── enclos/
+│   ├── espece/
+│   ├── personnelEntretien/
+│   ├── profil/
+│   ├── respBoutique/
+│   ├── respSoig/
+│   ├── soigneurs/
+│   └── zone/
+│
+└── PARTIE_BD/
+    ├── create.sql                   [Schéma BD]
+    ├── insert.sql                   [Données test]
+    └── requetes.sql                 [Requêtes utiles]
+```
+
+---
+
+## FLUX D'EXÉCUTION COMPLET (Exemple: Ajouter un employé)
+
+### 1. Utilisateur soumet le formulaire
+```
+HTML Form POST → index.php?action=ajoutEmployee
+```
+
+### 2. index.php route vers le contrôleur
+```php
+// index.php
+$action = $_GET['action'];  // "ajoutEmployee"
+if ($action === 'ajoutEmployee') {
+    $controller = new AdminController();
+    $controller->ajoutEmployee();
+}
+```
+
+### 3. Le contrôleur utilise try/catch
+```php
+// c-profilAdmin.php
+public function ajoutEmployee()
+{
+    $this->requireRole(ADMINID);
+    
+    try {
+        // Appelle le SERVICE (pas le modèle directement!)
+        $newEmployeeId = $this->serviceEmployee->ajoutEmployee();
+        
+        // Si pas d'exception = succès
+        $this->logEvent('INSERTION_BD', "Nouvel employé: $newEmployeeId");
+        $this->redirectWithMessage('adminDashboard', 'Succès!', 'success');
+        
+    } catch (ValidationException $e) {
+        // Une exception a été lancée
+        $this->redirectWithMessage('creationEmployee', $e->getUserMessage(), 'error');
+    }
+}
+```
+
+### 4. Le Service valide et coordonne
+```php
+// ServiceEmployee.php
+public function ajoutEmployee() throws ValidationException
+{
+    // Valide les données
+    $validationCode = $this->verificationForm('cree');
+    if ($validationCode != 0) {
+        throw new ValidationException($validationCode, "Message d'erreur");
+    }
+    
+    // Crée l'employé via le modèle
+    $data = [...];
+    $userId = $this->User->creer($data);
+    if (!$userId) {
+        throw new ValidationException(0, "Erreur création");
+    }
+    
+    // Crée le contrat
+    $contratData = [...];
+    $contratResult = $this->ContratTravail->creer($contratData);
+    if (!$contratResult) {
+        throw new ValidationException(0, "Erreur contrat");
+    }
+    
+    // Succès = retourner l'ID
+    return $userId;
+}
+```
+
+### 5. Le modèle exécute la requête
+```php
+// m-User.php
+public function creer($data)
+{
+    $query = "INSERT INTO PERSONNEL (NOM, PRENOM, ...) VALUES (?, ?, ...)";
+    return $this->executeModify($query, [$data['nom'], $data['prenom'], ...]);
+}
+```
+
+### 6. BaseModel gère OCI
+```php
+// BaseModel.php
+protected function executeModify($query, $params = [])
+{
+    $db = Database::getConnection();
+    $stmt = oci_parse($db, $query);
+    
+    foreach ($params as $key => $value) {
+        oci_bind_by_name($stmt, ':' . ($key + 1), $params[$key]);
+    }
+    
+    if (!oci_execute($stmt)) {
+        throw new Exception('OCI execute failed');
+    }
+    
+    return oci_commit($db);
+}
+```
+
+### 7. Redirection avec message flash
+```php
+// À partir du contrôleur:
+$this->redirectWithMessage('adminDashboard', 'Employé créé!', 'success');
+
+// Stocke dans $_SESSION['flash']:
+$_SESSION['flash'] = [
+    'type' => 'success',
+    'message' => 'Employé créé!'
+];
+
+// Redirige vers index.php?action=adminDashboard
+
+// Dans v-includes.php, affichage automatique
+```

@@ -1,0 +1,105 @@
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="card-title mb-4">Profil</h2>
+
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Email</div>
+                            <div class="text-muted"><?= htmlspecialchars($user['MAIL'] ?? '') ?></div>
+                        </div>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Nom</div>
+                            <div class="text-muted"><?= htmlspecialchars($user['NOM'] ?? '') ?></div>
+                        </div>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Prénom</div>
+                            <div class="text-muted"><?= htmlspecialchars($user['PRENOM'] ?? '') ?></div>
+                        </div>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Inscrit le</div>
+                            <div class="text-muted"><?= htmlspecialchars($user['DATE_ENTREE'] ?? '') ?></div>
+                        </div>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-start bg-transparent px-0">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Fonction actuelle au sein du zoo</div>
+                            <div class="text-muted"><?= htmlspecialchars($user['NOM_FONCTION'] ?? '') ?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- modif du mdp -->
+        <?php if ($_SESSION['user']['ID_PERSONNEL'] == $id_user): ?>
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">Modifier mon mot de passe</h3>
+
+                    <form action="index.php?action=updatePassword" method="POST">
+                        <div class="mb-3">
+                            <label for="old_password" class="form-label">Mot de passe actuel <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="old_password" name="old_password" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">Nouveau mot de passe <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="new_password" name="new_password" required minlength="6">
+                            <small class="text-muted">Minimum 6 caractères</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label">Confirmer le nouveau mot de passe <span class="text-danger">*</span></label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required minlength="6">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-shield-lock"></i> Modifier le mot de passe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body p-4">
+                <h3 class="card-title mb-4">Historique des contrats</h3>
+
+                <?php if (!empty($historique)): ?>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Fonction</th>
+                                    <th>Date début</th>
+                                    <th>Date fin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($historique as $contrat): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($contrat['NOM_FONCTION'] ?? '') ?></td>
+                                        <td><?= htmlspecialchars($contrat['DATE_DEBUT'] ?? '') ?></td>
+                                        <td><?= htmlspecialchars($contrat['DATE_FIN'] ?? '') ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <p class="text-muted mb-0">Aucun historique de contrat trouvé pour cet employé.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+
+    </div>
+</div>
