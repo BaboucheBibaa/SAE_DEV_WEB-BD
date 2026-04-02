@@ -87,10 +87,15 @@ class Boutique extends BaseModel
         return $this->executeModify($sql, [':id' => $id]);
     }
 
-    public function moteurRechercheRecup($searchTerm)
+    public function moteurRechercheRecup($searchTerm, $filters = [])
     {
-        $sql = "SELECT * FROM BOUTIQUE WHERE LOWER(NOM_BOUTIQUE) LIKE LOWER(:searchTerm)";
-        $likeTerm = '%' . $searchTerm . '%';
-        return $this->executeQueryAll($sql, [':searchTerm' => $likeTerm]);
+        $sql = "SELECT B.*, Z.NOM_ZONE 
+                 FROM BOUTIQUE B
+                 LEFT JOIN ZONE Z ON B.ID_ZONE = Z.ID_ZONE
+                 WHERE LOWER(B.NOM_BOUTIQUE) LIKE LOWER(:searchTerm)
+                    OR LOWER(B.DESCRIPTION_BOUTIQUE) LIKE LOWER(:searchTerm)
+                 ORDER BY B.NOM_BOUTIQUE";
+        
+        return $this->executeQueryAll($sql, [':searchTerm' => '%' . $searchTerm . '%']);
     }
 }

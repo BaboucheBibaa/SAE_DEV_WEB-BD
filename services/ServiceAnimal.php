@@ -284,4 +284,26 @@ class ServiceAnimal
         }
         return $enfants;
     }
+
+    /**
+     * Crée un lien de parenté entre deux animaux
+     * @param int $id_parent ID du parent
+     * @param int $id_enfant ID de l'enfant
+     * @return bool|null Résultat de la création
+     */
+    public function creerParente($id_parent, $id_enfant)
+    {
+        return $this->Animal->creerParente($id_parent, $id_enfant);
+    }
+
+    /**
+     * Supprime un lien de parenté entre deux animaux
+     * @param int $id_parent ID du parent
+     * @param int $id_enfant ID de l'enfant
+     * @return bool|null Résultat de la suppression
+     */
+    public function supprimerParente($id_parent, $id_enfant)
+    {
+        return $this->Animal->supprimerParente($id_parent, $id_enfant);
+    }
 }

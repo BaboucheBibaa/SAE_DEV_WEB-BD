@@ -24,9 +24,7 @@ class EnclosController extends BaseController {
 
         $enclos = $this->serviceEnclos->getEnclosParCoordonnees($latitude, $longitude);
         if (!$enclos) {
-            echo $latitude;
-            echo $longitude;
-            //$this->redirectWithMessage('home', 'Enclos non trouvé.', 'error');
+            $this->redirectWithMessage('home', 'Enclos non trouvé.', 'error');
         }
         $reparations = $this->serviceReparation->getReparationsParEnclos($latitude, $longitude);
         $animaux= $this->serviceAnimal->getAnimalParCoordonnees($latitude, $longitude);

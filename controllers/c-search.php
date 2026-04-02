@@ -4,15 +4,20 @@ class SearchController extends BaseController
 {
     private $serviceSearch;
     private $serviceZone;
+    private $serviceEmployee;
+    private $serviceEspece;
+
     public function __construct()
     {
         $this->serviceSearch = new ServiceSearch();
         $this->serviceZone = new ServiceZone();
+        $this->serviceEmployee = new ServiceEmployee();
+        $this->serviceEspece = new ServiceEspece();
     }
+
     /**
      * Route la requête de recherche vers l'action appropriée
-     * Détermine si c'est une recherche ou un affichage de la page
-     * @return void Affiche la page ou les résultats
+     * @return void
      */
     public function gererRequete(): void
     {
@@ -42,11 +47,17 @@ class SearchController extends BaseController
     {
         $searchTerm = $_GET['q'] ?? '';
 
-        // Filtres avancés
+        // Filtres simples
         $filter_espece = $_GET['filter_espece'] ?? '';
         $filter_zone = $_GET['filter_zone'] ?? '';
         $filter_regime = $_GET['filter_regime'] ?? '';
-        $filter_type_enclos = $_GET['filter_type_enclos'] ?? '';
+
+        // Nouveaux filtres spécifiques
+        $filter_poids_min = $_GET['filter_poids_min'] ?? '';
+        $filter_poids_max = $_GET['filter_poids_max'] ?? '';
+        $filter_date_naissance_min = $_GET['filter_date_naissance_min'] ?? '';
+        $filter_date_naissance_max = $_GET['filter_date_naissance_max'] ?? '';
+        $filter_fonction = $_GET['filter_fonction'] ?? '';
 
         $results = [];
         $message = '';
@@ -57,7 +68,11 @@ class SearchController extends BaseController
             empty($filter_espece) &&
             empty($filter_zone) &&
             empty($filter_regime) &&
-            empty($filter_type_enclos)
+            empty($filter_poids_min) &&
+            empty($filter_poids_max) &&
+            empty($filter_date_naissance_min) &&
+            empty($filter_date_naissance_max) &&
+            empty($filter_fonction)
         ) {
             $message = 'Veuillez entrer un terme ou appliquer un filtre.';
         } else {
@@ -65,12 +80,15 @@ class SearchController extends BaseController
                 'espece' => $_GET['filter_espece'] ?? '',
                 'zone' => $_GET['filter_zone'] ?? '',
                 'regime' => $_GET['filter_regime'] ?? '',
-                'type_enclos' => $_GET['filter_type_enclos'] ?? ''
+                'poids_min' => $_GET['filter_poids_min'] ?? '',
+                'poids_max' => $_GET['filter_poids_max'] ?? '',
+                'date_naissance_min' => $_GET['filter_date_naissance_min'] ?? '',
+                'date_naissance_max' => $_GET['filter_date_naissance_max'] ?? '',
+                'fonction' => $_GET['filter_fonction'] ?? ''
             ];
 
-            $results = $this->serviceSearch->recherchGlobale($_GET['q'] ?? '', $filters);
 
-
+            $results = $this->serviceSearch->recherchGlobale($_GET['q'] ?? '',$filters);
             // Compter les résultats
             $totalResults = 0;
             foreach ($results as $category) {
@@ -83,8 +101,9 @@ class SearchController extends BaseController
                 $message = 'Aucun résultat trouvé.';
             }
         }
-
+        $fonctions = $this->serviceEmployee->getFonctions();
         $zones = $this->serviceZone->getAll();
+        $especes = $this->serviceEspece->getAll();
 
         $this->render('test-moteur-recherche', [
             'title' => 'Résultats de Recherche - Zoo\'land',
@@ -94,8 +113,14 @@ class SearchController extends BaseController
             'filter_espece' => $filter_espece,
             'filter_zone' => $filter_zone,
             'filter_regime' => $filter_regime,
-            'filter_type_enclos' => $filter_type_enclos,
-            'zones' => $zones
+            'filter_poids_min' => $filter_poids_min,
+            'filter_poids_max' => $filter_poids_max,
+            'filter_date_naissance_min' => $filter_date_naissance_min,
+            'filter_date_naissance_max' => $filter_date_naissance_max,
+            'filter_fonction' => $filter_fonction,
+            'zones' => $zones,
+            'especes' => $especes,
+            'fonctions' => $fonctions
         ]);
     }
 }

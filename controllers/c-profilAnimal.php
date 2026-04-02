@@ -35,9 +35,10 @@ class ProfilAnimalController extends BaseController
         $libelles = $this->serviceParrainage->getLibelleParrainages();
         $parents = $this->serviceAnimal->getParents($id);
         $enfants = $this->serviceAnimal->getEnfants($id);
+        $tousAnimaux = $this->serviceAnimal->getTousAnimaux(); // Pour le formulaire d'ajout de parenté
 
         $title = "Profil de {$animal['NOM_ANIMAL']} - Zoo'land";
-        $this->render('animal/v-profil', ['title' => $title, 'animal' => $animal, 'nourritures' => $nourritures, 'soins' => $soins, 'parrains' => $listeParrains, 'visiteurs' => $visiteurs, 'libelles' => $libelles, 'parents' => $parents, 'enfants' => $enfants]);
+        $this->render('animal/v-profil', ['title' => $title, 'animal' => $animal, 'nourritures' => $nourritures, 'soins' => $soins, 'parrains' => $listeParrains, 'visiteurs' => $visiteurs, 'libelles' => $libelles, 'parents' => $parents, 'enfants' => $enfants, 'tousAnimaux' => $tousAnimaux]);
     }
 
     /**
@@ -106,5 +107,104 @@ class ProfilAnimalController extends BaseController
             );
             $this->redirectWithMessage('profilAnimal&id=' . $id_animal, 'Erreur lors de la suppression du parrainage.', 'error');
         }
+    }
+
+    /**
+     * Affiche la page de création d'un lien de parenté
+     * Accessible uniquement à l'administrateur
+     * @return void Affiche la vue de création
+     */
+    public function creationParente(): void
+    {
+        $this->requireRole(ADMINID);
+
+        $animals = $this->serviceAnimal->getTousAnimaux();
+
+        $title = "Ajouter un lien de parenté - Zoo'land";
+        $this->render('v-creationParente', ['title' => $title, 'animals' => $animals]);
+    }
+
+    /**
+     * Ajoute un lien de parenté entre deux animaux
+     * Accessible uniquement à l'administrateur
+     * @return void Redirige avec message de succès ou erreur
+     */
+    public function ajouterParente(): void
+    {
+        $this->requireRole(ADMINID);
+
+        if (empty($_POST['id_enfant']) || empty($_POST['id_parent'])) {
+            $idAnimal = $_POST['id_enfant'] ?? $_GET['id'] ?? 0;
+            $this->redirectWithMessage('profilAnimal&id=' . $idAnimal, 'Parent et enfant requis.', 'error');
+        }
+
+        $id_parent = $_POST['id_parent'];
+        $id_enfant = $_POST['id_enfant'];
+
+        // Vérifier que les deux animaux existent
+        $parent = $this->serviceAnimal->getAnimalParID($id_parent);
+        $enfant = $this->serviceAnimal->getAnimalParID($id_enfant);
+
+        if (!$parent || !$enfant) {
+            $this->redirectWithMessage('profilAnimal&id=' . $id_enfant, 'L\'un des animaux n\'existe pas.', 'error');
+        }
+
+        // Vérifier que ce n'est pas le même animal
+        if ($id_parent == $id_enfant) {
+            $this->redirectWithMessage('profilAnimal&id=' . $id_enfant, 'Un animal ne peut pas être son propre parent.', 'error');
+        }
+
+        $result = $this->serviceAnimal->creerParente($id_parent, $id_enfant);
+
+        if ($result) {
+            $this->logEvent(
+                'INSERTION_BD',
+                "Lien de parenté créé : animal id={$id_parent} est parent de animal id={$id_enfant}"
+            );
+            $_SESSION['flash'] = ['type' => 'success', 'message' => 'Lien de parenté créé avec succès.'];
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la création du lien de parenté : animal id={$id_parent} et animal id={$id_enfant}"
+            );
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Ce lien de parenté existe déjà ou une erreur s\'est produite.'];
+        }
+
+        $this->redirect('profilAnimal', $id_enfant);
+    }
+
+    /**
+     * Supprime un lien de parenté entre deux animaux
+     * Accessible uniquement à l'administrateur
+     * @return void Redirige avec message de succès ou erreur
+     */
+    public function supprimerParente(): void
+    {
+        $this->requireRole(ADMINID);
+
+        if (empty($_GET['id_parent']) || empty($_GET['id_enfant'])) {
+            $this->redirectWithMessage('home', 'Données manquantes.', 'error');
+        }
+
+        $id_parent = $_GET['id_parent'];
+        $id_enfant = $_GET['id_enfant'];
+
+        $result = $this->serviceAnimal->supprimerParente($id_parent, $id_enfant);
+
+        if ($result) {
+            $this->logEvent(
+                'DELETE_BD',
+                "Lien de parenté supprimé : animal id={$id_parent} n'est plus parent de animal id={$id_enfant}"
+            );
+            $_SESSION['flash'] = ['type' => 'success', 'message' => 'Lien de parenté supprimé avec succès.'];
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression du lien de parenté entre id={$id_parent} et id={$id_enfant}"
+            );
+            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur lors de la suppression du lien de parenté.'];
+        }
+
+        $this->redirect('profilAnimal', $id_enfant);
     }
 }

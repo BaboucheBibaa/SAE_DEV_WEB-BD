@@ -179,36 +179,92 @@ class Animal extends BaseModel
      */
     public function moteurRechercheRecup($searchTerm, $filters = [])
     {
-        $sql = "SELECT * FROM ANIMAL WHERE 1=1";
+        $sql = "SELECT A.*, E.NOM_ESPECE FROM ANIMAL A 
+                 LEFT JOIN ESPECE E ON A.ID_ESPECE = E.ID_ESPECE
+                 WHERE 1=1";
         $params = [];
-
+        
         if (!empty($searchTerm)) {
-            $sql .= " AND (LOWER(NOM_ANIMAL) LIKE LOWER(:searchTerm))";
-            $params[':searchTerm'] = "%" . $searchTerm . "%";
+            $sql .= " AND (LOWER(A.NOM_ANIMAL) LIKE LOWER(:searchTerm)
+                           OR LOWER(E.NOM_ESPECE) LIKE LOWER(:searchTerm))";
+            $params[':searchTerm'] = '%' . $searchTerm . '%';
         }
-
+        
+        // Filtre Espèce
         if (!empty($filters['espece'])) {
-            $sql .= " AND ID_ESPECE IN (SELECT ID_ESPECE FROM ESPECE WHERE LOWER(NOM_ESPECE) LIKE LOWER(:espece))";
-            $params[':espece'] = "%" . $filters['espece'] . "%";
+            $sql .= " AND A.ID_ESPECE = :id_espece";
+            $params[':id_espece'] = $filters['espece'];
         }
-
-        if (!empty($filters['zone'])) {
-            $sql .= " AND EXISTS (SELECT 1 FROM ENCLOS e JOIN ZONE z ON z.ID_ZONE = e.ID_ZONE 
-                     WHERE e.LATITUDE = LATITUDE_ENCLOS AND e.LONGITUDE = LONGITUDE_ENCLOS 
-                     AND LOWER(z.NOM_ZONE) LIKE LOWER(:zone))";
-            $params[':zone'] = "%" . $filters['zone'] . "%";
+        
+        // Filtre Poids minimum
+        if (!empty($filters['poids_min'])) {
+            $sql .= " AND A.POIDS >= :poids_min";
+            $params[':poids_min'] = floatval($filters['poids_min']);
         }
-
-        if (!empty($filters['regime'])) {
-            $sql .= " AND LOWER(REGIME_ALIMENTAIRE) LIKE LOWER(:regime)";
-            $params[':regime'] = "%" . $filters['regime'] . "%";
+        
+        // Filtre Poids maximum
+        if (!empty($filters['poids_max'])) {
+            $sql .= " AND A.POIDS <= :poids_max";
+            $params[':poids_max'] = floatval($filters['poids_max']);
         }
-
-        if (!empty($filters['type_enclos'])) {
-            $sql .= " AND (LATITUDE_ENCLOS, LONGITUDE_ENCLOS) IN (SELECT LATITUDE, LONGITUDE FROM ENCLOS WHERE LOWER(TYPE_ENCLOS) LIKE LOWER(:type_enclos))";
-            $params[':type_enclos'] = "%" . $filters['type_enclos'] . "%";
+        
+        // Filtre Date de naissance (après)
+        if (!empty($filters['date_naissance_min'])) {
+            $sql .= " AND A.DATE_NAISSANCE >= TO_DATE(:date_min, 'YYYY-MM-DD')";
+            $params[':date_min'] = $filters['date_naissance_min'];
         }
-
+        
+        // Filtre Date de naissance (avant)
+        if (!empty($filters['date_naissance_max'])) {
+            $sql .= " AND A.DATE_NAISSANCE <= TO_DATE(:date_max, 'YYYY-MM-DD')";
+            $params[':date_max'] = $filters['date_naissance_max'];
+        }
+        
+        $sql .= " ORDER BY A.NOM_ANIMAL";
         return $this->executeQueryAll($sql, $params);
+    }
+
+    /**
+     * Crée un lien de parenté entre deux animaux
+     * @param int $id_parent ID de l'animal parent
+     * @param int $id_enfant ID de l'animal enfant
+     * @return bool|null Résultat de l'insertion
+     */
+    public function creerParente($id_parent, $id_enfant)
+    {
+        // Vérifier que ce lien n'existe pas déjà
+        $checkSql = "SELECT COUNT(*) as CNT FROM EST_LE_PARENT_DE 
+                     WHERE ID_PARENT = :id_parent AND ID_ENFANT = :id_enfant";
+        $result = $this->executeQuery($checkSql, [
+            ':id_parent' => $id_parent,
+            ':id_enfant' => $id_enfant
+        ]);
+        
+        if ($result && $result['CNT'] > 0) {
+            return false; // Le lien existe déjà
+        }
+        
+        $sql = "INSERT INTO EST_LE_PARENT_DE (ID_PARENT, ID_ENFANT) 
+                VALUES (:id_parent, :id_enfant)";
+        return $this->executeModify($sql, [
+            ':id_parent' => $id_parent,
+            ':id_enfant' => $id_enfant
+        ]);
+    }
+
+    /**
+     * Supprime un lien de parenté entre deux animaux
+     * @param int $id_parent ID de l'animal parent
+     * @param int $id_enfant ID de l'animal enfant
+     * @return bool|null Résultat de la suppression
+     */
+    public function supprimerParente($id_parent, $id_enfant)
+    {
+        $sql = "DELETE FROM EST_LE_PARENT_DE 
+                WHERE ID_PARENT = :id_parent AND ID_ENFANT = :id_enfant";
+        return $this->executeModify($sql, [
+            ':id_parent' => $id_parent,
+            ':id_enfant' => $id_enfant
+        ]);
     }
 }

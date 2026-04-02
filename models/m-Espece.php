@@ -52,11 +52,20 @@ class Espece extends BaseModel
         return $this->executeModify($query, [':id_espece' => $id_espece]);
     }
 
-    public function moteurRechercheRecup($searchTerm)
+    public function moteurRechercheRecup($searchTerm, $filters = [])
     {
-        $sql = "SELECT * FROM ESPECE WHERE LOWER(NOM_ESPECE) LIKE LOWER(:searchTerm)";
-        $likeTerm = '%' . $searchTerm . '%';
-        return $this->executeQueryAll($sql, [':searchTerm' => $likeTerm]);
+        $sql = "SELECT E.*, COUNT(A.ID_ANIMAL) as NB_ANIMAUX 
+                 FROM ESPECE E
+                 LEFT JOIN ANIMAL A ON E.ID_ESPECE = A.ID_ESPECE
+                 WHERE (LOWER(E.NOM_ESPECE) LIKE LOWER(:searchTerm)
+                        OR LOWER(E.NOM_LATIN_ESPECE) LIKE LOWER(:searchTerm))";
+        
+        $params = [':searchTerm' => '%' . $searchTerm . '%'];
+        
+        $sql .= " GROUP BY E.ID_ESPECE, E.NOM_ESPECE, E.NOM_LATIN_ESPECE, E.EST_MENACEE
+                  ORDER BY E.NOM_ESPECE";
+        
+        return $this->executeQueryAll($sql, $params);
     }
 
     public function getEspecesCompatibles($id_espece)

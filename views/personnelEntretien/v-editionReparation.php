@@ -143,7 +143,7 @@
                                         <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
                                             <i class="bi bi-check-circle"></i> Enregistrer les modifications
                                         </button>
-                                        <a href="index.php?action=listerEntretiens" class="btn btn-secondary btn-lg">
+                                        <a href="index.php?action=profilEnclos&latitude=<?= $reparation['LATITUDE_ENCLOS'] ?>&longitude=<?= $reparation['LONGITUDE_ENCLOS'] ?>" class="btn btn-secondary btn-lg">
                                             <i class="bi bi-arrow-left"></i> Annuler
                                         </a>
                                     </div>

@@ -31,6 +31,11 @@ class ServiceEmployee
                 return $this->User->getAll(null);
         }
     }
+
+
+    public function getFonctions(){
+        return $this->Fonction->getAll();
+    }
     /**
      * Récupère l'ID du dernier employé ajouté à la base de données
      * @return int|null ID du dernier employé ou null
@@ -299,6 +304,8 @@ class ServiceEmployee
         //Met à jour le statut d'archivage d'un employé
         return $this->User->majArchive($id, $estArchive);
     }
+
+    
 
     //Fonctions retournant des données nécessaires pour des affichages de formulaires
     /**

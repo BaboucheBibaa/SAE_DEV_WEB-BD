@@ -1,14 +1,15 @@
 <?php
-// Ce fichier affiche la page de moteur de recherche
-// Ce fichier affiche la page de moteur de recherche
 $searchTerm = $searchTerm ?? '';
 $results = $results ?? [];
 $message = $message ?? '';
-// Filtres avancés récupérés depuis l'URL
+$especes = $especes ?? [];
+$fonctions = $fonctions ?? [];
 $filter_espece = $_GET['filter_espece'] ?? '';
-$filter_zone = $_GET['filter_zone'] ?? '';
-$filter_regime = $_GET['filter_regime'] ?? '';
-$filter_type_enclos = $_GET['filter_type_enclos'] ?? '';
+$filter_poids_min = $_GET['filter_poids_min'] ?? '';
+$filter_poids_max = $_GET['filter_poids_max'] ?? '';
+$filter_date_naissance_min = $_GET['filter_date_naissance_min'] ?? '';
+$filter_date_naissance_max = $_GET['filter_date_naissance_max'] ?? '';
+$filter_fonction = $_GET['filter_fonction'] ?? '';
 ?>
 
 <main class="container my-5 flex-grow-1">
@@ -20,8 +21,7 @@ $filter_type_enclos = $_GET['filter_type_enclos'] ?? '';
                 <div class="card-body">
                     <h5 class="card-title mb-4">Recherche Globale</h5>
 
-                    <!-- FORMULAIRE PRINCIPAL -->
-                    <form method="GET" action="index.php" class="mb-3">
+                    <form method="GET" action="index.php" class="mb-4">
                         <input type="hidden" name="action" value="search">
                         <input type="hidden" name="search_action" value="recherche_globale">
 
@@ -38,59 +38,77 @@ $filter_type_enclos = $_GET['filter_type_enclos'] ?? '';
                             </button>
                         </div>
 
-                        <!-- 🔽 FILTRES AVANCÉS -->
-                        <div class="card p-3 bg-light border">
-                            <h6 class="mb-3"><i class="bi bi-funnel"></i> Filtres avancés</h6>
-
+                        <!-- FILTRES AVANCÉS -->
+                        <div class="border-top pt-3 mt-3">
+                            <h6 class="mb-3"><i class="bi bi-funnel"></i> Filtres Avancés</h6>
+                            
                             <div class="row g-3">
-
-                                <!-- Filtre Espèce -->
-                                <div class="col-md-3">
-                                    <label class="form-label">Espèce</label>
-                                    <input type="text" name="filter_espece" class="form-control"
-                                        placeholder="Ex : Lion"
-                                        value="<?= htmlspecialchars($filter_espece) ?>">
-                                </div>
-
-                                <!-- Filtre Zone -->
-
-                                <div class="col-md-3">
-                                    <label class="form-label">Zone</label>
-                                    <select name="filter_zone" class="form-select">
-                                        <option value="">Sélectionnez une zone</option>
-
-                                        <?php foreach ($zones as $z): ?>
-                                            <option value="<?= htmlspecialchars($z['ID_ZONE']) ?>">
-                                                <?= htmlspecialchars($z['NOM_ZONE']) ?>
+                                <!-- Espèce -->
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="filter_espece" class="form-label">Espèce</label>
+                                    <select name="filter_espece" id="filter_espece" class="form-select">
+                                        <option value="">Toutes les espèces</option>
+                                        <?php foreach ($especes as $e): ?>
+                                            <option value="<?= htmlspecialchars($e['ID_ESPECE']) ?>" 
+                                                    <?= $filter_espece == $e['ID_ESPECE'] ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($e['NOM_ESPECE']) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
 
+                                <!-- Poids Min -->
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="filter_poids_min" class="form-label">Poids Min (kg)</label>
+                                    <input type="number" name="filter_poids_min" id="filter_poids_min" 
+                                           class="form-control" step="0.1" min="0"
+                                           value="<?= htmlspecialchars($filter_poids_min) ?>"
+                                           placeholder="0">
+                                </div>
 
-                                <!-- Filtre Régime alimentaire -->
-                                <div class="col-md-3">
-                                    <label class="form-label">Régime alimentaire</label>
-                                    <select name="filter_regime" class="form-select">
-                                        <option value="">Tous</option>
-                                        <option value="Carnivore" <?= $filter_regime === "Carnivore" ? "selected" : "" ?>>Carnivore</option>
-                                        <option value="Herbivore" <?= $filter_regime === "Herbivore" ? "selected" : "" ?>>Herbivore</option>
-                                        <option value="Omnivore" <?= $filter_regime === "Omnivore" ? "selected" : "" ?>>Omnivore</option>
+                                <!-- Poids Max -->
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="filter_poids_max" class="form-label">Poids Max (kg)</label>
+                                    <input type="number" name="filter_poids_max" id="filter_poids_max" 
+                                           class="form-control" step="0.1" min="0"
+                                           value="<?= htmlspecialchars($filter_poids_max) ?>"
+                                           placeholder="1000">
+                                </div>
+
+                                <!-- Fonction Employé -->
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="filter_fonction" class="form-label">Fonction Employé</label>
+                                    <select name="filter_fonction" id="filter_fonction" class="form-select">
+                                        <option value="">Toutes les fonctions</option>
+                                        <?php foreach ($fonctions as $f): ?>
+                                            <option value="<?= htmlspecialchars($f['ID_FONCTION']) ?>" 
+                                                    <?= $filter_fonction == $f['ID_FONCTION'] ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($f['NOM_FONCTION']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
 
-                                <!-- Filtre Type d'enclos -->
-                                <div class="col-md-3">
-                                    <label class="form-label">Type d'enclos</label>
-                                    <input type="text" name="filter_type_enclos" class="form-control"
-                                        placeholder="Ex : Extérieur"
-                                        value="<?= htmlspecialchars($filter_type_enclos) ?>">
+                                <!-- Date Naissance Min -->
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="filter_date_naissance_min" class="form-label">Date Naissance Min</label>
+                                    <input type="date" name="filter_date_naissance_min" id="filter_date_naissance_min" 
+                                           class="form-control"
+                                           value="<?= htmlspecialchars($filter_date_naissance_min) ?>">
+                                </div>
+
+                                <!-- Date Naissance Max -->
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="filter_date_naissance_max" class="form-label">Date Naissance Max</label>
+                                    <input type="date" name="filter_date_naissance_max" id="filter_date_naissance_max" 
+                                           class="form-control"
+                                           value="<?= htmlspecialchars($filter_date_naissance_max) ?>">
                                 </div>
                             </div>
 
-                            <div class="mt-3 text-end">
-                                <button class="btn btn-secondary" type="submit">
-                                    <i class="bi bi-funnel"></i> Appliquer les filtres
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-arrow-repeat"></i> Appliquer les filtres
                                 </button>
                             </div>
                         </div>
@@ -105,7 +123,7 @@ $filter_type_enclos = $_GET['filter_type_enclos'] ?? '';
                     <?php endif; ?>
 
                     <!-- Résultats -->
-                    <?php if (!empty($searchTerm) || !empty($filter_espece) || !empty($filter_zone) || !empty($filter_regime) || !empty($filter_type_enclos)): ?>
+                    <?php if (!empty($searchTerm) || !empty($filter_espece) || !empty($filter_poids_min) || !empty($filter_poids_max) || !empty($filter_date_naissance_min) || !empty($filter_date_naissance_max) || !empty($filter_fonction)): ?>
                         <div class="search-results">
                             <!-- Animaux -->
                             <?php if (!empty($results['animals'])): ?>
@@ -132,7 +150,6 @@ $filter_type_enclos = $_GET['filter_type_enclos'] ?? '';
                                     </div>
                                 </div>
                             <?php endif; ?>
-                            <!-- (Les autres sections restent identiques) -->
                             <!-- Espèces -->
                             <?php if (!empty($results['especes'])): ?>
                                 <div class="mb-4">

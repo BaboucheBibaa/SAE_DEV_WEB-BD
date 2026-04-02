@@ -32,8 +32,7 @@ class User extends BaseModel
         $sql = "SELECT Personnel.*, Fonction.ID_Fonction, Fonction.Nom_Fonction
             FROM Personnel 
             LEFT JOIN Fonction ON Personnel.ID_Fonction = Fonction.ID_Fonction 
-            WHERE ID_Personnel = :id
-            AND estArchive = 1";
+            WHERE ID_Personnel = :id";
         return $this->executeQuery($sql, [':id' => $id]);
     }
 
@@ -160,12 +159,26 @@ class User extends BaseModel
         return $this->executeModify($sql, [':id' => $id]);
     }
 
-    public function moteurRechercheRecup($searchTerm)
+    public function moteurRechercheRecup($searchTerm, $filters = [])
     {
-        /*Récupère tous les employés correspondant à un terme de recherche dans leur nom ou prénom
-        */
-        $sql = "SELECT * FROM Personnel WHERE LOWER(Nom) LIKE LOWER(:searchTerm) OR LOWER(Prenom) LIKE LOWER(:searchTerm) AND estArchive = 1";
-        $likeTerm = '%' . $searchTerm . '%';
-        return $this->executeQueryAll($sql, [':searchTerm' => $likeTerm]);
+        $sql = "SELECT P.*, F.NOM_FONCTION 
+                 FROM PERSONNEL P 
+                 LEFT JOIN FONCTION F ON P.ID_FONCTION = F.ID_FONCTION
+                 WHERE (LOWER(P.NOM) LIKE LOWER(:searchTerm) 
+                        OR LOWER(P.PRENOM) LIKE LOWER(:searchTerm)
+                        OR LOWER(P.MAIL) LIKE LOWER(:searchTerm)
+                        OR LOWER(P.LOGIN) LIKE LOWER(:searchTerm))
+                 AND P.ESTARCHIVE = 1";
+
+        $params = [':searchTerm' => '%' . $searchTerm . '%'];
+
+        // Filtre Fonction
+        if (!empty($filters['fonction'])) {
+            $sql .= " AND P.ID_FONCTION = :id_fonction";
+            $params[':id_fonction'] = $filters['fonction'];
+        }
+
+        $sql .= " ORDER BY P.NOM, P.PRENOM";
+        return $this->executeQueryAll($sql, $params);
     }
 }

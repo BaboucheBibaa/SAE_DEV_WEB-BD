@@ -32,26 +32,6 @@ class AdminController extends BaseController
 
     //  Dashboard admin
 
-
-    /**
-     * Affiche les alertes pour les contrats de travail qui se terminent bientôt
-     *
-     * @return void
-     */
-    public function popUpsAdmins(): void
-    {
-        $this->requireRole(ADMINID);
-        $finsDeContrats = $this->serviceEmployee->getFinsDeContrats();
-        $nbFins = count($finsDeContrats);
-        if ($nbFins == 1) {
-            $message = "Il y a $nbFins contrat de travail qui se termine dans les 30 prochains jours.";
-            $_SESSION['flash'] = ['type' => 'warning', 'message' => $message];
-        } elseif ($nbFins > 1) {
-            $message = "Il y a $nbFins contrats de travail qui se terminent dans les 30 prochains jours.";
-            $_SESSION['flash'] = ['type' => 'warning', 'message' => $message];
-        }
-    }
-
     /**
      * Affiche le tableau de bord administrateur avec les filtres d'archivage
      *
@@ -60,7 +40,6 @@ class AdminController extends BaseController
     public function profilAdmin(): void
     {
         $this->requireRole(ADMINID);
-        $this->popUpsAdmins();
         $title = "Profil Administrateur";
         $filtreArchive = $_GET['filtreArchive'] ?? 'tous';
         if (!in_array($filtreArchive, ['tous', 'actifs', 'archives'], true)) {
@@ -291,16 +270,12 @@ class AdminController extends BaseController
 
         //si l'employé n'existe pas on met un msg d'erreur
         if (!$employee) {
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Employé non trouvé.'];
-            header('Location: index.php?action=adminDashboard&filtreArchive=' . $filtreArchive);
-            exit;
+            $this->redirectWithMessage('adminDashboard','Employé non trouvé','error');
         }
 
         //empêcher un admin d'archiver son propre compte
         if (!empty($_SESSION['user']['ID_PERSONNEL']) && $_SESSION['user']['ID_PERSONNEL'] == $id) {
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Vous ne pouvez pas archiver votre propre compte.'];
-            header('Location: index.php?action=adminDashboard&filtreArchive=' . $filtreArchive);
-            exit;
+            $this->redirectWithMessage('adminDashboard','Vous ne pouvez pas archiver votre propre compte','error');
         }
         //valeur : 0 pour archiver, 1 pour désarchiver, si elle existe on la met en int et on l'affecte, sinon null
         $valeur = isset($_GET['valeur']) ? intval($_GET['valeur']) : null;
@@ -308,18 +283,14 @@ class AdminController extends BaseController
         $nouvelEtat = ($valeur === 0 || $valeur === 1)
             ? $valeur
             : ((int) ($employee['ESTARCHIVE'] ?? 1) === 1 ? 0 : 1);
-
         if ($this->serviceEmployee->majArchiveEmployee($id, $nouvelEtat)) {
             $message = $nouvelEtat === 0
                 ? 'Employé archivé avec succès.'
                 : 'Employé désarchivé avec succès.';
-            $_SESSION['flash'] = ['type' => 'success', 'message' => $message];
+            $this->redirectWithMessage('adminDashboard', $message, 'success', ['filtreArchive' => $filtreArchive]);
         } else {
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur lors de la mise à jour du statut d\'archivage.'];
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour du statut d\'archivage', 'error', ['filtreArchive' => $filtreArchive]);
         }
-
-        header('Location: index.php?action=adminDashboard&filtreArchive=' . $filtreArchive);
-        exit;
     }
 
     //  Boutiques
@@ -1224,7 +1195,7 @@ class AdminController extends BaseController
      *
      * @return void
      */
-    public function supprReparation($dateDebut,$longitude,$latitude): void
+    public function supprReparation($dateDebut, $longitude, $latitude): void
     {
         $this->requireRole(ADMINID);
         if (!$dateDebut || !$latitude || !$longitude) {
@@ -1233,7 +1204,7 @@ class AdminController extends BaseController
         }
 
         // Vérifier que la réparation existe
-        $reparation = $this->serviceReparation->getReparation($dateDebut,$longitude,$latitude);
+        $reparation = $this->serviceReparation->getReparation($dateDebut, $longitude, $latitude);
 
         if (!$reparation) {
             $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation non trouvée.', 'error');
@@ -1266,7 +1237,7 @@ class AdminController extends BaseController
     public function formEditionReparation(string $date_debut, float $latitude, float $longitude): void
     {
         $this->requireRole(ADMINID);
-        
+
         if (!$date_debut || !is_numeric($latitude) || !is_numeric($longitude)) {
             $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation non trouvée.', 'error');
             return;
@@ -1322,9 +1293,9 @@ class AdminController extends BaseController
             'COUT_REPARATION' => $_POST['COUT_REPARATION'] ?? null
         ];
 
-        echo $data['COUT_REPARATION']."<br>";
-        echo $data['DATE_DEBUT_REPARATION']."<br>";
-        echo $data['DATE_FIN']."<br>";
+        echo $data['COUT_REPARATION'] . "<br>";
+        echo $data['DATE_DEBUT_REPARATION'] . "<br>";
+        echo $data['DATE_FIN'] . "<br>";
 
         if ($this->serviceReparation->updateReparation($data)) {
             $this->logEvent(

@@ -4,7 +4,7 @@
  * Classe de base pour tous les modèles
  * Centralise la logique OCI pour éviter la duplication de code
  */
-abstract class BaseModel
+class BaseModel
 {
     /**
      * Exécute une requête OCI et retourne un seul résultat
@@ -40,7 +40,7 @@ abstract class BaseModel
      * @param array $params Tableau associatif des paramètres [':param_name' => $value]
      * @return array Tableau indexé contenant des tableaux associatifs
      */
-    protected function executeQueryAll($query, $params = [])
+    public function executeQueryAll($query, $params = [])
     {
         $db = Database::getConnection();
         $stid = oci_parse($db, $query);

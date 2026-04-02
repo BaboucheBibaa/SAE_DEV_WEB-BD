@@ -45,7 +45,9 @@ class PersonnelEntretienController extends BaseController
     public function ajoutEntretien(): void
     {
         $this->requireRole(ENTRETIEN);
-        if ($this->serviceReparation->ajoutEntretien()) {
+        $result = $this->serviceReparation->ajoutEntretien();
+
+        if ($result) {
             $this->logEvent(
                 'INSERTION_BD',
                 "Nouvelle tâche d'entretien ajoutée"
@@ -59,21 +61,6 @@ class PersonnelEntretienController extends BaseController
             $this->redirectWithMessage('formAjoutEntretien', 'Erreur lors de l\'enregistrement de l\'entretien.', 'error');
         }
     }
-
-    /**
-     * Supprime une tâche d'entretien
-     *
-     * @return void
-     */
-    public function supprimerEntretien(): void
-    {
-        // Logique pour supprimer une tâche d'entretien
-        $this->logEvent(
-            'DELETE_BD',
-            "Tâche d'entretien supprimée"
-        );
-    }
-
     /**
      * Affiche la liste des tâches d'entretien du personnel connecté
      *

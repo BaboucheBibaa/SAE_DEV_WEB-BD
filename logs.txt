@@ -166,3 +166,12 @@
 [2026-04-02 09:55:37] [CONNEXION] Connexion réussie: login=ddupont, id=3
 [2026-04-02 10:02:14] [DECONNEXION] Déconnexion utilisateur id=3
 [2026-04-02 10:02:18] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-02 15:48:33] [SUPPRESSION_BD] Employé supprimé: id=25
+[2026-04-02 15:49:06] [SUPPRESSION_BD] Employé supprimé: id=24
+[2026-04-02 15:51:20] [SUPPRESSION_BD] Réparation supprimée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-02 15:55:59] [SUPPRESSION_BD] Réparation supprimée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-02 16:11:57] [UPDATE_BD] Employé mis à jour: id=1
+[2026-04-02 16:29:27] [INSERTION_BD] Lien de parenté créé : animal id=1 est parent de animal id=12
+[2026-04-02 16:29:35] [DELETE_BD] Lien de parenté supprimé : animal id=1 n'est plus parent de animal id=12
+[2026-04-02 16:32:29] [INSERTION_BD] Lien de parenté créé : animal id=2 est parent de animal id=11
+[2026-04-02 16:32:43] [DELETE_BD] Lien de parenté supprimé : animal id=2 n'est plus parent de animal id=11

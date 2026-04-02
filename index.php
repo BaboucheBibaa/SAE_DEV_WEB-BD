@@ -153,6 +153,9 @@ switch ($action) {
     case 'profilAnimal':
     case 'ajouterParrainage':
     case 'supprimerParrainage':
+    case 'creationParente':
+    case 'ajouterParente':
+    case 'supprimerParente':
         $controller = new ProfilAnimalController();
         break;
     case 'profilEnclos':
@@ -343,6 +346,14 @@ switch ($action) {
         $controller->supprimerParrainage();
         break;
 
+    case 'ajouterParente':
+        $controller->ajouterParente();
+        break;
+
+    case 'supprimerParente':
+        $controller->supprimerParente();
+        break;
+
     case 'soigneursDashboard':
         $controller->index();
         break;
@@ -372,9 +383,6 @@ switch ($action) {
         break;
     case 'listerEntretiens':
         $controller->listerEntretiens();
-        break;
-    case 'supprimerEntretien':
-        $controller->supprimerEntretien();
         break;
     case 'profilZone':
         $controller->profileZone($_GET['id']);
@@ -446,8 +454,12 @@ switch ($action) {
         $controller->supprContrat($_GET['id']);
         break;
 
+    case 'creationParente':
+        $controller->creationParente();
+        break;
+
     case 'modifReparation':
-        $controller->formEditionReparation(urldecode($_GET['dateReparation']),$_GET['latitude'],$_GET['longitude']);
+        $controller->formEditionReparation(urldecode($_GET['dateReparation']), $_GET['latitude'], $_GET['longitude']);
     case 'creationEnclos':
         $controller->formCreationEnclos();
         break;
@@ -464,10 +476,10 @@ switch ($action) {
         $controller->supprEnclos();
         break;
     case 'supprReparation':
-        $controller->supprReparation(urldecode($_GET['dateReparation']),$_GET['longitude'],$_GET['latitude']);
+        $controller->supprReparation(urldecode($_GET['dateReparation']), $_GET['longitude'], $_GET['latitude']);
         break;
     case 'formEditionReparation':
-        $controller->formEditionReparation(urldecode($_GET['date_debut']),$_GET['latitude'],$_GET['longitude']);
+        $controller->formEditionReparation(urldecode($_GET['date_debut']), $_GET['latitude'], $_GET['longitude']);
         break;
     case 'updateReparation':
         $controller->updateReparation();

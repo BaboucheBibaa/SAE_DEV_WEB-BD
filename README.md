@@ -173,6 +173,12 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 ### Moteur de Recherche
 
 - ✅ Recherche globale (animaux, employés, zones, boutiques, enclos)
+- ✅ Recherche spécifique (par espèce, poids min / poids max, par fonction d'un employé, par date de naissance min / max)
+
+### Ajouts optionnels
+
+- ✅ Gérer l'affichage des données du comptable par une vue
+- ✅ Ajout d'un fichier de gestion des logs (Connexion / Déconnexion au sein du site et Ajout / Maj / Suppression au sein de la BD)
 
 ---
 
@@ -195,23 +201,28 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 - ✅ Affichage de l'historique des réparations d'un enclos
 - ✅ Ajout d'une réparation (personnel entretien)
 - ✅ Accès et affichage du dashboard administrateur
-- ✅ Gestion des employés (ajout, modification, suppression, archivage)
-  - [ ] Désarchivage non fonctionnel
+- ✅ Gestion des employés (ajout, modification, suppression, archivage / désarchivage)
 - ✅ Gestion des zones (ajout, modification, suppression)
 - ✅ Gestion des boutiques (ajout, modification, suppression)
 - ✅ Accès et affichage du dashboard responsable de zone
-  - [ ] Un responsable soigneur de zone est aussi un soigneur, ajouter ce cas-ci  
+  - [ ] Un responsable soigneur de zone est aussi un soigneur, ajouter ce cas-ci
 - ✅ Accès et affichage du dashboard responsable de boutique
 - ✅ Ajout de chiffre d'affaires journalier (responsable boutique)
 - ✅ Accès et affichage du dashboard soigneur
 - ✅ Accès et affichage du dashboard personnel entretien
 - ✅ Affichage de la liste des entretiens d'enclos (personnel entretien)
 - ✅ Moteur de recherche global (animaux, employés, zones, boutiques, enclos)
-- [ ] Moteur de recherche avec filtres spécifiques MAJEUR
-- [ ] Affichage et gestion des messages flash multiples
+- ✅ Moteur de recherche avec filtres spécifiques
+  - ✅ Filtres spécifiques:
+    - ✅ Filtres sur la date de naissance d'un animal
+    - ✅ Filtres sur le poids d'un animal
+    - ✅ Filtres sur la fonction d'un employé
+    - ✅ Filtres sur l'espèce d'un animal
+  - ✅ Si une recherche filtrée implique plusieurs filtres -> résultat des plusieurs filtres affiché
 - ✅ Vérification des droits d'accès (accès refusé si non autorisé)
 - ✅ Supprimer un soin / Supprimer un parrainage / Supprimer une nourriture donnée
-- [ ] Supprimer une réparation depuis le profil enclos
+- ✅ Supprimer une réparation depuis le profil enclos
+- [ ] Ajouter un lien de parenté entre animaux
 
 ---
 
@@ -219,22 +230,8 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 
 ---
 
-### Phase 1 - Améliorations Dashboard
-
-- [ ] Dashboard Responsable Boutique:
-  - ✅ Chiffre d'affaires journalier, mensuel et annuel
-  - [ ] Statistiques
-- [ ] Dashboard Administrateur:
-  - [ ] Statistiques globales
-- [ ] Dashboard employé boutique
-- ✅ Profil espèce
-
 ### Améliorations
 
-- [ ] Gérer l'affichage des données du comptable par une vue
-- ✅ Ajout d'un fichier de gestion des logs (Connexion / Déconnexion au sein du site et Ajout / Maj / Suppression au sein de la BD)
-- ✅ Popup pour les fins de contrat sur le dashboard admin
-  - [ ] Gérer le fait de pouvoir avoir plusieurs popups à afficher
 - [ ] Mettre le nom du prestataire et pas son identifiant dans la gestion entretien
 
 ---

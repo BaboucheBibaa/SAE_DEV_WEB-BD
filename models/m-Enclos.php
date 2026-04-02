@@ -22,7 +22,7 @@ class Enclos extends BaseModel
 
     public function moteurRechercheRecup($searchTerm)
     {
-        $sql = "SELECT TYPE_ENCLOS, LONGITUDE, LATITUDE FROM ENCLOS WHERE LOWER(TYPE_ENCLOS) LIKE LOWER(:searchTerm)";
+        $sql = "SELECT E.* FROM ENCLOS E WHERE LOWER(TYPE_ENCLOS) LIKE LOWER(:searchTerm)";
         return $this->executeQueryAll($sql, [':searchTerm' => '%' . $searchTerm . '%']);
     }
 
@@ -78,4 +78,5 @@ class Enclos extends BaseModel
         $sql = "DELETE FROM ENCLOS WHERE LATITUDE = :latitude AND LONGITUDE = :longitude";
         return $this->executeModify($sql, [':latitude' => $latitude, ':longitude' => $longitude]);
     }
+
 }

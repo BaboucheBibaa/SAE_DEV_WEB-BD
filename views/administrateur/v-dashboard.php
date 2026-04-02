@@ -187,6 +187,9 @@
                             <a href="index.php?action=creationAnimal" class="btn btn-success">
                                 <i class="bi bi-plus-circle"></i> Ajouter un Animal
                             </a>
+                            <a href="index.php?action=creationParente" class="btn btn-success">
+                                <i class="bi bi-link-45deg"></i> Ajouter un lien de parenté
+                            </a>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-sm table-hover">

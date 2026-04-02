@@ -20,20 +20,26 @@ class BaseController
         require_once 'views/v-includes.php';
     }
 
-    protected function redirect(string $action, ?int $id = null): void
+    protected function redirect(string $action, ?int $id = null, array $params = []): void
     {
         $url = "index.php?action={$action}";
         if ($id !== null) {
             $url .= "&id={$id}";
         }
+        
+        // Ajouter les paramètres supplémentaires
+        foreach ($params as $key => $value) {
+            $url .= "&" . urlencode($key) . "=" . urlencode($value);
+        }
+        
         header("Location: {$url}");
         exit;
     }
 
-    protected function redirectWithMessage(string $action, string $message, string $type = 'success'): void
+    protected function redirectWithMessage(string $action, string $message, string $type = 'success', array $params = []): void
     {
         $_SESSION['flash'] = ['type' => $type, 'message' => $message];
-        $this->redirect($action);
+        $this->redirect($action, null, $params);
     }
 
     protected function requireRole(int $role): void

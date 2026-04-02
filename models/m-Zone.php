@@ -59,9 +59,14 @@ class Zone extends BaseModel
         return $this->executeModify($sql, [':id' => $id]);
     }
 
-    public function moteurRechercheRecup($searchTerm)
+    public function moteurRechercheRecup($searchTerm, $filters = [])
     {
-        $sql = "SELECT ID_ZONE, NOM_ZONE FROM ZONE WHERE LOWER(NOM_ZONE) LIKE LOWER(:searchTerm)";
+        $sql = "SELECT Z.*, P.NOM, P.PRENOM 
+                 FROM ZONE Z
+                 LEFT JOIN PERSONNEL P ON Z.ID_MANAGER = P.ID_PERSONNEL
+                 WHERE LOWER(Z.NOM_ZONE) LIKE LOWER(:searchTerm)
+                 ORDER BY Z.NOM_ZONE";
+        
         return $this->executeQueryAll($sql, [':searchTerm' => '%' . $searchTerm . '%']);
     }
 }
