@@ -9,9 +9,9 @@ abstract class BaseModel
     /**
      * Exécute une requête OCI et retourne un seul résultat
      * 
-     * @param string $query SQL query with named parameters
-     * @param array $params Associative array of parameters [':param_name' => $value]
-     * @return array|false Single row or false if no result
+     * @param string $query Requête SQL
+     * @param array $params Tableau associatif des paramètres [':param_name' => $value]
+     * @return array|false Un seule ligne ou false si aucun résultat
      */
     protected function executeQuery($query, $params = [])
     {
@@ -36,9 +36,9 @@ abstract class BaseModel
     /**
      * Exécute une requête OCI et retourne tous les résultats sous forme de tableau
      * 
-     * @param string $query SQL query with named parameters
-     * @param array $params Associative array of parameters [':param_name' => $value]
-     * @return array Array of rows
+     * @param string $query Requête SQL
+     * @param array $params Tableau associatif des paramètres [':param_name' => $value]
+     * @return array Tableau indexé contenant des tableaux associatifs
      */
     protected function executeQueryAll($query, $params = [])
     {
@@ -66,9 +66,9 @@ abstract class BaseModel
      * Exécute une requête d'insertion, mise à jour ou suppression
      * Retourne true si succès, false sinon
      * 
-     * @param string $query SQL query with named parameters
-     * @param array $params Associative array of parameters [':param_name' => $value]
-     * @return bool Success status
+     * @param string $query Requête SQL
+     * @param array $params Tableau associatif des paramètres [':param_name' => $value]
+     * @return bool Succès ou non
      */
     protected function executeModify($query, $params = [])
     {
@@ -88,18 +88,5 @@ abstract class BaseModel
         }
 
         return $r;
-    }
-
-    /**
-     * Variante de bind pour les références (requises par OCI)
-     * À utiliser dans les cas complexes si nécessaire
-     * 
-     * @param resource $stid Statement ID from oci_parse
-     * @param string $bindName Parameter name (ex: ':id')
-     * @param mixed $value Value to bind
-     */
-    protected function bindParam(&$stid, $bindName, &$value)
-    {
-        oci_bind_by_name($stid, $bindName, $value);
     }
 }

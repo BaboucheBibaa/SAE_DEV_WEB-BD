@@ -21,6 +21,41 @@ class Animal extends BaseModel
         return $this->executeQuery($query, [':id_animal' => $id]);
     }
 
+    public function getParents($id)
+    {
+        $sql = "SELECT 
+    P.ID_ANIMAL,
+    P.NOM_ANIMAL,
+    P.POIDS,
+    P.DATE_NAISSANCE,
+    ES.NOM_ESPECE,
+    'Parent' as LIEN
+    FROM ANIMAL P
+    JOIN EST_LE_PARENT_DE E ON P.ID_ANIMAL = E.ID_PARENT
+    JOIN ESPECE ES ON P.ID_ESPECE = ES.ID_ESPECE
+    WHERE E.ID_ENFANT = :id_animal";
+        return $this->executeQueryAll($sql, [':id_animal' => $id]);
+    }
+
+    /**
+     * Récupère les enfants d'un animal
+     */
+    public function getEnfants($id)
+    {
+        $sql = "SELECT 
+    E.ID_ANIMAL,
+    E.NOM_ANIMAL,
+    E.POIDS,
+    E.DATE_NAISSANCE,
+    ES.NOM_ESPECE,
+    'Enfant' as LIEN
+    FROM ANIMAL E
+    JOIN EST_LE_PARENT_DE EP ON E.ID_ANIMAL = EP.ID_ENFANT
+    JOIN ESPECE ES ON E.ID_ESPECE = ES.ID_ESPECE
+    WHERE EP.ID_PARENT = :id_animal";
+        return $this->executeQueryAll($sql, [':id_animal' => $id]);
+    }
+
     /**
      * Récupère le soigneur et remplaçant d'un animal
      */

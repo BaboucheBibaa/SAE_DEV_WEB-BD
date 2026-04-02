@@ -256,4 +256,32 @@ class ServiceAnimal
             'soigneurs' => $soigneurs
         ];
     }
+
+    /**
+     * Récupère les parents d'un animal
+     * @param int $id ID de l'animal
+     * @return array|null Tableau des parents ou null si aucun
+     */
+    public function getParents($id)
+    {
+        $parents = $this->Animal->getParents($id);
+        if (!$parents) {
+            return null;
+        }
+        return $parents;
+    }
+
+    /**
+     * Récupère les enfants d'un animal
+     * @param int $id ID de l'animal
+     * @return array|null Tableau des enfants ou null si aucun
+     */
+    public function getEnfants($id)
+    {
+        $enfants = $this->Animal->getEnfants($id);
+        if (!$enfants) {
+            return null;
+        }
+        return $enfants;
+    }
 }

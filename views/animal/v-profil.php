@@ -43,15 +43,8 @@
                                         <?php
                                         if (!empty($animal['DATE_NAISSANCE'])) {
                                             $dateNaissance = htmlspecialchars($animal['DATE_NAISSANCE']);
-                                            $date = DateTime::createFromFormat('d-M-y', $dateNaissance) ?: DateTime::createFromFormat('Y-m-d', $dateNaissance);
-                                            if ($date) {
-                                                echo $date->format('d/m/Y');
-                                                $maintenant = new DateTime();
-                                                $age = $maintenant->diff($date)->y;
-                                                echo " <span class='badge bg-success'>( $age ans )</span>";
-                                            } else {
-                                                echo htmlspecialchars($dateNaissance);
-                                            }
+                                            $date = DateTime::createFromFormat('d-M-y', $dateNaissance);
+                                            echo htmlspecialchars($dateNaissance);
                                         } else {
                                             echo '<span class="text-muted">Non spécifiée</span>';
                                         }
@@ -152,6 +145,103 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Généalogie -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGenealogy">
+                        <i class="bi bi-diagram-3 me-2"></i> Généalogie
+                    </button>
+                </h2>
+                <div id="collapseGenealogy" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <!-- Parents -->
+                        <h5 class="mb-3">👨‍👩‍👧 Parents</h5>
+                        <?php if (!empty($parents)): ?>
+                            <div class="table-responsive mb-4">
+                                <table class="table table-sm table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Espèce</th>
+                                            <th>Poids</th>
+                                            <th>Date de naissance</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($parents as $parent): ?>
+                                            <tr>
+                                                <td><strong><?= htmlspecialchars($parent['NOM_ANIMAL']) ?></strong></td>
+                                                <td><?= htmlspecialchars($parent['NOM_ESPECE'] ?? '-') ?></td>
+                                                <td><?= htmlspecialchars($parent['POIDS'] ?? '-') ?> kg</td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($parent['DATE_NAISSANCE'])) {
+                                                        $date = DateTime::createFromFormat('d-M-y', htmlspecialchars($parent['DATE_NAISSANCE']));
+                                                        $dateFinale = $date->format('d/m/Y');
+                                                        echo $dateFinale;
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <a href="index.php?action=profilAnimal&id=<?= $parent['ID_ANIMAL'] ?>" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-muted mb-4">Aucun parent enregistré</p>
+                        <?php endif; ?>
+
+                        <!-- Enfants -->
+                        <h5 class="mb-3">👶 Enfants</h5>
+                        <?php if (!empty($enfants)): ?>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Espèce</th>
+                                            <th>Poids</th>
+                                            <th>Date de naissance</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($enfants as $enfant): ?>
+                                            <tr>
+                                                <td><strong><?= htmlspecialchars($enfant['NOM_ANIMAL']) ?></strong></td>
+                                                <td><?= htmlspecialchars($enfant['NOM_ESPECE'] ?? '-') ?></td>
+                                                <td><?= htmlspecialchars($enfant['POIDS'] ?? '-') ?> kg</td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($enfant['DATE_NAISSANCE'])) {
+                                                        $date = DateTime::createFromFormat('d-M-y', htmlspecialchars($enfant['DATE_NAISSANCE'])) ?: DateTime::createFromFormat('Y-m-d', htmlspecialchars($enfant['DATE_NAISSANCE']));
+                                                        echo $date ? $date->format('d/m/Y') : htmlspecialchars($enfant['DATE_NAISSANCE']);
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <a href="index.php?action=profilAnimal&id=<?= $enfant['ID_ANIMAL'] ?>" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-muted">Aucun enfant enregistré</p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

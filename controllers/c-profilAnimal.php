@@ -33,9 +33,11 @@ class ProfilAnimalController extends BaseController
         $listeParrains = $this->serviceParrainage->getParrainsParAnimal($id);
         $visiteurs = $this->serviceParrainage->getTousVisiteurs();
         $libelles = $this->serviceParrainage->getLibelleParrainages();
+        $parents = $this->serviceAnimal->getParents($id);
+        $enfants = $this->serviceAnimal->getEnfants($id);
 
         $title = "Profil de {$animal['NOM_ANIMAL']} - Zoo'land";
-        $this->render('animal/v-profil', ['title' => $title, 'animal' => $animal, 'nourritures' => $nourritures, 'soins' => $soins, 'parrains' => $listeParrains, 'visiteurs' => $visiteurs, 'libelles' => $libelles]);
+        $this->render('animal/v-profil', ['title' => $title, 'animal' => $animal, 'nourritures' => $nourritures, 'soins' => $soins, 'parrains' => $listeParrains, 'visiteurs' => $visiteurs, 'libelles' => $libelles, 'parents' => $parents, 'enfants' => $enfants]);
     }
 
     /**
