@@ -2,5 +2,6 @@
 /lib/
 *.txt
 *.zip
-PARTIE_BD
+PARTIE_BD/*.pdf
+PARTIE_BD/*.zip
 logs.txt
