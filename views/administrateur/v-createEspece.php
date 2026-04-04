@@ -8,18 +8,18 @@
                 <div class="card-body">
                     <form action="index.php?action=ajoutEspece" method="POST">
                         <div class="mb-3">
-                            <label for="nom_espece" class="form-label">Nom de l'espèce <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nom_espece" name="nom_espece" placeholder="Ex: Lion" required>
+                            <label for="nom_espece_cree" class="form-label">Nom de l'espèce <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nom_espece_cree" name="nom_espece_cree" placeholder="Ex: Lion" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="nom_latin" class="form-label">Nom Latin <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nom_latin" name="nom_latin" placeholder="Ex: Panthera leo" required>
+                            <label for="nom_latin_espece_cree" class="form-label">Nom Latin <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="nom_latin_espece_cree" name="nom_latin_espece_cree" placeholder="Ex: Panthera leo" required>
                         </div>
 
                         <div class="mb-3">
-                            <label for="est_menacee" class="form-label">Espèce menacée <span class="text-danger">*</span></label>
-                            <select class="form-select" id="est_menacee" name="est_menacee" required>
+                            <label for="est_menacee_cree" class="form-label">Espèce menacée <span class="text-danger">*</span></label>
+                            <select class="form-select" id="est_menacee_cree" name="est_menacee_cree" required>
                                 <option value="">-- Sélectionner --</option>
                                 <option value="1">Oui, espèce menacée</option>
                                 <option value="0">Non, espèce non menacée</option>

@@ -175,3 +175,114 @@
 [2026-04-02 16:29:35] [DELETE_BD] Lien de parenté supprimé : animal id=1 n'est plus parent de animal id=12
 [2026-04-02 16:32:29] [INSERTION_BD] Lien de parenté créé : animal id=2 est parent de animal id=11
 [2026-04-02 16:32:43] [DELETE_BD] Lien de parenté supprimé : animal id=2 n'est plus parent de animal id=11
+[2026-04-03 12:57:39] [ERREUR] Échec connexion: login=
+[2026-04-03 12:57:43] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-03 13:01:15] [UPDATE_BD] Mot de passe mis à jour pour l'utilisateur id=1
+[2026-04-03 13:01:19] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-03 13:01:24] [ERREUR] Échec connexion: login=admin
+[2026-04-03 13:01:27] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-03 13:14:48] [SUPPRESSION_BD] Chiffre affaires supprimé: id=1 date=01/03/26
+[2026-04-03 13:22:36] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-03 13:22:41] [CONNEXION] Connexion réussie: login=comptable, id=25
+[2026-04-03 13:27:04] [DECONNEXION] Déconnexion utilisateur id=25
+[2026-04-03 13:27:09] [ERREUR] Échec connexion: login=protu
+[2026-04-03 13:29:12] [ERREUR] Échec connexion: login=admin
+[2026-04-03 13:29:17] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-03 13:34:07] [SUPPRESSION_BD] Employé supprimé: id=24
+[2026-04-03 13:36:40] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-03 13:36:44] [CONNEXION] Connexion réussie: login=ddupond, id=4
+[2026-04-03 13:45:51] [DECONNEXION] Déconnexion utilisateur id=4
+[2026-04-03 13:46:56] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-04 10:34:35] [INSERTION_BD] Nouvel employé ajouté: id=28
+[2026-04-04 10:34:39] [SUPPRESSION_BD] Employé supprimé: id=27
+[2026-04-04 10:34:42] [SUPPRESSION_BD] Employé supprimé: id=26
+[2026-04-04 10:40:36] [UPDATE_BD] Employé mis à jour: id=14
+[2026-04-04 10:40:51] [UPDATE_BD] Employé mis à jour: id=14
+[2026-04-04 10:40:59] [UPDATE_BD] Employé mis à jour: id=14
+[2026-04-04 10:41:22] [INSERTION_BD] Nouvel employé ajouté: id=27
+[2026-04-04 10:41:26] [SUPPRESSION_BD] Employé supprimé: id=26
+[2026-04-04 10:43:14] [UPDATE_BD] Employé mis à jour: id=15
+[2026-04-04 10:43:14] [ERREUR] Erreur lors de la mise à jour de l'employé id=15
+[2026-04-04 10:43:19] [UPDATE_BD] Employé mis à jour: id=15
+[2026-04-04 10:43:19] [ERREUR] Erreur lors de la mise à jour de l'employé id=15
+[2026-04-04 10:43:37] [UPDATE_BD] Employé mis à jour: id=15
+[2026-04-04 10:43:37] [ERREUR] Erreur lors de la mise à jour de l'employé id=15
+[2026-04-04 10:44:42] [UPDATE_BD] Employé mis à jour: id=15
+[2026-04-04 11:15:55] [UPDATE_BD] Employé mis à jour: id=1
+[2026-04-04 11:16:12] [UPDATE_BD] Employé mis à jour: id=1
+[2026-04-04 11:16:21] [UPDATE_BD] Employé mis à jour: id=1
+[2026-04-04 11:25:35] [INSERTION_BD] Nouvelle boutique ajoutée
+[2026-04-04 11:25:48] [UPDATE_BD] Boutique mise à jour: id=6
+[2026-04-04 11:25:55] [SUPPRESSION_BD] Boutique supprimée: id=6
+[2026-04-04 11:34:53] [ERREUR] Erreur lors de l'ajout d'une zone
+[2026-04-04 11:35:04] [ERREUR] Erreur lors de l'ajout d'une zone
+[2026-04-04 11:35:15] [ERREUR] Erreur lors de l'ajout d'une zone
+[2026-04-04 11:35:45] [ERREUR] Erreur lors de l'ajout d'une zone
+[2026-04-04 11:36:46] [ERREUR] Erreur lors de l'ajout d'une zone
+[2026-04-04 11:37:01] [ERREUR] Erreur lors de l'ajout d'une zone
+[2026-04-04 11:37:17] [INSERTION_BD] Nouvelle zone ajoutée
+[2026-04-04 11:37:23] [SUPPRESSION_BD] Zone supprimée: id=5
+[2026-04-04 11:51:20] [INSERTION_BD] Nouvel animal ajouté
+[2026-04-04 11:51:33] [INSERTION_BD] Nouvel animal ajouté
+[2026-04-04 11:51:39] [DELETE_BD] Animal supprimé: id=21
+[2026-04-04 11:54:11] [DELETE_BD] Animal supprimé: id=18
+[2026-04-04 11:59:46] [UPDATE_BD] Animal mis à jour: id=19
+[2026-04-04 11:59:57] [UPDATE_BD] Animal mis à jour: id=19
+[2026-04-04 12:00:02] [DELETE_BD] Animal supprimé: id=19
+[2026-04-04 12:07:24] [INSERTION_BD] Nouvelle espèce ajoutée
+[2026-04-04 12:07:30] [SUPPRESSION_BD] Espèce supprimée: id=14
+[2026-04-04 12:07:34] [SUPPRESSION_BD] Espèce supprimée: id=15
+[2026-04-04 12:09:02] [INSERTION_BD] Nouveau prestataire ajouté
+[2026-04-04 12:09:07] [SUPPRESSION_BD] Prestataire supprimé: id=6
+[2026-04-04 12:19:04] [INSERTION_BD] Nouveau prestataire ajouté
+[2026-04-04 12:19:09] [SUPPRESSION_BD] Prestataire supprimé: id=8
+[2026-04-04 12:19:13] [SUPPRESSION_BD] Prestataire supprimé: id=6
+[2026-04-04 12:19:18] [SUPPRESSION_BD] Prestataire supprimé: id=7
+[2026-04-04 12:20:14] [UPDATE_BD] Prestataire mis à jour: id=1
+[2026-04-04 12:23:21] [UPDATE_BD] Prestataire mis à jour: id=1
+[2026-04-04 12:33:22] [INSERTION_BD] Nouvel enclos ajouté
+[2026-04-04 12:33:57] [SUPPRESSION_BD] Enclos supprimé - Lat: 45, Long: 65
+[2026-04-04 12:34:01] [SUPPRESSION_BD] Enclos supprimé - Lat: 45, Long: 40
+[2026-04-04 12:34:45] [INSERTION_BD] Nouvel enclos ajouté
+[2026-04-04 12:35:01] [ERREUR] Erreur lors de l'ajout d'un enclos
+[2026-04-04 12:35:19] [ERREUR] Erreur lors de l'ajout d'un enclos
+[2026-04-04 12:35:28] [SUPPRESSION_BD] Enclos supprimé - Lat: 45, Long: 65
+[2026-04-04 12:42:48] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 12:43:01] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 12:43:09] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 12:47:26] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 12:55:02] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 12:57:47] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 12:58:33] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 12:58:50] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 12:59:11] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 12:59:37] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 12:59:53] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 13:00:33] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 13:00:42] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 13:01:21] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 13:02:12] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 13:04:36] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 13:04:48] [ERREUR] Erreur lors de la modification de la réparation Date: 15/03/26
+[2026-04-04 13:04:59] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 13:05:01] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 13:07:18] [MODIFICATION_BD] Réparation modifiée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 13:08:05] [SUPPRESSION_BD] Réparation supprimée - Date: 15/03/26, Lat: 15, Long: 25
+[2026-04-04 13:08:51] [INSERTION_BD] Compatibilité ajoutée entre espèce 10 et 4
+[2026-04-04 13:18:21] [INSERTION_BD] Nouvel employé ajouté: id=27
+[2026-04-04 13:29:50] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-04 13:30:07] [CONNEXION] Connexion réussie: login=sbounce, id=15
+[2026-04-04 13:30:30] [DECONNEXION] Déconnexion utilisateur id=15
+[2026-04-04 13:30:34] [CONNEXION] Connexion réussie: login=bdora, id=5
+[2026-04-04 13:31:18] [INSERTION_BD] Chiffre d'affaires journalier ajouté pour la boutique id=1 à la date 2026-04-04
+[2026-04-04 13:37:58] [DECONNEXION] Déconnexion utilisateur id=5
+[2026-04-04 13:39:38] [ERREUR] Échec connexion: login=admin
+[2026-04-04 13:39:42] [ERREUR] Échec connexion: login=admin
+[2026-04-04 13:39:46] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-04 13:40:15] [UPDATE_BD] Employé mis à jour: id=1
+[2026-04-04 13:40:44] [SUPPRESSION_BD] Employé supprimé: id=26
+[2026-04-04 13:49:29] [DECONNEXION] Déconnexion utilisateur id=1
+[2026-04-04 13:49:34] [ERREUR] Échec connexion: login=admin
+[2026-04-04 13:49:38] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-04 13:52:15] [ERREUR] Erreur lors de la création du lien de parenté : animal id=20 et animal id=8
+[2026-04-04 13:52:22] [ERREUR] Erreur lors de la création du lien de parenté : animal id=20 et animal id=8

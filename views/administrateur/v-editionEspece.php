@@ -17,7 +17,7 @@
 
                         <div class="mb-3">
                             <label for="nom_latin_modif" class="form-label">Nom Latin <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nom_latin_modif" name="nom_latin_modif" 
+                            <input type="text" class="form-control" id="nom_latin_espece_modif" name="nom_latin_espece_modif" 
                                    value="<?= htmlspecialchars($espece['NOM_LATIN_ESPECE'] ?? '') ?>" required>
                         </div>
 

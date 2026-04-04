@@ -7,7 +7,7 @@ class BaseController
             $logger = new LogWriter();
             $logger->writeLog($type, $message, $filename);
         } catch (Exception $e) {
-            // Ne pas casser le flux applicatif si l'écriture de log échoue.
+            // Si log échoue, pas d'erreur visuelle affichée pour l'utilisateur
         }
     }
 
@@ -17,17 +17,19 @@ class BaseController
         extract($data);
         $title = $data['title'] ?? $title;
         $view = "views/{$viewPath}.php";
+        //variable $view utilisée dans v-includes
         require_once 'views/v-includes.php';
     }
 
     protected function redirect(string $action, ?int $id = null, array $params = []): void
     {
         $url = "index.php?action={$action}";
+        //concaténation de l'id afin d'avoir un url index.php?action=action&id=id
         if ($id !== null) {
             $url .= "&id={$id}";
         }
         
-        // Ajouter les paramètres supplémentaires
+        // tableau associatif contenant les paramètres supplémentaires (longitude latitude par exemple)
         foreach ($params as $key => $value) {
             $url .= "&" . urlencode($key) . "=" . urlencode($value);
         }
@@ -38,12 +40,14 @@ class BaseController
 
     protected function redirectWithMessage(string $action, string $message, string $type = 'success', array $params = []): void
     {
+        //redirection avec un message de succès/warning/danger
         $_SESSION['flash'] = ['type' => $type, 'message' => $message];
         $this->redirect($action, null, $params);
     }
 
     protected function requireRole(int $role): void
     {
+        //fonction vérifiant le rôle de la personne connectée.
         if (empty($_SESSION['user'])) {
             $this->redirectWithMessage('afficheConnexion', 'Vous devez être connecté.', 'error');
         }

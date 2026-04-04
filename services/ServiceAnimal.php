@@ -86,29 +86,27 @@ class ServiceAnimal
     /**
      * Valide les données du formulaire d'ajout/modification d'animal
      * @param string $champ Suffixe du champ POST ('cree' ou 'modif')
-     * @return int 0 si valide, 2 si erreur nom, 3 si erreur poids
+     * @return string Code d'erreur ('nom', 'poids') ou 'ok' si valide
      */
     public function verificationForm($champ)
     {
-        //ne doit pas retourner 1 car on peut confondre avec le retour du boolean de la fonction de création ou de modification d'un animal, c'est pour ça que les codes d'erreur commencent à 2
         if (!preg_match('/^[a-zA-Z-\'éèêëç ]+$/', $_POST['nom_animal_' . $champ] ?? '')) {
-            return 2; // valeur de retour 2 = erreur du nom
+            return 'nom';
         }
         if (!preg_match('/^\d+(?:[\.,]\d{1,2})?$/', $_POST['poids_' . $champ] ?? '')) {
-            return 3; // valeur de retour 3 = erreur du poids
+            return 'poids';
         }
-        return 0;
+        return 'ok';
     }
 
     /**
      * Ajoute un nouvel animal à la base de données
-     * @return int|bool Code d'erreur validation (2, 3) ou résultat de création
+     * @return bool|string|null Résultat de la création ou code d'erreur
      */
     public function ajoutAnimal()
     {
         $validationCode = $this->verificationForm('cree');
-
-        if ($validationCode != 0) {
+        if ($validationCode != 'ok') {
             return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
         }
         //Ajoute un nouvel animal à la base de données
@@ -128,14 +126,14 @@ class ServiceAnimal
     /**
      * Met à jour les données d'un animal
      * @param int $id ID de l'animal à modifier
-     * @return int|bool Code d'erreur validation (2, 3) ou résultat de modification
+     * @return bool|string|null Résultat de la modification ou code d'erreur
      */
     public function majAnimal($id)
     {
         $validationCode = $this->verificationForm('modif');
-        if ($validationCode != 0) {
+        if ($validationCode != 'ok') {
             return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
-        };
+        }
         if (isset($_POST['poids_modif'])) {
             $poids = str_replace('.', ',', $_POST['poids_modif']);
         }
@@ -186,7 +184,6 @@ class ServiceAnimal
         $especes = $this->Espece->getAll();
         $zones = $this->Zone->getAll();
         $soigneurs = $this->User->getParFonction(SOIGNEUR);
-
         if (!empty($animal['LATITUDE_ENCLOS']) && !empty($animal['LONGITUDE_ENCLOS'])) {
             $id_zone_selected = $this->Zone->getParEnclos($animal['LATITUDE_ENCLOS'], $animal['LONGITUDE_ENCLOS']);
         }
@@ -194,9 +191,8 @@ class ServiceAnimal
         $soigneur_attire = $this->User->getParID($animal['ID_SOIGNEUR']);
         $especeAnimal = $this->Espece->getParID($animal['ID_ESPECE']);
         // Charger les enclos de la zone sélectionnée
-        $enclos = [];
         if (!empty($id_zone_selected)) {
-            $enclos = $this->Enclos->getParZone($id_zone_selected);
+            $enclos = $this->Enclos->getParZone($id_zone_selected['ID_ZONE']);
         }
 
         $animal['POIDS'] = str_replace(',', '.', $animal['POIDS']);

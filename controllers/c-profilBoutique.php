@@ -14,7 +14,7 @@ class BoutiqueProfilController extends BaseController {
      * @return void
      */
     public function profilBoutique(int $id): void {
-        if ($id === null) {
+        if ($id == null) {
             $this->redirectWithMessage('home', 'Boutique non trouvée.', 'error');
         }
 

@@ -74,11 +74,22 @@ class ServiceBoutique
         return $this->Boutique->getAll();
     }
 
+    public function verificationForm($champ)
+    {
+        if (!preg_match('/^[a-zA-Z-\'éèêëç ]+$/', $_POST['nom_boutique_' . $champ])) {
+            return 'nom';
+        }
+        if (!preg_match('/^[a-zA-Z0-9\-\'.,éèêëçà ]+$/', $_POST['description_boutique_' . $champ])) {
+            return "description";
+        }
+        return 'ok';
+    }
+
     // ============ AJOUT / SUPPRESSION / MODIFICATION ============
 
     /**
      * Ajoute une nouvelle boutique à la base de données
-     * @return bool|null Résultat de la création
+     * @return bool|string|null Résultat de la création
      */
     public function ajoutBoutique()
     {
@@ -86,6 +97,12 @@ class ServiceBoutique
         $id_zone = $_POST['id_zone_cree'];
         $nom_boutique = $_POST['nom_boutique_cree'];
         $description_boutique = $_POST['description_boutique_cree'];
+
+
+        $validationCode = $this->verificationForm('cree');
+        if ($validationCode != 'ok') {
+            return $validationCode;
+        }
 
         return $this->Boutique->creer([
             'id_manager' => $id_manager,
@@ -98,7 +115,7 @@ class ServiceBoutique
     /**
      * Met à jour une boutique
      * @param int $id ID de la boutique à modifier
-     * @return bool|null Résultat de la modification
+     * @return bool|string|null Résultat de la modification
      */
     public function majBoutique($id)
     {
@@ -107,6 +124,11 @@ class ServiceBoutique
         $nom_boutique = $_POST['nom_boutique_modif'];
         $description_boutique = $_POST['description_boutique_modif'];
 
+
+        $validationCode = $this->verificationForm('modif');
+        if ($validationCode != 'ok') {
+            return $validationCode;
+        }
         return $this->Boutique->maj($id, [
             'id_manager' => $id_manager,
             'id_zone' => $id_zone,

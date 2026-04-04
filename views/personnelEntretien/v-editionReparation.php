@@ -40,7 +40,7 @@
                                         type="date"
                                         class="form-control form-control-lg"
                                         id="dateFin"
-                                        name="DATE_FIN"
+                                        name="date_fin_modif"
                                         value="<?= htmlspecialchars($nouvelleDate ?? '') ?>"
                                         aria-label="Date de fin de reparation">
                                 </div>
@@ -55,7 +55,7 @@
                                         id="latitudeEnclos"
                                         disabled
                                         value="<?= htmlspecialchars($reparation['LATITUDE_ENCLOS']) ?>">
-                                    <input type="hidden" name="LATITUDE_ENCLOS" value="<?= htmlspecialchars($reparation['LATITUDE_ENCLOS']) ?>">
+                                    <input type="hidden" name="latitude_enclos_modif" value="<?= htmlspecialchars($reparation['LATITUDE_ENCLOS']) ?>">
                                 </div>
 
                                 <div class="col-md-6">
@@ -68,7 +68,7 @@
                                         id="longitudeEnclos"
                                         disabled
                                         value="<?= htmlspecialchars($reparation['LONGITUDE_ENCLOS']) ?>">
-                                    <input type="hidden" name="LONGITUDE_ENCLOS" value="<?= htmlspecialchars($reparation['LONGITUDE_ENCLOS']) ?>">
+                                    <input type="hidden" name="longitude_enclos_modif" value="<?= htmlspecialchars($reparation['LONGITUDE_ENCLOS']) ?>">
                                 </div>
 
                                 <div class="col-md-6">
@@ -81,7 +81,7 @@
                                         id="idPersonnel"
                                         disabled
                                         value="<?= htmlspecialchars(($reparation['NOM'] ?? '') . ' ' . ($reparation['PRENOM'] ?? '')) ?>">
-                                    <input type="hidden" name="ID_PERSONNEL" value="<?= htmlspecialchars($reparation['ID_PERSONNEL']) ?>">
+                                    <input type="hidden" name="id_personnel_modif" value="<?= htmlspecialchars($reparation['ID_PERSONNEL']) ?>">
                                 </div>
 
                                 <div class="col-md-6">
@@ -91,7 +91,7 @@
                                     <select
                                         class="form-control form-control-lg"
                                         id="idPrestataire"
-                                        name="ID_PRESTATAIRE"
+                                        name="id_prestataire_modif"
                                         aria-label="Sélectionner un prestataire">
                                         <option value="">-- Aucun prestataire --</option>
                                         <?php if (!empty($prestataires)): ?>
@@ -117,7 +117,7 @@
                                     <textarea
                                         class="form-control form-control-lg"
                                         id="natureReparation"
-                                        name="NATURE_REPARATION"
+                                        name="nature_reparation_modif"
                                         rows="3"
                                         placeholder="Décrivez la nature de la réparation ou de l'entretien..."
                                         required><?= htmlspecialchars($reparation['NATURE_REPARATION'] ?? '') ?></textarea>
@@ -131,7 +131,7 @@
                                         type="number"
                                         class="form-control form-control-lg"
                                         id="coutReparation"
-                                        name="COUT_REPARATION"
+                                        name="cout_reparation_modif"
                                         step="0.01"
                                         min="0"
                                         value="<?= htmlspecialchars($reparation['COUT_REPARATION'] ?? '') ?>"

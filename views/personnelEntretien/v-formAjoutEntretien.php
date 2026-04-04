@@ -19,7 +19,7 @@
 										type="date"
 										class="form-control form-control-lg"
 										id="dateDebut"
-										name="DATE_DEBUT_REPARATION"
+										name="date_debut_reparation_cree"
 										required
 										value="<?= date('Y-m-d') ?>"
 										aria-label="Date de debut de reparation">
@@ -33,7 +33,7 @@
 										type="date"
 										class="form-control form-control-lg"
 										id="dateFin"
-										name="DATE_FIN"
+										name="date_fin_cree"
 										aria-label="Date de fin de reparation">
 								</div>
 
@@ -45,7 +45,7 @@
 										type="number"
 										class="form-control form-control-lg"
 										id="latitudeEnclos"
-										name="LATITUDE_ENCLOS"
+										name="latitude_enclos_cree"
 										required
 										placeholder="Ex : 45"
 										aria-label="Latitude de l enclos">
@@ -59,7 +59,7 @@
 										type="number"
 										class="form-control form-control-lg"
 										id="longitudeEnclos"
-										name="LONGITUDE_ENCLOS"
+										name="longitude_enclos_cree"
 										required
 										placeholder="Ex : 2"
 										aria-label="Longitude de l enclos">
@@ -72,7 +72,7 @@
 									<select
 										class="form-control form-control-lg"
 										id="idPrestataire"
-										name="ID_PRESTATAIRE"
+											name="id_prestataire_cree"
 										aria-label="Sélectionner un prestataire">
 										<option value="">-- Aucun prestataire --</option>
 										<?php if (!empty($prestataires)): ?>
@@ -98,7 +98,7 @@
 										type="number"
 										class="form-control form-control-lg"
 										id="coutReparation"
-										name="COUT_REPARATION"
+										name="cout_reparation_cree"
 										min="0"
 										max="99999999.99"
 										step="0.01"
@@ -113,7 +113,7 @@
 									<textarea
 										class="form-control form-control-lg"
 										id="natureReparation"
-										name="NATURE_REPARATION"
+											name="nature_reparation_cree"
 										rows="4"
 										maxlength="200"
 										placeholder="Décrivez la nature de l'intervention..."

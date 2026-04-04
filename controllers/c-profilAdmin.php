@@ -41,11 +41,10 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         $title = "Profil Administrateur";
-        $filtreArchive = $_GET['filtreArchive'] ?? 'tous';
-        if (!in_array($filtreArchive, ['tous', 'actifs', 'archives'], true)) {
-            $filtreArchive = 'tous';
-        }
+        //affiche les utilisateurs actifs par défaut
+        $filtreArchive = $_GET['filtreArchive'] ?? 'actifs';
 
+        //récupère toutes les données permettant d'afficher le dashboard admin
         $employees = $this->serviceEmployee->getTousEmployees($filtreArchive);
         $zones = $this->serviceZone->getAll();
         $boutiques = $this->serviceBoutique->getToutesLesBoutiques();
@@ -55,7 +54,7 @@ class AdminController extends BaseController
         $contrats = $this->serviceEmployee->getAllContrats();
         $enclos = $this->serviceEnclos->getAll();
         $compatibilites = $this->serviceCompatibilite->getAll();
-        if ($employees === null || $zones === null || $boutiques === null || $animals === null) {
+        if ($employees == null || $zones == null || $boutiques == null || $animals == null || $especes == null || $prestataires == null || $contrats == null || $enclos == null || $compatibilites == null) {
             $this->redirectWithMessage('home', 'Erreur lors de la récupération des données pour le dashboard admin.', 'error');
         }
         $this->render('administrateur/v-dashboard', [
@@ -84,7 +83,7 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceEmployee->dataCreationEmployee();
-        if ($data === null) {
+        if ($data == null) {
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation de la création de l\'employé.', 'error');
         } else {
             $this->render(
@@ -107,8 +106,9 @@ class AdminController extends BaseController
     public function ajoutEmployee(): void
     {
         $this->requireRole(ADMINID);
-
-        switch ($this->serviceEmployee->ajoutEmployee()) {
+        $retour = $this->serviceEmployee->ajoutEmployee();
+        //voir ajoutEmployee dans ServiceEmployee.php pour + de détails sur les codes de retour
+        switch ($retour) {
             case 0:
                 $this->logEvent(
                     'ERREUR',
@@ -116,37 +116,30 @@ class AdminController extends BaseController
                 );
                 $this->redirectWithMessage('creationEmployee', 'Erreur lors de l\'ajout de l\'employé.', 'error');
                 break;
-            case 1:
+            case 'nom':
+                $this->redirectWithMessage('creationEmployee', 'Erreur : nom invalide', 'error');
+                break;
+            case 'prenom':
+                $this->redirectWithMessage('creationEmployee', 'Erreur : Prénom invalide', 'error');
+                break;
+            case 'mail':
+                $this->redirectWithMessage('creationEmployee', 'Erreur : Email invalide', 'error');
+                break;
+            case 'salaire':
+                $this->redirectWithMessage('creationEmployee', 'Erreur : Salaire invalide');
+                break;
+            case 'login':
+                $this->redirectWithMessage('creationEmployee', 'Erreur : Login invalide', 'error');
+                break;
+            //default -> retour de l'identifiant de la personne créée
+            default:
+                //récupère le dernier id 
                 $newEmployeeId = $this->serviceEmployee->getLastInsertId();
                 $this->logEvent(
                     'INSERTION_BD',
                     "Nouvel employé ajouté: id={$newEmployeeId}"
                 );
                 $this->redirectWithMessage('adminDashboard', 'Employé ajouté avec succès.', 'success');
-                break;
-            case 2:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Nom invalide.'];
-                $this->redirect('creationEmployee');
-                break;
-            case 3:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Prénom invalide.'];
-                $this->redirect('creationEmployee');
-                break;
-            case 4:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Email invalide.'];
-                $this->redirect('creationEmployee');
-                break;
-            case 5:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Salaire invalide.'];
-                $this->redirect('creationEmployee');
-                break;
-            case 6:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Login invalide.'];
-                $this->redirect('creationEmployee');
-                break;
-            default:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur inconnue lors de l\'ajout de l\'employé.'];
-                $this->redirect('creationEmployee');
                 break;
         }
     }
@@ -161,7 +154,7 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceEmployee->dataEditionEmployee($id);
-        if ($data === null) {
+        if ($data == null) {
             $this->redirectWithMessage('adminDashboard', 'Employé non trouvé.', 'error');
         } else {
             $this->render(
@@ -180,7 +173,9 @@ class AdminController extends BaseController
     public function majEmployee(int $id): void
     {
         $this->requireRole(ADMINID);
-        switch ($this->serviceEmployee->majEmployee($id)) {
+        $retour = $this->serviceEmployee->majEmployee($id);
+        echo $retour;
+        switch ($retour) {
             //valeurs de retour de la fonction majEmployee: 0 ou 1 car retourne un boolean
             case 1:
                 $this->logEvent(
@@ -199,29 +194,20 @@ class AdminController extends BaseController
                 break;
             //autres cas ici : valeurs de retour de la validation de formulaire
 
-            case 2:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Nom invalide.'];
-                $this->redirect('editionEmployee', $id);
+            case 'nom':
+                $this->redirectWithMessage('editionEmployee', 'Erreur : Nom invalide.', 'error', ['id' => $id]);
                 break;
-            case 3:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Prénom invalide.'];
-                $this->redirect('editionEmployee', $id);
+            case 'prenom':
+                $this->redirectWithMessage('editionEmployee', 'Erreur : Prénom invalide', 'error', ['id' => $id]);
                 break;
-            case 4:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur: Email invalide.'];
-                $this->redirect('editionEmployee', $id);
+            case 'mail':
+                $this->redirectWithMessage('editionEmployee', 'Erreur : Email invalide', 'error', ['id' => $id]);
                 break;
-            case 5:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur: Salaire invalide.'];
-                $this->redirect('editionEmployee', $id);
+            case 'salaire':
+                $this->redirectWithMessage('editionEmployee', 'Erreur : Salaire invalide', 'error', ['id' => $id]);
                 break;
-            case 6:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur: Login invalide.'];
-                $this->redirect('editionEmployee', $id);
-                break;
-            default:
-                $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur inconnue lors de la mise à jour de l\'employé.'];
-                $this->redirect('editionEmployee', $id);
+            case 'login':
+                $this->redirectWithMessage('editionEmployee', 'Erreur : Login invalide', 'error', ['id' => $id]);
                 break;
         }
     }
@@ -264,27 +250,24 @@ class AdminController extends BaseController
 
         // récupérer le filtre d'archivage et mettre par défaut si quelqu'un saisit une valeur non valide dans l'url
         $filtreArchive = $_GET['filtreArchive'] ?? 'actifs';
-        if (!in_array($filtreArchive, ['tous', 'actifs', 'archives'], true)) {
-            $filtreArchive = 'actifs';
-        }
 
         //si l'employé n'existe pas on met un msg d'erreur
         if (!$employee) {
-            $this->redirectWithMessage('adminDashboard','Employé non trouvé','error');
+            $this->redirectWithMessage('adminDashboard', 'Employé non trouvé', 'error');
         }
 
         //empêcher un admin d'archiver son propre compte
         if (!empty($_SESSION['user']['ID_PERSONNEL']) && $_SESSION['user']['ID_PERSONNEL'] == $id) {
-            $this->redirectWithMessage('adminDashboard','Vous ne pouvez pas archiver votre propre compte','error');
+            $this->redirectWithMessage('adminDashboard', 'Vous ne pouvez pas archiver votre propre compte', 'error');
         }
         //valeur : 0 pour archiver, 1 pour désarchiver, si elle existe on la met en int et on l'affecte, sinon null
         $valeur = isset($_GET['valeur']) ? intval($_GET['valeur']) : null;
-        //si valeur est à 0 ou à 1 alors l'état de l'archivage est valide (archiver ou désarchiver) sinon on regarde l'état de l'archivage de l'employé
-        $nouvelEtat = ($valeur === 0 || $valeur === 1)
+        //si valeur est à 0 ou à 1 alors l'état de l'archivage est valide (archiver ou désarchiver) sinon on regarde l'état de l'archivage de l'employé et on fait l'état inverse de son état actuel
+        $nouvelEtat = ($valeur == 0 || $valeur == 1)
             ? $valeur
-            : ((int) ($employee['ESTARCHIVE'] ?? 1) === 1 ? 0 : 1);
+            : ((int) ($employee['ESTARCHIVE'] ?? 1) == 1 ? 0 : 1);
         if ($this->serviceEmployee->majArchiveEmployee($id, $nouvelEtat)) {
-            $message = $nouvelEtat === 0
+            $message = $nouvelEtat == 0
                 ? 'Employé archivé avec succès.'
                 : 'Employé désarchivé avec succès.';
             $this->redirectWithMessage('adminDashboard', $message, 'success', ['filtreArchive' => $filtreArchive]);
@@ -304,7 +287,7 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceBoutique->dataCreationBoutique();
-        if ($data === null) {
+        if ($data == null) {
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation de la création de la boutique.', 'error');
         } else {
             $this->render('administrateur/v-createBoutique', $data);
@@ -319,18 +302,29 @@ class AdminController extends BaseController
     public function ajoutBoutique(): void
     {
         $this->requireRole(ADMINID);
-        if ($this->serviceBoutique->ajoutBoutique()) {
-            $this->logEvent(
-                'INSERTION_BD',
-                "Nouvelle boutique ajoutée"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Boutique ajoutée avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de l'ajout d'une boutique"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout de la boutique.', 'error');
+        $retour = $this->serviceBoutique->ajoutBoutique();
+        switch ($retour) {
+            //cas de retour booléen de la fonction ajoutBoutique -> erreur au niveau de la BD
+            case 1:
+                $this->logEvent(
+                    'INSERTION_BD',
+                    "Nouvelle boutique ajoutée"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Boutique ajoutée avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de l'ajout d'une boutique"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout de la boutique.', 'error');
+                //cas de retour de type string: erreur au sein du regex
+            case 'nom':
+                $this->redirectWithMessage('creationBoutique', 'Erreur : Nom invalide.', 'error');
+                break;
+            case 'description':
+                $this->redirectWithMessage('creationBoutique', 'Erreur : Description invalide.', 'error');
+                break;
         }
     }
 
@@ -344,7 +338,7 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceBoutique->dataEditionBoutique($id);
-        if ($data === null) {
+        if ($data == null) {
             $this->redirectWithMessage('adminDashboard', 'Boutique non trouvée.', 'error');
         } else {
             $this->render('administrateur/v-editionBoutique', $data);
@@ -360,18 +354,30 @@ class AdminController extends BaseController
     public function majBoutique(int $id): void
     {
         $this->requireRole(ADMINID);
-        if ($this->serviceBoutique->majBoutique($id)) {
-            $this->logEvent(
-                'UPDATE_BD',
-                "Boutique mise à jour: id={$id}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Boutique mise à jour avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de la mise à jour de la boutique id={$id}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de la boutique.', 'error');
+        $retour = $this->serviceBoutique->majBoutique($id);
+        switch ($retour) {
+            //cas de retour booléen de la fonction majBoutique -> succès au niveau de la BD
+            case 1:
+                $this->logEvent(
+                    'UPDATE_BD',
+                    "Boutique mise à jour: id={$id}"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Boutique mise à jour avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de la mise à jour de la boutique id={$id}"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de la boutique.', 'error');
+                break;
+            //cas de retour de type string: erreur au sein du regex
+            case 'nom':
+                $this->redirectWithMessage('editionBoutique', 'Erreur : Nom invalide.', 'error', ['id' => $id]);
+                break;
+            case 'description':
+                $this->redirectWithMessage('editionBoutique', 'Erreur : Description invalide.', 'error', ['id' => $id]);
+                break;
         }
     }
 
@@ -427,19 +433,27 @@ class AdminController extends BaseController
     public function ajoutZone(): void
     {
         $this->requireRole(ADMINID);
-        if ($this->serviceZone->ajoutZone()) {
-            $this->logEvent(
-                'INSERTION_BD',
-                "Nouvelle zone ajoutée"
-            );
+        $retour = $this->serviceZone->ajoutZone();
+        echo $retour;
+        switch ($retour) {
+            case 1:
+                $this->logEvent(
+                    'INSERTION_BD',
+                    "Nouvelle zone ajoutée"
+                );
 
-            $this->redirectWithMessage('adminDashboard', 'Zone ajoutée avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de l'ajout d'une zone"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout d\'une zone.', 'error');
+                $this->redirectWithMessage('adminDashboard', 'Zone ajoutée avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de l'ajout d'une zone"
+                );
+                //$this->redirectWithMessage('adminDashboard', 'Erreur lors de l\'ajout d\'une zone.', 'error');
+                break;
+            case 'nom':
+                //$this->redirectWithMessage('creationZone', 'Erreur : Nom invalide.', 'error');
+                break;
         }
     }
 
@@ -453,7 +467,7 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceZone->dataEditionZone($id);
-        if ($data === null) {
+        if ($data == null) {
             $this->redirectWithMessage('adminDashboard', 'Zone non trouvée.', 'error');
         } else {
             $this->render('administrateur/v-editionZone', $data);
@@ -469,18 +483,27 @@ class AdminController extends BaseController
     public function majZone(int $id): void
     {
         $this->requireRole(ADMINID);
-        if ($this->serviceZone->majZone($id)) {
-            $this->logEvent(
-                'UPDATE_BD',
-                "Zone mise à jour: id={$id}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Zone mise à jour avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de la mise à jour de la zone id={$id}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de la zone.', 'error');
+        $retour = $this->serviceZone->majZone($id);
+        switch ($retour) {
+            //cas de retour booléen de la fonction majZone -> succès au niveau de la BD
+            case 1:
+                $this->logEvent(
+                    'UPDATE_BD',
+                    "Zone mise à jour: id={$id}"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Zone mise à jour avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de la mise à jour de la zone id={$id}"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Erreur lors de la mise à jour de la zone.', 'error');
+                break;
+            //cas de retour de type string: erreur au sein du regex
+            case 'nom':
+                $this->redirectWithMessage('editionZone', 'Erreur : Nom invalide.', 'error', ['id' => $id]);
+                break;
         }
     }
 
@@ -537,26 +560,30 @@ class AdminController extends BaseController
      */
     public function ajoutAnimal(): void
     {
-
         $this->requireRole(ADMINID);
         $result = $this->serviceAnimal->ajoutAnimal();
-        if ($result === 2) {
-            $this->redirectWithMessage('creationAnimal', 'Erreur : Nom invalide.', 'error');
-        } elseif ($result === 3) {
-            $this->redirectWithMessage('creationAnimal', 'Erreur : Poids invalide.', 'error');
-        } elseif ($result == 1) {
-            $this->logEvent(
-                'INSERTION_BD',
-                "Nouvel animal ajouté"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Animal ajouté avec succès.', 'success');
-        } else {
-            echo $result;
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de l'ajout d'un animal"
-            );
-            $this->redirectWithMessage('creationAnimal', 'Erreur lors de l\'ajout de l\'animal.', 'error');
+        echo $result;
+        switch ($result) {
+            case 1:
+                $this->logEvent(
+                    'INSERTION_BD',
+                    "Nouvel animal ajouté"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Animal ajouté avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de l'ajout d'un animal"
+                );
+                $this->redirectWithMessage('creationAnimal', 'Erreur lors de l\'ajout de l\'animal.', 'error');
+                break;
+            case 'nom':
+                $this->redirectWithMessage('creationAnimal', 'Erreur : Nom invalide.', 'error');
+                break;
+            case 'poids':
+                $this->redirectWithMessage('creationAnimal', 'Erreur : Poids invalide.', 'error');
+                break;
         }
     }
 
@@ -570,7 +597,7 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         $data = $this->serviceAnimal->dataEditionAnimal($id);
-        if ($data === null) {
+        if ($data == null) {
             $this->redirectWithMessage('adminDashboard', 'Animal non trouvé.', 'error');
         } else {
             $this->render(
@@ -590,27 +617,27 @@ class AdminController extends BaseController
     {
         $this->requireRole(ADMINID);
         $result = $this->serviceAnimal->majAnimal($id);
-
-        //si la maj a pas fonctionnée on retourne sur le formulaire avec msg d'erreur sinon dashboard avec msg de succès
-        if ($result === 2) {
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Nom invalide.'];
-            $this->redirect('editionAnimal', $id);
-        } elseif ($result === 3) {
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur : Poids invalide.'];
-            $this->redirect('editionAnimal', $id);
-        } elseif ($result === true) {
-            $this->logEvent(
-                'UPDATE_BD',
-                "Animal mis à jour: id={$id}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Animal mis à jour avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de la mise à jour de l\'animal id={$id}"
-            );
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur lors de la mise à jour de l\'animal.'];
-            $this->redirect('editionAnimal', $id);
+        switch ($result) {
+            case 1:
+                $this->logEvent(
+                    'UPDATE_BD',
+                    "Animal mis à jour: id={$id}"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Animal mis à jour avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de la mise à jour de l\'animal id={$id}"
+                );
+                $this->redirectWithMessage('editionAnimal', 'Erreur lors de la mise à jour de l\'animal.', 'error', ['id' => $id]);
+                break;
+            case 'nom':
+                $this->redirectWithMessage('editionAnimal', 'Erreur : Nom invalide.', 'error', ['id' => $id]);
+                break;
+            case 'poids':
+                $this->redirectWithMessage('editionAnimal', 'Erreur : Poids invalide.', 'error', ['id' => $id]);
+                break;
         }
     }
 
@@ -653,13 +680,13 @@ class AdminController extends BaseController
                 'SUPPRESSION_BD',
                 "Chiffre affaires supprimé: id={$id_boutique} date={$date_ca}"
             );
-            $this->redirectWithMessage("profilBoutique&id={$id_boutique}", "Chiffre d'affaires supprimé avec succès.", 'success');
+            $this->redirectWithMessage("profilBoutique", "Chiffre d'affaires supprimé avec succès.", 'success', ['id' => $id_boutique]);
         } else {
             $this->logEvent(
                 'ERREUR',
                 "Erreur lors de la suppression du chiffre d'\'affaires id={$id_boutique} date={$date_ca}"
             );
-            $this->redirectWithMessage("profilBoutique&id={$id_boutique}", 'Erreur lors de la suppression du chiffre d\'affaires.', 'error');
+            $this->redirectWithMessage("profilBoutique", 'Erreur lors de la suppression du chiffre d\'affaires.', 'error', ['id' => $id_boutique]);
         }
     }
 
@@ -678,13 +705,13 @@ class AdminController extends BaseController
                 'SUPPRESSION_BD',
                 "Soin supprimé: id={$id_animal} date={$date_soin}"
             );
-            $this->redirectWithMessage("profilAnimal&id={$id_animal}", "Soin supprimé avec succès.", 'success');
+            $this->redirectWithMessage("profilAnimal", "Soin supprimé avec succès.", 'success', ['id' => $id_animal]);
         } else {
             $this->logEvent(
                 'ERREUR',
                 "Erreur lors de la suppression du soin id={$id_animal} date={$date_soin}"
             );
-            $this->redirectWithMessage("profilAnimal&id={$id_animal}", 'Erreur lors de la suppression du soin.', 'error');
+            $this->redirectWithMessage("profilAnimal", 'Erreur lors de la suppression du soin.', 'error', ['id' => $id_animal]);
         }
     }
 
@@ -704,13 +731,13 @@ class AdminController extends BaseController
                 'SUPPRESSION_BD',
                 "Nourriture donnée supprimée: id={$id_animal} soigneur={$id_soigneur} date={$date_nourrit}"
             );
-            $this->redirectWithMessage("profilAnimal&id={$id_animal}", "Nourriture donnée supprimée avec succès.", 'success');
+            $this->redirectWithMessage("profilAnimal", "Nourriture donnée supprimée avec succès.", 'success', ['id' => $id_animal]);
         } else {
             $this->logEvent(
                 'ERREUR',
                 "Erreur lors de la suppression de la nourriture donnée id={$id_animal} soigneur={$id_soigneur} date={$date_nourrit}"
             );
-            $this->redirectWithMessage("profilAnimal&id={$id_animal}", 'Erreur lors de la suppression de la nourriture donnée.', 'error');
+            $this->redirectWithMessage("profilAnimal", 'Erreur lors de la suppression de la nourriture donnée.', 'error', ['id' => $id_animal]);
         }
     }
 
@@ -759,29 +786,28 @@ class AdminController extends BaseController
     public function ajoutEspece(): void
     {
         $this->requireRole(ADMINID);
-        $data = [
-            'nom_espece' => $_POST['nom_espece'] ?? '',
-            'nom_latin_espece' => $_POST['nom_latin'] ?? '',
-            'est_menacee' => $_POST['est_menacee'] ?? ''
-        ];
-
-        if (empty($data['nom_espece']) || empty($data['nom_latin_espece']) || $data['est_menacee'] === '') {
-            $this->redirectWithMessage('formCreationEspece', 'Tous les champs sont obligatoires.', 'error');
-            return;
-        }
-
-        if ($this->serviceEspece->ajoutEspece($data)) {
-            $this->logEvent(
-                'INSERTION_BD',
-                "Nouvelle espèce ajoutée: {$data['nom_espece']}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Espèce ajoutée avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de l'ajout d'une espèce"
-            );
-            $this->redirectWithMessage('formCreationEspece', 'Erreur lors de l\'ajout de l\'espèce.', 'error');
+        $result = $this->serviceEspece->ajoutEspece();
+        switch ($result) {
+            case 1:
+                $this->logEvent(
+                    'INSERTION_BD',
+                    "Nouvelle espèce ajoutée"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Espèce ajoutée avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de l'ajout d'une espèce"
+                );
+                $this->redirectWithMessage('formCreationEspece', 'Erreur lors de l\'ajout de l\'espèce.', 'error');
+                break;
+            case 'nom':
+                $this->redirectWithMessage('formCreationEspece', 'Erreur : Nom invalide.', 'error');
+                break;
+            case 'latin':
+                $this->redirectWithMessage('formCreationEspece', 'Erreur : Nom latin invalide.', 'error');
+                break;
         }
     }
 
@@ -816,36 +842,28 @@ class AdminController extends BaseController
     public function updateEspece(int $id): void
     {
         $this->requireRole(ADMINID);
-        $data = [
-            'nom_espece' => $_POST['nom_espece_modif'] ?? '',
-            'nom_latin_espece' => $_POST['nom_latin_modif'] ?? '',
-            'est_menacee' => $_POST['est_menacee_modif'] ?? ''
-        ];
-
-        if (empty($data['nom_espece']) || empty($data['nom_latin_espece']) || $data['est_menacee'] === '') {
-            $this->redirectWithMessage('formEditionEspece', 'Tous les champs sont obligatoires.', 'error');
-            return;
-        }
-
-        // Vérifier que l'espèce existe
-        $espece = $this->serviceEspece->getEspeceParID($id);
-        if (!$espece) {
-            $this->redirectWithMessage('adminDashboard', 'Espèce non trouvée.', 'error');
-            return;
-        }
-
-        if ($this->serviceEspece->updateEspece($id, $data)) {
-            $this->logEvent(
-                'UPDATE_BD',
-                "Espèce mise à jour: id={$id}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Espèce mise à jour avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de la mise à jour de l'espèce id={$id}"
-            );
-            $this->redirectWithMessage('formEditionEspece', 'Erreur lors de la mise à jour de l\'espèce.', 'error');
+        $result = $this->serviceEspece->updateEspece($id);
+        switch ($result) {
+            case 1:
+                $this->logEvent(
+                    'UPDATE_BD',
+                    "Espèce mise à jour: id={$id}"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Espèce mise à jour avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de la mise à jour de l'espèce id={$id}"
+                );
+                $this->redirectWithMessage('formEditionEspece', 'Erreur lors de la mise à jour de l\'espèce.', 'error', ['id' => $id]);
+                break;
+            case 'nom':
+                $this->redirectWithMessage('formEditionEspece', 'Erreur : Nom invalide.', 'error', ['id' => $id]);
+                break;
+            case 'latin':
+                $this->redirectWithMessage('formEditionEspece', 'Erreur : Nom latin invalide.', 'error', ['id' => $id]);
+                break;
         }
     }
 
@@ -874,18 +892,29 @@ class AdminController extends BaseController
     public function ajoutPrestataire(): void
     {
         $this->requireRole(ADMINID);
-        if ($this->serviceReparation->ajoutPrestataire()) {
-            $this->logEvent(
-                'INSERTION_BD',
-                "Nouveau prestataire ajouté"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Prestataire ajouté avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de l'ajout d'un prestataire"
-            );
-            $this->redirectWithMessage('creationPrestataire', 'Erreur lors de l\'ajout du prestataire.', 'error');
+        $result = $this->serviceReparation->ajoutPrestataire();
+        switch ($result) {
+            case 1:
+                $this->logEvent(
+                    'INSERTION_BD',
+                    "Nouveau prestataire ajouté"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Prestataire ajouté avec succès.', 'success');
+                break;
+            case 0:
+            default:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de l'ajout d'un prestataire"
+                );
+                $this->redirectWithMessage('creationPrestataire', 'Erreur lors de l\'ajout du prestataire.', 'error');
+                break;
+            case 'nom':
+                $this->redirectWithMessage('creationPrestataire', 'Erreur : Nom invalide.', 'error');
+                break;
+            case 'prenom':
+                $this->redirectWithMessage('creationPrestataire', 'Erreur : Prénom invalide.', 'error');
+                break;
         }
     }
 
@@ -898,24 +927,13 @@ class AdminController extends BaseController
     public function formEditionPrestataire(int $id): void
     {
         $this->requireRole(ADMINID);
-        $prestataire = $this->serviceReparation->getAllPrestataires();
+        $prestataire = $this->serviceReparation->getPrestataireByID($id);
 
-        // Chercher le prestataire avec l'ID spécifié
-        $prestataire_trouve = null;
-        if ($prestataire) {
-            foreach ($prestataire as $p) {
-                if ($p['ID_PRESTATAIRE'] == $id) {
-                    $prestataire_trouve = $p;
-                    break;
-                }
-            }
-        }
-
-        if ($prestataire_trouve === null) {
+        if ($prestataire === null) {
             $this->redirectWithMessage('adminDashboard', 'Prestataire non trouvé.', 'error');
         } else {
             $this->render('administrateur/v-editionPrestataire', [
-                'prestataire' => $prestataire_trouve,
+                'prestataire' => $prestataire,
                 'title' => 'Modifier un prestataire'
             ]);
         }
@@ -930,36 +948,28 @@ class AdminController extends BaseController
     public function majPrestataire(int $id): void
     {
         $this->requireRole(ADMINID);
-        $data = [
-            'NOM_PRESTATAIRE' => $_POST['nom_modif'] ?? '',
-            'PRENOM_PRESTATAIRE' => $_POST['prenom_modif'] ?? ''
-        ];
-
-        if (empty($data['NOM_PRESTATAIRE']) || empty($data['PRENOM_PRESTATAIRE'])) {
-            $this->redirectWithMessage('editionPrestataire', 'Tous les champs sont obligatoires.', 'error');
-            return;
-        }
-
-        // Récupérer le modèle Prestataire via la service
-        $prestataire = $this->serviceReparation->getPrestataireByID($id);
-        if (!$prestataire) {
-            $this->redirectWithMessage('adminDashboard', 'Prestataire non trouvé.', 'error');
-            return;
-        }
-
-        // Appel direct au modèle via la service
-        if ($this->serviceReparation->updatePrestataire($id, $data)) {
-            $this->logEvent(
-                'UPDATE_BD',
-                "Prestataire mis à jour: id={$id}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Prestataire mis à jour avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de la mise à jour du prestataire id={$id}"
-            );
-            $this->redirectWithMessage('editionPrestataire', 'Erreur lors de la mise à jour du prestataire.', 'error');
+        $result = $this->serviceReparation->majPrestataire($id);
+        switch ($result) {
+            case 1:
+                $this->logEvent(
+                    'UPDATE_BD',
+                    "Prestataire mis à jour: id={$id}"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Prestataire mis à jour avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de la mise à jour du prestataire id={$id}"
+                );
+                $this->redirectWithMessage('editionPrestataire', 'Erreur lors de la mise à jour du prestataire.', 'error', ['id' => $id]);
+                break;
+            case 'nom':
+                $this->redirectWithMessage('editionPrestataire', 'Erreur : Nom invalide.', 'error', ['id' => $id]);
+                break;
+            case 'prenom':
+                $this->redirectWithMessage('editionPrestataire', 'Erreur : Prénom invalide.', 'error', ['id' => $id]);
+                break;
         }
     }
 
@@ -1051,30 +1061,26 @@ class AdminController extends BaseController
     public function ajoutEnclos(): void
     {
         $this->requireRole(ADMINID);
-        $data = [
-            'LATITUDE' => $_POST['latitude'] ?? '',
-            'LONGITUDE' => $_POST['longitude'] ?? '',
-            'ID_ZONE' => $_POST['id_zone'] ?? '',
-            'TYPE_ENCLOS' => $_POST['type_enclos'] ?? ''
-        ];
-
-        if (empty($data['LATITUDE']) || empty($data['LONGITUDE']) || empty($data['ID_ZONE']) || empty($data['TYPE_ENCLOS'])) {
-            $this->redirectWithMessage('formCreationEnclos', 'Tous les champs sont obligatoires.', 'error');
-            return;
-        }
-
-        if ($this->serviceEnclos->ajoutEnclos($data)) {
-            $this->logEvent(
-                'INSERTION_BD',
-                "Nouvel enclos ajouté - Lat: {$data['LATITUDE']}, Long: {$data['LONGITUDE']}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Enclos ajouté avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de l'ajout d'un enclos"
-            );
-            $this->redirectWithMessage('formCreationEnclos', 'Erreur lors de l\'ajout de l\'enclos.', 'error');
+        $result = $this->serviceEnclos->ajoutEnclos();
+        echo $result;
+        switch ($result) {
+            case 1:
+                $this->logEvent(
+                    'INSERTION_BD',
+                    "Nouvel enclos ajouté"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Enclos ajouté avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de l'ajout d'un enclos"
+                );
+                $this->redirectWithMessage('creationEnclos', 'Erreur lors de l\'ajout de l\'enclos (Enclos déjà existant ?).', 'error');
+                break;
+            case 'type':
+                $this->redirectWithMessage('creationEnclos', 'Erreur : Type d\'enclos invalide.', 'error');
+                break;
         }
     }
 
@@ -1124,28 +1130,25 @@ class AdminController extends BaseController
             return;
         }
 
-        $data = [
-            'ID_ZONE' => $_POST['id_zone'] ?? '',
-            'TYPE_ENCLOS' => $_POST['type_enclos'] ?? ''
-        ];
-
-        if (empty($data['ID_ZONE']) || empty($data['TYPE_ENCLOS'])) {
-            $this->redirectWithMessage('formEditionEnclos', 'Tous les champs sont obligatoires.', 'error');
-            return;
-        }
-
-        if ($this->serviceEnclos->majEnclos($latitude, $longitude, $data)) {
-            $this->logEvent(
-                'UPDATE_BD',
-                "Enclos mis à jour - Lat: {$latitude}, Long: {$longitude}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Enclos mis à jour avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de la mise à jour de l'enclos Lat: {$latitude}, Long: {$longitude}"
-            );
-            $this->redirectWithMessage('formEditionEnclos', 'Erreur lors de la mise à jour de l\'enclos.', 'error');
+        $result = $this->serviceEnclos->majEnclos($latitude, $longitude);
+        switch ($result) {
+            case 1:
+                $this->logEvent(
+                    'UPDATE_BD',
+                    "Enclos mis à jour - Lat: {$latitude}, Long: {$longitude}"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Enclos mis à jour avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de la mise à jour de l'enclos Lat: {$latitude}, Long: {$longitude}"
+                );
+                $this->redirectWithMessage('formEditionEnclos', 'Erreur lors de la mise à jour de l\'enclos.', 'error', ['latitude' => $latitude, 'longitude' => $longitude]);
+                break;
+            case 'type':
+                $this->redirectWithMessage('formEditionEnclos', 'Erreur : Type d\'enclos invalide.', 'error', ['latitude' => $latitude, 'longitude' => $longitude]);
+                break;
         }
     }
 
@@ -1160,29 +1163,31 @@ class AdminController extends BaseController
         $latitude = $_GET['latitude'] ?? null;
         $longitude = $_GET['longitude'] ?? null;
 
+        //coordonnées inexistantes
         if (!$latitude || !$longitude) {
             $this->redirectWithMessage('adminDashboard', 'Enclos non trouvé.', 'error');
             return;
         }
+        $result = $this->serviceEnclos->supprEnclos($latitude, $longitude);
 
-        $enclos = $this->serviceEnclos->getEnclosParCoordonnees($latitude, $longitude);
-        if (!$enclos) {
-            $this->redirectWithMessage('adminDashboard', 'Enclos non trouvé.', 'error');
-            return;
-        }
-
-        if ($this->serviceEnclos->supprEnclos($latitude, $longitude)) {
-            $this->logEvent(
-                'SUPPRESSION_BD',
-                "Enclos supprimé - Lat: {$latitude}, Long: {$longitude}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Enclos supprimé avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de la suppression de l'enclos Lat: {$latitude}, Long: {$longitude}"
-            );
-            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de l\'enclos.', 'error');
+        switch ($result) {
+            case 1:
+                $this->logEvent(
+                    'SUPPRESSION_BD',
+                    "Enclos supprimé - Lat: {$latitude}, Long: {$longitude}"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Enclos supprimé avec succès.', 'success');
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de la suppression de l'enclos Lat: {$latitude}, Long: {$longitude}"
+                );
+                $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de l\'enclos.', 'error');
+                break;
+            case 'coordonnees':
+                $this->redirectWithMessage('adminDashboard', 'Enclos inexistant.', 'error');
+                break;
         }
     }
 
@@ -1271,44 +1276,35 @@ class AdminController extends BaseController
         $latitude = $_GET['latitude'] ?? null;
         $longitude = $_GET['longitude'] ?? null;
 
-        if (!$dateDebut || $latitude === null || $longitude === null) {
-            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation non trouvée.', 'error');
-            return;
-        }
-
         // Vérifier que la réparation existe
         $reparation = $this->serviceReparation->getReparation($dateDebut, $longitude, $latitude);
-        if (!$reparation) {
-            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation non trouvée.', 'error');
+        if (!$reparation || !$dateDebut || $latitude == null || $longitude == null) {
+            $this->redirectWithMessage("profilEnclos", 'Réparation non trouvée.', 'error', ['latitude' => $latitude, 'longitude' => $longitude]);
             return;
         }
 
-        $data = [
-            'DATE_DEBUT_REPARATION' => $_POST['DATE_DEBUT_REPARATION'],
-            'LONGITUDE_ENCLOS' => $longitude,
-            'LATITUDE_ENCLOS' => $latitude,
-            'ID_PRESTATAIRE' => $_POST['ID_PRESTATAIRE'] ?? null,
-            'DATE_FIN' => $_POST['DATE_FIN'] ?? null,
-            'NATURE_REPARATION' => $_POST['NATURE_REPARATION'] ?? null,
-            'COUT_REPARATION' => $_POST['COUT_REPARATION'] ?? null
-        ];
-
-        echo $data['COUT_REPARATION'] . "<br>";
-        echo $data['DATE_DEBUT_REPARATION'] . "<br>";
-        echo $data['DATE_FIN'] . "<br>";
-
-        if ($this->serviceReparation->updateReparation($data)) {
-            $this->logEvent(
-                'MODIFICATION_BD',
-                "Réparation modifiée - Date: {$dateDebut}, Lat: {$latitude}, Long: {$longitude}"
-            );
-            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Réparation modifiée avec succès.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de la modification de la réparation Date: {$dateDebut}"
-            );
-            $this->redirectWithMessage("profilEnclos&latitude={$latitude}&longitude={$longitude}", 'Erreur lors de la modification de la réparation.', 'error');
+        $result = $this->serviceReparation->majEntretien($dateDebut, $latitude, $longitude);
+        switch ($result) {
+            case 1:
+                $this->logEvent(
+                    'MODIFICATION_BD',
+                    "Réparation modifiée - Date: {$dateDebut}, Lat: {$latitude}, Long: {$longitude}"
+                );
+                $this->redirectWithMessage("profilEnclos", 'Réparation modifiée avec succès.', 'success', ['latitude' => $latitude, 'longitude' => $longitude]);
+                break;
+            case 'nature':
+                $this->redirectWithMessage("formEditionReparation", 'Erreur : Nature de la réparation requise.', 'error', ['date_debut' => $dateDebut, 'latitude' => $latitude, 'longitude' => $longitude]);
+                break;
+            case 'cout':
+                $this->redirectWithMessage("formEditionReparation", 'Erreur : Coût invalide (doit être numérique positif).', 'error', ['date_debut' => $dateDebut, 'latitude' => $latitude, 'longitude' => $longitude]);
+                break;
+            case 0:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de la modification de la réparation Date: {$dateDebut}"
+                );
+                $this->redirectWithMessage("profilEnclos", 'Erreur lors de la modification de la réparation.', 'error', ['latitude' => $latitude, 'longitude' => $longitude]);
+                break;
         }
     }
 

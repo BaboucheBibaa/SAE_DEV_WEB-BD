@@ -44,7 +44,7 @@ class ServiceEmployee
     
     {
         //Récupère l'id du dernier employé ajouté à la base de données
-        return $this->User->getLastInsertId()['LAST_ID'];
+        return $this->User->getLastInsertId()['LAST_ID']+1;
     }
 
     /**
@@ -128,27 +128,27 @@ class ServiceEmployee
     /**
      * Vérifie les données du formulaire d'ajout/modification d'employé
      * @param string $champ Suffixe du champ POST ('cree' ou 'modif')
-     * @return int 0 si valide, 2-6 si erreur (nom, prénom, mail, salaire, login)
+     * @return string 'ok' si valide, le reste si erreur (nom, prénom, mail, salaire, login)
      */
     public function verificationForm($champ)
     {
         //ne doit pas retourner 1 car on peut confondre avec le retour du boolean de la fonction de création ou de modification d'un employé, c'est pour ça que les codes d'erreur commencent à 2
         if (!preg_match('/^[a-zA-Z-\'éèêëç ]+$/', $_POST['nom_' . $champ] ?? '')) {
-            return 2; // valeur de retour 2 = erreur du nom
+            return 'nom';
         }
         if (!preg_match('/^[a-zA-Z-\'éèêëç ]+$/', $_POST['prenom_' . $champ] ?? '')) {
-            return 3; // valeur de retour 3 = erreur du prénom
+            return 'prenom';
         }
         if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $_POST['mail_' . $champ] ?? '')) {
-            return 4; // valeur de retour 4 = erreur du mail
+            return 'mail';
         }
         if (!preg_match('/^\d+(?:[\.,]\d{2})?$/', $_POST['salaire_' . $champ] ?? '')) {
-            return 5; // valeur de retour 5 = erreur du salaire
+            return 'salaire';
         }
         if (!preg_match('/^[a-zA-Z0-9._-]+$/', $_POST['login_' . $champ] ?? '')) {
-            return 6; // valeur de retour 6 = erreur du login
+            return 'login';
         }
-        return 0;
+        return 'ok';
     }
     /**
      * Supprime un employé de la base de données
@@ -165,20 +165,16 @@ class ServiceEmployee
     }
     /**
      * Ajoute un nouvel employé et crée son contrat de travail
-     * @return int ID du nouvel employé
+     * @return int|string ID du nouvel employé
      */
     public function ajoutEmployee()
     {
         // Vérifier que la fonction est bien définie, sinon utiliser une fonction par défaut
-        $id_fonction = $_POST['id_fonction_cree'] ?? null;
-        if (empty($id_fonction)) {
-            $fonctions = $this->Fonction->getAll();
-            $id_fonction = !empty($fonctions) ? $fonctions[0]['ID_FONCTION'] : null;
-        }
+        $id_fonction = $_POST['id_fonction_cree'] ?? 'Comptable';
 
         // Valide les données du formulaire
         $validationCode = $this->verificationForm('cree');
-        if ($validationCode != 0) {
+        if ($validationCode != 'ok') {
             // Retourne le code d'erreur au lieu de lancer une exception
             return $validationCode;
         }
@@ -197,7 +193,7 @@ class ServiceEmployee
             'id_superieur' => !empty($_POST['id_superieur_cree']) ? $_POST['id_superieur_cree'] : null
         ];
 
-        // Essaie de créer l'employé
+        // Créer l'employé
         $newEmployeeId = $this->User->creer($data);
         if (!$newEmployeeId) {
             // Retourne 0 en cas d'erreur serveur
@@ -230,7 +226,7 @@ class ServiceEmployee
     /**
      * Met à jour les données d'un employé
      * @param int $id ID de l'employé à modifier
-     * @return int|bool|null Code d'erreur validation ou résultat de modification
+     * @return int|string|bool|null Code d'erreur validation ou résultat de modification
      */
     public function majEmployee($id)
     {
@@ -256,7 +252,7 @@ class ServiceEmployee
         $id_remplacant = !empty($_POST['id_remplacant_modif']) ? $_POST['id_remplacant_modif'] : $id;
 
         $validationCode = $this->verificationForm('modif');
-        if ($validationCode != 0) {
+        if ($validationCode != 'ok') {
             return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
         }
         $data = [

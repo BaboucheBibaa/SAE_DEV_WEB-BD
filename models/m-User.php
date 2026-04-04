@@ -9,6 +9,7 @@ class User extends BaseModel
         return $row['NEW_ID'];
     }
 
+    //Retourne le dernier ID ajouté dans la BD (donc NVL(MAX(ID_PERSONNEL),0)) car séquences interdites
     public function getLastInsertId()
     {
         $sqlSeq = "SELECT NVL(MAX(ID_PERSONNEL), 0) AS LAST_ID FROM Personnel";

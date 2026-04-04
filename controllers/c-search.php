@@ -35,7 +35,7 @@ class SearchController extends BaseController
      */
     private function affichePage()
     {
-        $this->render('test-moteur-recherche', [
+        $this->render('moteur', [
             'title' => 'Moteur de Recherche - Zoo\'land'
         ]);
     }
@@ -49,12 +49,9 @@ class SearchController extends BaseController
 
         // Filtres simples
         $filter_espece = $_GET['filter_espece'] ?? '';
-        $filter_zone = $_GET['filter_zone'] ?? '';
         $filter_regime = $_GET['filter_regime'] ?? '';
 
-        // Nouveaux filtres spécifiques
-        $filter_poids_min = $_GET['filter_poids_min'] ?? '';
-        $filter_poids_max = $_GET['filter_poids_max'] ?? '';
+        // filtres spécifiques
         $filter_date_naissance_min = $_GET['filter_date_naissance_min'] ?? '';
         $filter_date_naissance_max = $_GET['filter_date_naissance_max'] ?? '';
         $filter_fonction = $_GET['filter_fonction'] ?? '';
@@ -68,8 +65,6 @@ class SearchController extends BaseController
             empty($filter_espece) &&
             empty($filter_zone) &&
             empty($filter_regime) &&
-            empty($filter_poids_min) &&
-            empty($filter_poids_max) &&
             empty($filter_date_naissance_min) &&
             empty($filter_date_naissance_max) &&
             empty($filter_fonction)
@@ -80,13 +75,10 @@ class SearchController extends BaseController
                 'espece' => $_GET['filter_espece'] ?? '',
                 'zone' => $_GET['filter_zone'] ?? '',
                 'regime' => $_GET['filter_regime'] ?? '',
-                'poids_min' => $_GET['filter_poids_min'] ?? '',
-                'poids_max' => $_GET['filter_poids_max'] ?? '',
                 'date_naissance_min' => $_GET['filter_date_naissance_min'] ?? '',
                 'date_naissance_max' => $_GET['filter_date_naissance_max'] ?? '',
                 'fonction' => $_GET['filter_fonction'] ?? ''
             ];
-
 
             $results = $this->serviceSearch->recherchGlobale($_GET['q'] ?? '',$filters);
             // Compter les résultats
@@ -97,24 +89,20 @@ class SearchController extends BaseController
                 }
             }
 
-            if ($totalResults === 0) {
+            if ($totalResults == 0) {
                 $message = 'Aucun résultat trouvé.';
             }
         }
         $fonctions = $this->serviceEmployee->getFonctions();
         $zones = $this->serviceZone->getAll();
         $especes = $this->serviceEspece->getAll();
-
-        $this->render('test-moteur-recherche', [
+        $this->render('moteur', [
             'title' => 'Résultats de Recherche - Zoo\'land',
             'searchTerm' => $searchTerm,
             'results' => $results,
             'message' => $message,
             'filter_espece' => $filter_espece,
-            'filter_zone' => $filter_zone,
             'filter_regime' => $filter_regime,
-            'filter_poids_min' => $filter_poids_min,
-            'filter_poids_max' => $filter_poids_max,
             'filter_date_naissance_min' => $filter_date_naissance_min,
             'filter_date_naissance_max' => $filter_date_naissance_max,
             'filter_fonction' => $filter_fonction,

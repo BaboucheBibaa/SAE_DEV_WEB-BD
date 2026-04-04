@@ -44,13 +44,32 @@ class ServiceEnclos
         return $enclos;
     }
 
+    public function verificationForm($champ)
+    {
+        // Valide le type d'enclos (lettres, chiffres, espaces, traits d'union)
+        if (!preg_match('/^[a-zA-Z0-9\-éèêëç ]+$/', $_POST['type_enclos_' . $champ] ?? '')) {
+            return 'type';
+        }
+        return 'ok';
+    }
+
     /**
      * Crée un nouvel enclos
-     * @param array $data Données de l'enclos
-     * @return bool Succès de l'opération
+     * @return bool|string|null Succès de l'opération ou code d'erreur
      */
-    public function ajoutEnclos($data)
+    public function ajoutEnclos()
     {
+        $validationCode = $this->verificationForm('cree');
+        if ($validationCode != 'ok') {
+            return $validationCode;
+        }
+
+        $data = [
+            'LATITUDE' => $_POST['latitude_cree'] ?? '',
+            'LONGITUDE' => $_POST['longitude_cree'] ?? '',
+            'ID_ZONE' => $_POST['id_zone_cree'] ?? '',
+            'TYPE_ENCLOS' => $_POST['type_enclos_cree'] ?? ''
+        ];
         return $this->Enclos->creer($data);
     }
 
@@ -58,11 +77,20 @@ class ServiceEnclos
      * Met à jour un enclos
      * @param float $latitude Latitude
      * @param float $longitude Longitude
-     * @param array $data Données à mettre à jour
-     * @return bool Succès de l'opération
+     * @return bool|string|null Succès de l'opération ou code d'erreur
      */
-    public function majEnclos($latitude, $longitude, $data)
+    public function majEnclos($latitude, $longitude)
     {
+        $validationCode = $this->verificationForm('modif');
+        if ($validationCode != 'ok') {
+            return $validationCode;
+        }
+
+        $data = [
+            'ID_ZONE' => $_POST['id_zone_modif'] ?? '',
+            'TYPE_ENCLOS' => $_POST['type_enclos_modif'] ?? ''
+        ];
+
         return $this->Enclos->update($latitude, $longitude, $data);
     }
 
@@ -70,10 +98,14 @@ class ServiceEnclos
      * Supprime un enclos
      * @param float $latitude Latitude
      * @param float $longitude Longitude
-     * @return bool Succès de l'opération
+     * @return bool|string Succès de l'opération ou echec
      */
     public function supprEnclos($latitude, $longitude)
     {
+        //si coordonnées inexistantes
+        if (!$this->getEnclosParCoordonnees($latitude, $longitude)){
+            return 'coordonnees';
+        }
         return $this->Enclos->suppr($latitude, $longitude);
     }
 }

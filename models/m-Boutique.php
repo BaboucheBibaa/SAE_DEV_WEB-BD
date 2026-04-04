@@ -87,7 +87,7 @@ class Boutique extends BaseModel
         return $this->executeModify($sql, [':id' => $id]);
     }
 
-    public function moteurRechercheRecup($searchTerm, $filters = [])
+    public function moteurRechercheRecup($searchTerm)
     {
         $sql = "SELECT B.*, Z.NOM_ZONE 
                  FROM BOUTIQUE B

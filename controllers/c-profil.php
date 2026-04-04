@@ -18,10 +18,8 @@ class ProfilController extends BaseController
      */
     public function profil(int $id): void
     {
-        $id_user = $_GET['id'] ?? null;
-        if ($id_user === null) {
-            $id_user = $id;
-        }
+        $id_user = $_GET['id'];
+
         // Vérifier si l'utilisateur est connecté
         if (empty($_SESSION['user'])) {
             $this->redirectWithMessage('afficheConnexion', 'Vous devez être connecté pour accéder à votre profil.', 'error');
@@ -82,7 +80,7 @@ class ProfilController extends BaseController
             $this->redirectWithMessage('profil', 'Le nouveau mot de passe doit contenir au moins 6 caractères.', "error");
         }
 
-        // maj du mdp
+        // maj du  -> PASSWORD_DEFAULT = bcrypt en ce moment, constante contenant l'algorithme utilisé par PHP par défaut
         $MDP = password_hash($newPassword, PASSWORD_DEFAULT);
 
         if ($this->serviceEmployee->majPassword($userId, $MDP)) {
@@ -90,15 +88,13 @@ class ProfilController extends BaseController
                 'UPDATE_BD',
                 "Mot de passe mis à jour pour l'utilisateur id={$userId}"
             );
-            $_SESSION['flash'] = ['type' => 'success', 'message' => 'Votre mot de passe a été modifié avec succès.'];
+            $this->redirectWithMessage('profil', 'Votre mot de passe a été modifié avec succès.', 'success');
         } else {
             $this->logEvent(
                 'ERREUR',
                 "Erreur lors de la mise à jour du mot de passe pour l'utilisateur id={$userId}"
             );
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Une erreur a eu lieu lors de la mise à jour du profil.'];
+            $this->redirectWithMessage('profil', 'Une erreur a eu lieu lors de la mise à jour du profil.', 'error');
         }
-
-        $this->redirect('profil', $userId);
     }
 }

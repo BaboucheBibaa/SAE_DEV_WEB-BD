@@ -57,7 +57,7 @@
                         <?php }
                         if (isset($_SESSION['user']['ID_FONCTION']) && $_SESSION['user']['ID_FONCTION'] == COMPTABLE) { ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="index.php?action=comptableDashboard">Dashboard Personnel d'entretien</a>
+                                <a class="nav-link" href="index.php?action=comptableDashboard">Dashboard Comptable</a>
                             </li>
                         <?php }
                         if (!empty($_SESSION['user'])): ?>

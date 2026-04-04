@@ -20,7 +20,7 @@ class ProfilAnimalController extends BaseController
      */
     public function profilAnimal(int $id): void
     {
-        if ($id === null) {
+        if ($id == null) {
             $this->redirectWithMessage('home', 'Animal non trouvé.', 'error');
         }
 
@@ -54,7 +54,7 @@ class ProfilAnimalController extends BaseController
         }
 
         if (empty($_POST['id_animal']) || empty($_POST['id_visiteur']) || empty($_POST['libelle'])) {
-            $this->redirectWithMessage('profilAnimal&id=' . $_POST['id_animal'], 'Données manquantes.', 'error');
+            $this->redirectWithMessage('profilAnimal', 'Données manquantes.', 'error', ['id' => $_POST['id_animal']]);
         }
 
         $id_animal = $_POST['id_animal'];
@@ -66,13 +66,13 @@ class ProfilAnimalController extends BaseController
                 'INSERTION_BD',
                 "Nouveau parrainage ajouté pour l'animal id={$id_animal}"
             );
-            $this->redirectWithMessage('profilAnimal&id=' . $id_animal, 'Parrainage ajouté avec succès.', 'success');
+            $this->redirectWithMessage('profilAnimal', 'Parrainage ajouté avec succès.', 'success', ['id' => $_POST['id_animal']]);
         } else {
             $this->logEvent(
                 'ERREUR',
                 "Erreur lors de l'ajout du parrainage pour l'animal id={$id_animal}"
             );
-            $this->redirectWithMessage('profilAnimal&id=' . $id_animal, 'Erreur lors de l\'ajout du parrainage.', 'error');
+            $this->redirectWithMessage('profilAnimal', 'Erreur lors de l\'ajout du parrainage.', 'error', ['id' => $_POST['id_animal']]);
         }
     }
 
@@ -86,7 +86,7 @@ class ProfilAnimalController extends BaseController
         $this->requireRole(ADMINID);
 
         if (empty($_GET['idAnimal']) || empty($_GET['idVisiteur'])) {
-            $this->redirectWithMessage('profilAnimal&id=' . $_GET['id_animal'], 'Données manquantes.', 'error');
+            $this->redirectWithMessage('profilAnimal', 'Données manquantes.', 'error', ['id' => $_POST['id_animal']]);
         }
 
         $id_animal = $_GET['idAnimal'];
@@ -99,13 +99,13 @@ class ProfilAnimalController extends BaseController
                 'DELETE_BD',
                 "Parrainage supprimé pour l'animal id={$id_animal} et visiteur id={$id_visiteur}"
             );
-            $this->redirectWithMessage('profilAnimal&id=' . $id_animal, 'Parrainage supprimé avec succès.', 'success');
+            $this->redirectWithMessage('profilAnimal', 'Parrainage supprimé avec succès.', 'success', ['id' => $id_animal]);
         } else {
             $this->logEvent(
                 'ERREUR',
                 "Erreur lors de la suppression du parrainage pour l'animal id={$id_animal} et visiteur id={$id_visiteur}"
             );
-            $this->redirectWithMessage('profilAnimal&id=' . $id_animal, 'Erreur lors de la suppression du parrainage.', 'error');
+            $this->redirectWithMessage('profilAnimal', 'Erreur lors de la suppression du parrainage.', 'error', ['id' => $id_animal]);
         }
     }
 
@@ -121,7 +121,7 @@ class ProfilAnimalController extends BaseController
         $animals = $this->serviceAnimal->getTousAnimaux();
 
         $title = "Ajouter un lien de parenté - Zoo'land";
-        $this->render('v-creationParente', ['title' => $title, 'animals' => $animals]);
+        $this->render('animal/v-creationParente', ['title' => $title, 'animals' => $animals]);
     }
 
     /**
@@ -135,7 +135,7 @@ class ProfilAnimalController extends BaseController
 
         if (empty($_POST['id_enfant']) || empty($_POST['id_parent'])) {
             $idAnimal = $_POST['id_enfant'] ?? $_GET['id'] ?? 0;
-            $this->redirectWithMessage('profilAnimal&id=' . $idAnimal, 'Parent et enfant requis.', 'error');
+            $this->redirectWithMessage('profilAnimal', 'Parent et enfant requis.', 'error', ['id' => $idAnimal]);
         }
 
         $id_parent = $_POST['id_parent'];
@@ -146,12 +146,12 @@ class ProfilAnimalController extends BaseController
         $enfant = $this->serviceAnimal->getAnimalParID($id_enfant);
 
         if (!$parent || !$enfant) {
-            $this->redirectWithMessage('profilAnimal&id=' . $id_enfant, 'L\'un des animaux n\'existe pas.', 'error');
+            $this->redirectWithMessage('profilAnimal', 'L\'un des animaux n\'existe pas.', 'error', ['id' => $id_enfant]);
         }
 
         // Vérifier que ce n'est pas le même animal
         if ($id_parent == $id_enfant) {
-            $this->redirectWithMessage('profilAnimal&id=' . $id_enfant, 'Un animal ne peut pas être son propre parent.', 'error');
+            $this->redirectWithMessage('profilAnimal', 'Un animal ne peut pas être son propre parent.', 'error', ['id' => $id_enfant]);
         }
 
         $result = $this->serviceAnimal->creerParente($id_parent, $id_enfant);
@@ -161,16 +161,14 @@ class ProfilAnimalController extends BaseController
                 'INSERTION_BD',
                 "Lien de parenté créé : animal id={$id_parent} est parent de animal id={$id_enfant}"
             );
-            $_SESSION['flash'] = ['type' => 'success', 'message' => 'Lien de parenté créé avec succès.'];
+            $this->redirectWithMessage('profilAnimal', 'Lien de parenté créé avec succès.', 'success', ['id' => $id_enfant]);
         } else {
             $this->logEvent(
                 'ERREUR',
                 "Erreur lors de la création du lien de parenté : animal id={$id_parent} et animal id={$id_enfant}"
             );
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Ce lien de parenté existe déjà ou une erreur s\'est produite.'];
+            $this->redirectWithMessage('profilAnimal', 'Ce lien de parenté existe déjà ou une erreur s\'est produite.', 'error', ['id' => $id_enfant]);
         }
-
-        $this->redirect('profilAnimal', $id_enfant);
     }
 
     /**
@@ -196,15 +194,13 @@ class ProfilAnimalController extends BaseController
                 'DELETE_BD',
                 "Lien de parenté supprimé : animal id={$id_parent} n'est plus parent de animal id={$id_enfant}"
             );
-            $_SESSION['flash'] = ['type' => 'success', 'message' => 'Lien de parenté supprimé avec succès.'];
+            $this->redirectWithMessage('profilAnimal', 'Lien de parenté supprimé avec succès.', 'success', ['id' => $id_enfant]);
         } else {
             $this->logEvent(
                 'ERREUR',
                 "Erreur lors de la suppression du lien de parenté entre id={$id_parent} et id={$id_enfant}"
             );
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Erreur lors de la suppression du lien de parenté.'];
+            $this->redirectWithMessage('profilAnimal', 'Erreur lors de la suppression du lien de parenté.', 'error', ['id' => $id_enfant]);
         }
-
-        $this->redirect('profilAnimal', $id_enfant);
     }
 }

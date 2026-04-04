@@ -95,10 +95,7 @@ class Reparation extends BaseModel
     /**
      * Met à jour une réparation existante
      * 
-     * @param string $dateDebut Date de début (clé primaire)
-     * @param float $latitude Latitude de l'enclos (clé primaire)
-     * @param float $longitude Longitude de l'enclos (clé primaire)
-     * @param array $data Données à mettre à jour
+     * @param array $data Données à mettre à jour (contient DATE_DEBUT_REPARATION, LATITUDE_ENCLOS, LONGITUDE_ENCLOS, etc.)
      * @return bool Succès de l'opération
      */
     public function update($data)
@@ -108,7 +105,7 @@ class Reparation extends BaseModel
                     DATE_FIN = TO_DATE(:date_fin,'YYYY-MM-DD'),
                     NATURE_REPARATION = :nature_reparation,
                     COUT_REPARATION = :cout_reparation
-                WHERE DATE_DEBUT_REPARATION = TO_DATE(:date_debut,'YYYY-MM-DD') 
+                WHERE DATE_DEBUT_REPARATION = TO_DATE(:date_debut,'DD/MM/YY') 
                 AND LATITUDE_ENCLOS = :latitude 
                 AND LONGITUDE_ENCLOS = :longitude";
 
@@ -116,10 +113,10 @@ class Reparation extends BaseModel
             ':date_debut' => $data['DATE_DEBUT_REPARATION'],
             ':latitude' => $data['LATITUDE_ENCLOS'],
             ':longitude' => $data['LONGITUDE_ENCLOS'],
-            ':id_prestataire' => $data['ID_PRESTATAIRE'] ?: null,
-            ':date_fin' => $data['DATE_FIN'] ?: null,
-            ':nature_reparation' => $data['NATURE_REPARATION'] ?: null,
-            ':cout_reparation' => $data['COUT_REPARATION'] ?: null
+            ':id_prestataire' => $data['ID_PRESTATAIRE'] ?? null,
+            ':date_fin' => $data['DATE_FIN'] ?? null,
+            ':nature_reparation' => $data['NATURE_REPARATION'],
+            ':cout_reparation' => $data['COUT_REPARATION'] ?? null
         ]);
     }
 

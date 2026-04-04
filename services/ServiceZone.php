@@ -36,8 +36,9 @@ class ServiceZone
      * @param float $longitude Longitude de l'enclos
      * @return array|null Données de la zone ou null
      */
-    public function getZoneParEnclos($latitude,$longitude){
-        return $this->Zone->getParEnclos($latitude,$longitude);
+    public function getZoneParEnclos($latitude, $longitude)
+    {
+        return $this->Zone->getParEnclos($latitude, $longitude);
     }
 
     /**
@@ -62,15 +63,29 @@ class ServiceZone
         return $this->Zone->getZoneManager($id_manager);
     }
 
+
+
+    public function verificationForm($champ)
+    {
+        if (!preg_match('/^[a-zA-Z-\'éèêëç ]+$/', $_POST['nom_zone_' . $champ] ?? '')) {
+            return 'nom';
+        }
+        return 'ok';
+    }
     //MAJ/Suppression/Création d'une zone
     /**
      * Met à jour les données d'une zone
      * @param int $id ID de la zone à modifier
-     * @return bool|null Résultat de la modification
+     * @return bool|string|null Résultat de la modification
      */
     public function majZone($id)
     {
+        $validationCode = $this->verificationForm('modif');
+        if ($validationCode != 'ok') {
+            return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
+        }
         //Met à jour les données d'une zone
+
         $data = [
             'nom_zone' => $_POST['nom_zone_modif'] ?? null,
             'id_manager' => !empty($_POST['id_manager_modif']) ? $_POST['id_manager_modif'] : null
@@ -90,10 +105,15 @@ class ServiceZone
     }
     /**
      * Ajoute une nouvelle zone à la base de données
-     * @return bool|null Résultat de la création
+     * @return bool|string|null Résultat de la création
      */
     public function ajoutZone()
     {
+
+        $validationCode = $this->verificationForm('cree');
+        if ($validationCode != 'ok') {
+            return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
+        }
         //Ajoute une nouvelle zone à la base de données
         $data = [
             'nom_zone' => $_POST['nom_zone_cree'] ?? null,

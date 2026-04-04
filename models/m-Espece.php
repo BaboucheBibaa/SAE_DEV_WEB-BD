@@ -62,6 +62,12 @@ class Espece extends BaseModel
         
         $params = [':searchTerm' => '%' . $searchTerm . '%'];
         
+        // Filtre Espèce
+        if (!empty($filters['espece'])) {
+            $sql .= " AND E.ID_ESPECE = :id_espece";
+            $params[':id_espece'] = $filters['espece'];
+        }
+
         $sql .= " GROUP BY E.ID_ESPECE, E.NOM_ESPECE, E.NOM_LATIN_ESPECE, E.EST_MENACEE
                   ORDER BY E.NOM_ESPECE";
         

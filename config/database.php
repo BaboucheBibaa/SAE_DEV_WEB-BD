@@ -2,6 +2,8 @@
 class Database
 {
 
+    //pattern singleton afin de ne pas avoir une connexion qui se fait à chaque fois que l'on appelle la fonction
+    //solution à cela: static, attribut de classe donc appelé une seule fois
     private static $conn = null;
     public static function getConnection()
     {
@@ -10,7 +12,7 @@ class Database
             return self::$conn;
         }
 
-        self::$conn = oci_connect(USERNAME, MYPASS, CONNEX);
+        self::$conn = oci_connect(MYUSER, MYPASS, MYHOST);
 
         if (!self::$conn) {
             $e = oci_error();

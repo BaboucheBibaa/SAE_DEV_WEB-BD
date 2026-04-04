@@ -5,8 +5,6 @@ $message = $message ?? '';
 $especes = $especes ?? [];
 $fonctions = $fonctions ?? [];
 $filter_espece = $_GET['filter_espece'] ?? '';
-$filter_poids_min = $_GET['filter_poids_min'] ?? '';
-$filter_poids_max = $_GET['filter_poids_max'] ?? '';
 $filter_date_naissance_min = $_GET['filter_date_naissance_min'] ?? '';
 $filter_date_naissance_max = $_GET['filter_date_naissance_max'] ?? '';
 $filter_fonction = $_GET['filter_fonction'] ?? '';
@@ -20,6 +18,7 @@ $filter_fonction = $_GET['filter_fonction'] ?? '';
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title mb-4">Recherche Globale</h5>
+
 
                     <form method="GET" action="index.php" class="mb-4">
                         <input type="hidden" name="action" value="search">
@@ -37,11 +36,14 @@ $filter_fonction = $_GET['filter_fonction'] ?? '';
                                 <i class="bi bi-search"></i> Rechercher
                             </button>
                         </div>
+                        <small class="text-muted d-block mb-3">
+                            <i class="bi bi-info-circle"></i> Appuyez sur le bouton "Appliquer les filtres" avant de faire une recherche avec filtres
+                        </small>
 
                         <!-- FILTRES AVANCÉS -->
                         <div class="border-top pt-3 mt-3">
                             <h6 class="mb-3"><i class="bi bi-funnel"></i> Filtres Avancés</h6>
-                            
+
                             <div class="row g-3">
                                 <!-- Espèce -->
                                 <div class="col-md-6 col-lg-3">
@@ -49,30 +51,12 @@ $filter_fonction = $_GET['filter_fonction'] ?? '';
                                     <select name="filter_espece" id="filter_espece" class="form-select">
                                         <option value="">Toutes les espèces</option>
                                         <?php foreach ($especes as $e): ?>
-                                            <option value="<?= htmlspecialchars($e['ID_ESPECE']) ?>" 
-                                                    <?= $filter_espece == $e['ID_ESPECE'] ? 'selected' : '' ?>>
+                                            <option value="<?= htmlspecialchars($e['ID_ESPECE']) ?>"
+                                                <?= $filter_espece == $e['ID_ESPECE'] ? 'selected' : '' ?>>
                                                 <?= htmlspecialchars($e['NOM_ESPECE']) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
-                                </div>
-
-                                <!-- Poids Min -->
-                                <div class="col-md-6 col-lg-3">
-                                    <label for="filter_poids_min" class="form-label">Poids Min (kg)</label>
-                                    <input type="number" name="filter_poids_min" id="filter_poids_min" 
-                                           class="form-control" step="0.1" min="0"
-                                           value="<?= htmlspecialchars($filter_poids_min) ?>"
-                                           placeholder="0">
-                                </div>
-
-                                <!-- Poids Max -->
-                                <div class="col-md-6 col-lg-3">
-                                    <label for="filter_poids_max" class="form-label">Poids Max (kg)</label>
-                                    <input type="number" name="filter_poids_max" id="filter_poids_max" 
-                                           class="form-control" step="0.1" min="0"
-                                           value="<?= htmlspecialchars($filter_poids_max) ?>"
-                                           placeholder="1000">
                                 </div>
 
                                 <!-- Fonction Employé -->
@@ -81,8 +65,8 @@ $filter_fonction = $_GET['filter_fonction'] ?? '';
                                     <select name="filter_fonction" id="filter_fonction" class="form-select">
                                         <option value="">Toutes les fonctions</option>
                                         <?php foreach ($fonctions as $f): ?>
-                                            <option value="<?= htmlspecialchars($f['ID_FONCTION']) ?>" 
-                                                    <?= $filter_fonction == $f['ID_FONCTION'] ? 'selected' : '' ?>>
+                                            <option value="<?= htmlspecialchars($f['ID_FONCTION']) ?>"
+                                                <?= $filter_fonction == $f['ID_FONCTION'] ? 'selected' : '' ?>>
                                                 <?= htmlspecialchars($f['NOM_FONCTION']) ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -92,17 +76,17 @@ $filter_fonction = $_GET['filter_fonction'] ?? '';
                                 <!-- Date Naissance Min -->
                                 <div class="col-md-6 col-lg-3">
                                     <label for="filter_date_naissance_min" class="form-label">Date Naissance Min</label>
-                                    <input type="date" name="filter_date_naissance_min" id="filter_date_naissance_min" 
-                                           class="form-control"
-                                           value="<?= htmlspecialchars($filter_date_naissance_min) ?>">
+                                    <input type="date" name="filter_date_naissance_min" id="filter_date_naissance_min"
+                                        class="form-control"
+                                        value="<?= htmlspecialchars($filter_date_naissance_min) ?>">
                                 </div>
 
                                 <!-- Date Naissance Max -->
                                 <div class="col-md-6 col-lg-3">
                                     <label for="filter_date_naissance_max" class="form-label">Date Naissance Max</label>
-                                    <input type="date" name="filter_date_naissance_max" id="filter_date_naissance_max" 
-                                           class="form-control"
-                                           value="<?= htmlspecialchars($filter_date_naissance_max) ?>">
+                                    <input type="date" name="filter_date_naissance_max" id="filter_date_naissance_max"
+                                        class="form-control"
+                                        value="<?= htmlspecialchars($filter_date_naissance_max) ?>">
                                 </div>
                             </div>
 

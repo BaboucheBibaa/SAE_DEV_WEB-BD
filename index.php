@@ -65,6 +65,7 @@ require_once 'controllers/c-search.php';
 require_once 'controllers/c-profilZone.php';
 require_once 'controllers/c-personnelEntretien.php';
 require_once 'controllers/c-profilBoutique.php';
+require_once 'controllers/c-profilPrestataire.php';
 require_once 'controllers/c-espece.php';
 require_once 'controllers/c-comptable.php';
 
@@ -186,6 +187,9 @@ switch ($action) {
         break;
     case 'profilBoutique':
         $controller = new BoutiqueProfilController();
+        break;
+    case 'profilPrestataire':
+        $controller = new ProfilPrestaireController();
         break;
     case 'comptableDashboard':
     case 'statsBoutiques':
@@ -395,6 +399,10 @@ switch ($action) {
         break;
     case 'profilBoutique':
         $controller->profilBoutique($_GET['id']);
+        break;
+
+    case 'profilPrestataire':
+        $controller->profilPrestataire($_GET['id']);
         break;
 
     case 'statsSoigneurs':

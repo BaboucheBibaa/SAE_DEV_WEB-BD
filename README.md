@@ -232,6 +232,7 @@ Navigateur → index.php (Chef d'orchestre du projet / routeur)
 
 ### Améliorations
 
+- [ ] Erreur sur les liens de parenté, tester sur id =20 en parent et 8 en enfant
 - [ ] Mettre le nom du prestataire et pas son identifiant dans la gestion entretien
 
 ---

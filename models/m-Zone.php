@@ -59,7 +59,7 @@ class Zone extends BaseModel
         return $this->executeModify($sql, [':id' => $id]);
     }
 
-    public function moteurRechercheRecup($searchTerm, $filters = [])
+    public function moteurRechercheRecup($searchTerm)
     {
         $sql = "SELECT Z.*, P.NOM, P.PRENOM 
                  FROM ZONE Z

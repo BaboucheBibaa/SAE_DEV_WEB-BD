@@ -17,7 +17,7 @@ class ProfilZoneController extends BaseController {
      * @return void
      */
     public function profileZone(int $id_zone): void {
-        if ($id_zone === null) {
+        if ($id_zone == null) {
             $this->redirectWithMessage('home', 'Zone non trouvée.', 'error');
         }
 

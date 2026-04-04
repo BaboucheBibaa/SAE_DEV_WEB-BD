@@ -36,7 +36,7 @@ class ServiceSearch
     }
 
     /**
-     * Effectue une recherche globale intelligent selon les filtres appliqués
+     * Effectue une recherche globale selon les filtres appliqués
      * @param string $searchTerm Terme de recherche
      * @param array $filters Filtres optionnels
      * @return array|null Résultats de recherche par type ou null si pas de résultats
@@ -61,7 +61,7 @@ class ServiceSearch
         $searchTerm = trim($searchTerm);
         $results = [];
 
-        // Déterminer quel filtre appliquer en regardant si l'un est vide ou non
+        // Déterminer quels filtres appliquer en regardant si l'un est vide ou non (recherche possible sur plusieurs filtres)
         $filtresAnimaux = !empty($filters['poids_min']) || !empty($filters['poids_max']) || 
                             !empty($filters['date_naissance_min']) || !empty($filters['date_naissance_max']) ||
                             !empty($filters['espece']);
@@ -71,11 +71,11 @@ class ServiceSearch
         // Si un terme de recherche est présent, faire une recherche globale
         if (!empty($searchTerm)) {
             $results['animals'] = $this->Animal->moteurRechercheRecup($searchTerm, $filters);
-            $results['especes'] = $this->Espece->moteurRechercheRecup($searchTerm, $filters);
-            $results['zones'] = $this->Zone->moteurRechercheRecup($searchTerm, $filters);
+            $results['especes'] = $this->Espece->moteurRechercheRecup($searchTerm);
+            $results['zones'] = $this->Zone->moteurRechercheRecup($searchTerm);
             $results['employes'] = $this->User->moteurRechercheRecup($searchTerm, $filters);
-            $results['boutiques'] = $this->Boutique->moteurRechercheRecup($searchTerm, $filters);
-            $results['enclos'] = $this->Enclos->moteurRechercheRecup($searchTerm, $filters);
+            $results['boutiques'] = $this->Boutique->moteurRechercheRecup($searchTerm);
+            $results['enclos'] = $this->Enclos->moteurRechercheRecup($searchTerm);
         } else {
             // Pas de terme de recherche : afficher uniquement les résultats des filtres appliqués
             

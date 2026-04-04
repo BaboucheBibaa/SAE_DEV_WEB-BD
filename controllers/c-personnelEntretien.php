@@ -47,18 +47,30 @@ class PersonnelEntretienController extends BaseController
         $this->requireRole(ENTRETIEN);
         $result = $this->serviceReparation->ajoutEntretien();
 
-        if ($result) {
-            $this->logEvent(
-                'INSERTION_BD',
-                "Nouvelle tâche d'entretien ajoutée"
-            );
-            $this->redirectWithMessage('formAjoutEntretien', 'Entretien enregistre avec succes.', 'success');
-        } else {
-            $this->logEvent(
-                'ERREUR',
-                "Erreur lors de l'enregistrement de l'entretien"
-            );
-            $this->redirectWithMessage('formAjoutEntretien', 'Erreur lors de l\'enregistrement de l\'entretien.', 'error');
+        switch ($result) {
+            case 'nature':
+                $this->redirectWithMessage('formAjoutEntretien', 'Erreur : Nature de la réparation requise.', 'error');
+                break;
+            case 'cout':
+                $this->redirectWithMessage('formAjoutEntretien', 'Erreur : Coût invalide (doit être numérique positif).', 'error');
+                break;
+            case 1:
+            case true:
+                $this->logEvent(
+                    'INSERTION_BD',
+                    "Nouvelle tâche d'entretien ajoutée"
+                );
+                $this->redirectWithMessage('formAjoutEntretien', 'Entretien enregistre avec succes.', 'success');
+                break;
+            case 0:
+            case false:
+            default:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de l'enregistrement de l'entretien"
+                );
+                $this->redirectWithMessage('formAjoutEntretien', 'Erreur lors de l\'enregistrement de l\'entretien.', 'error');
+                break;
         }
     }
     /**

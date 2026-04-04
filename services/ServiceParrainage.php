@@ -76,10 +76,6 @@ class ServiceParrainage
      */
     public function creerParrainage()
     {
-        echo $_POST['id_animal'];
-        echo $_POST['id_visiteur'];
-        echo $_POST['libelle'];
-
         $data = [
             'id_animal' => $_POST['id_animal'] ?? null,
             'id_visiteur' => $_POST['id_visiteur'] ?? null,

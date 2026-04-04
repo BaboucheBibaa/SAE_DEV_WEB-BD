@@ -159,7 +159,7 @@
                 <div id="collapseGenealogy" class="accordion-collapse collapse">
                     <div class="accordion-body">
                         <!-- Parents -->
-                        <h5 class="mb-3">👨‍👩‍👧 Parents</h5>
+                        <h5 class="mb-3">Parents</h5>
                         <?php if (!empty($parents)): ?>
                             <div class="table-responsive mb-4">
                                 <table class="table table-sm table-hover">
@@ -206,7 +206,7 @@
                         <?php endif; ?>
 
                         <!-- Enfants -->
-                        <h5 class="mb-3">👶 Enfants</h5>
+                        <h5 class="mb-3">Enfants</h5>
                         <?php if (!empty($enfants)): ?>
                             <div class="table-responsive">
                                 <table class="table table-sm table-hover">
@@ -250,37 +250,6 @@
                             </div>
                         <?php else: ?>
                             <p class="text-muted">Aucun enfant enregistré</p>
-                        <?php endif; ?>
-
-                        <!-- Formulaire ajout parenté (Admin) -->
-                        <?php if (!empty($_SESSION['user']) && $_SESSION['user']['ID_FONCTION'] == ADMINID): ?>
-                            <hr class="my-4">
-                            <h5 class="mb-3">➕ Ajouter un lien de parenté</h5>
-                            <form method="POST" action="index.php?action=ajouterParente" class="row g-3">
-                                <input type="hidden" name="id_enfant" value="<?= $animal['ID_ANIMAL'] ?>">
-
-                                <div class="col-md-6">
-                                    <label for="id_parent" class="form-label">Sélectionner le parent</label>
-                                    <select name="id_parent" id="id_parent" class="form-select" required>
-                                        <option value="">-- Choisir un animal parent --</option>
-                                        <?php if (!empty($tousAnimaux)): ?>
-                                            <?php foreach ($tousAnimaux as $a): ?>
-                                                <?php if ($a['ID_ANIMAL'] != $animal['ID_ANIMAL']): ?>
-                                                    <option value="<?= $a['ID_ANIMAL'] ?>">
-                                                        <?= htmlspecialchars($a['NOM_ANIMAL']) ?> (<?= htmlspecialchars($a['NOM_ESPECE'] ?? 'Espèce inconnue') ?>)
-                                                    </option>
-                                                <?php endif; ?>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="bi bi-plus-circle"></i> Ajouter ce lien
-                                    </button>
-                                </div>
-                            </form>
                         <?php endif; ?>
                     </div>
                 </div>

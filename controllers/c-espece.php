@@ -16,7 +16,7 @@ class EspeceController extends BaseController {
      */
     public function profilEspece(int $id): void
     {
-        if ($id === null) {
+        if ($id == null) {
             $this->redirectWithMessage('home', 'Espèce non trouvée.', 'error');
         }
 

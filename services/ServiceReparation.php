@@ -26,6 +26,23 @@ class ServiceReparation
         return $this->Prestataire->getById($id);
     }
 
+    /**
+     * Alias pour getPrestataireByID
+     * @param int $id ID du prestataire
+     * @return array|false Données du prestataire
+     */
+    public function getPrestataire($id){
+        return $this->Prestataire->getById($id);
+    }
+
+    /**
+     * Récupère toutes les réparations effectuées par un prestataire
+     * @param int $id_prestataire ID du prestataire
+     * @return array|false Tableau des réparations
+     */
+    public function getReparationsParPrestataire($id_prestataire){
+        return $this->Prestataire->getReparations($id_prestataire);
+    }
 
     public function getReparation($date_debut,$longitude,$latitude){
         return $this->Reparation->getReparation($date_debut,$longitude,$latitude);
@@ -60,15 +77,42 @@ class ServiceReparation
     }
 
     /**
+     * Valide les données d'une réparation/entretien
+     * @param string $champ Suffixe du champ (_cree ou _modif)
+     * @return string 'ok' ou code d'erreur ('nature', 'cout')
+     */
+    public function verificationFormReparation($champ)
+    {
+        // Valide la nature de la réparation (255 caractères max, contenu libre avec caractères spéciaux)
+        if (empty($_POST['nature_reparation_' . $champ] ?? '')) {
+            return 'nature';
+        }
+        
+        // Valide le coût (optionnel mais doit être numérique s'il est fourni)
+        if (!empty($_POST['cout_reparation_' . $champ] ?? '')) {
+            if (!is_numeric($_POST['cout_reparation_' . $champ]) || floatval($_POST['cout_reparation_' . $champ]) < 0) {
+                return 'cout';
+            }
+        }
+        
+        return 'ok';
+    }
+
+    /**
      * Ajoute une nouvelle réparation/entretien
      * Vérifie les données POST et crée l'enregistrement
-     * @return bool|null Résultat de la création
+     * @return bool|string|null Résultat de la création ou code d'erreur
      */
     public function ajoutEntretien()
     {
-        $dateDebut = $_POST['DATE_DEBUT_REPARATION'] ?? null;
-        $latitude = isset($_POST['LATITUDE_ENCLOS']) && $_POST['LATITUDE_ENCLOS'] !== '' ? floatval($_POST['LATITUDE_ENCLOS']) : null;
-        $longitude = isset($_POST['LONGITUDE_ENCLOS']) && $_POST['LONGITUDE_ENCLOS'] !== '' ? floatval($_POST['LONGITUDE_ENCLOS']) : null;
+        $validationCode = $this->verificationFormReparation('cree');
+        if ($validationCode != 'ok') {
+            return $validationCode;
+        }
+
+        $dateDebut = $_POST['date_debut_reparation_cree'] ?? null;
+        $latitude = isset($_POST['latitude_enclos_cree']) && $_POST['latitude_enclos_cree'] !== '' ? floatval($_POST['latitude_enclos_cree']) : null;
+        $longitude = isset($_POST['longitude_enclos_cree']) && $_POST['longitude_enclos_cree'] !== '' ? floatval($_POST['longitude_enclos_cree']) : null;
         $idPersonnel = $_SESSION['user']['ID_PERSONNEL'] ?? null;
 
         if (!$dateDebut || $latitude === null || $longitude === null || !$idPersonnel) {
@@ -80,32 +124,68 @@ class ServiceReparation
             'LATITUDE_ENCLOS' => $latitude,
             'LONGITUDE_ENCLOS' => $longitude,
             'ID_PERSONNEL' => intval($idPersonnel),
-            'ID_PRESTATAIRE' => $_POST['ID_PRESTATAIRE'] ?? '',
-            'DATE_FIN' => $_POST['DATE_FIN'] ?? '',
-            'NATURE_REPARATION' => $_POST['NATURE_REPARATION'] ?? '',
-            'COUT_REPARATION' => $_POST['COUT_REPARATION'] ?? ''
+            'ID_PRESTATAIRE' => $_POST['id_prestataire_cree'] ?? '',
+            'DATE_FIN' => $_POST['date_fin_cree'] ?? '',
+            'NATURE_REPARATION' => $_POST['nature_reparation_cree'] ?? '',
+            'COUT_REPARATION' => $_POST['cout_reparation_cree'] ?? ''
         ];
 
         return $this->Reparation->creer($data);
     }
 
     /**
-     * Ajoute un nouveau prestataire
-     * Vérifie les données POST et crée l'enregistrement
-     * @return bool|null Résultat de la création
+     * Met à jour une réparation/entretien existante
+     * @param string $dateDebut Date de début
+     * @param float $latitude Latitude de l'enclos
+     * @param float $longitude Longitude de l'enclos
+     * @return bool|string Succès ou code d'erreur
      */
-    public function ajoutPrestataire()
+    public function majEntretien($dateDebut, $latitude, $longitude)
     {
-        $nom = $_POST['nom_cree'] ?? null;
-        $prenom = $_POST['prenom_cree'] ?? null;
-
-        if (!$nom || !$prenom) {
-            return null;
+        $validationCode = $this->verificationFormReparation('modif');
+        if ($validationCode != 'ok') {
+            return $validationCode;
         }
 
         $data = [
-            'NOM_PRESTATAIRE' => $nom,
-            'PRENOM_PRESTATAIRE' => $prenom
+            'DATE_DEBUT_REPARATION' => $dateDebut,
+            'LONGITUDE_ENCLOS' => $longitude,
+            'LATITUDE_ENCLOS' => $latitude,
+            'ID_PRESTATAIRE' => $_POST['id_prestataire_modif'] ?? null,
+            'DATE_FIN' => $_POST['date_fin_modif'] ?? null,
+            'NATURE_REPARATION' => $_POST['nature_reparation_modif'] ?? null,
+            'COUT_REPARATION' => $_POST['cout_reparation_modif'] ?? null
+        ];
+
+        return $this->Reparation->update($data);
+    }
+
+    public function verificationFormPrestataire($champ)
+    {
+        if (!preg_match('/^[a-zA-Z-\'éèêëç ]+$/', $_POST['nom_' . $champ] ?? '')) {
+            return 'nom';
+        }
+        if (!preg_match('/^[a-zA-Z-\'éèêëç ]+$/', $_POST['prenom_' . $champ] ?? '')) {
+            return 'prenom';
+        }
+        return 'ok';
+    }
+
+    /**
+     * Ajoute un nouveau prestataire
+     * Vérifie les données POST et crée l'enregistrement
+     * @return bool|string|null Résultat de la création ou code d'erreur
+     */
+    public function ajoutPrestataire()
+    {
+        $validationCode = $this->verificationFormPrestataire('cree');
+        if ($validationCode != 'ok') {
+            return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
+        }
+
+        $data = [
+            'NOM_PRESTATAIRE' => $_POST['nom_cree'] ?? null,
+            'PRENOM_PRESTATAIRE' => $_POST['prenom_cree'] ?? null
         ];
 
         return $this->Prestataire->creer($data);
@@ -113,6 +193,26 @@ class ServiceReparation
 
     /**
      * Met à jour un prestataire existant
+     * @param int $id ID du prestataire
+     * @return bool|string|null Résultat de la mise à jour ou code d'erreur
+     */
+    public function majPrestataire(int $id)
+    {
+        $validationCode = $this->verificationFormPrestataire('modif');
+        if ($validationCode != 'ok') {
+            return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
+        }
+
+        $data = [
+            'NOM_PRESTATAIRE' => $_POST['nom_modif'] ?? null,
+            'PRENOM_PRESTATAIRE' => $_POST['prenom_modif'] ?? null
+        ];
+
+        return $this->Prestataire->update($id, $data);
+    }
+
+    /**
+     * Alias pour majPrestataire avec données fournies (pour rétrocompatibilité)
      * @param int $id ID du prestataire
      * @param array $data Données à mettre à jour
      * @return bool|null Résultat de la mise à jour

@@ -23,8 +23,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="id_zone" class="form-label">Zone <span class="text-danger">*</span></label>
-                            <select class="form-select" id="id_zone" name="id_zone" required>
+                            <label for="id_zone_modif" class="form-label">Zone <span class="text-danger">*</span></label>
+                            <select class="form-select" id="id_zone_modif" name="id_zone_modif" required>
                                 <option value="">-- Sélectionner une zone --</option>
                                 <?php if (!empty($zones)): ?>
                                     <?php foreach ($zones as $zone): ?>
@@ -38,8 +38,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="type_enclos" class="form-label">Type d'enclos <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="type_enclos" name="type_enclos" 
+                            <label for="type_enclos_modif" class="form-label">Type d'enclos <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="type_enclos_modif" name="type_enclos_modif" 
                                    value="<?= htmlspecialchars($enclos['TYPE_ENCLOS'] ?? '') ?>" required>
                         </div>
 

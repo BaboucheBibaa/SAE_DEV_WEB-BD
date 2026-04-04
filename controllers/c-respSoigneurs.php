@@ -34,7 +34,7 @@ class RespSoigneurController extends BaseController
         $enclos = [];
         $animaux = [];
         if ($zone) {
-            $employes = $this->serviceEmployee->getSoigneursParSuperieur($user['ID_PERSONNEL']); // Ou une méthode spécifique pour récupérer le personnel d'une zone
+            $employes = $this->serviceEmployee->getSoigneursParSuperieur($user['ID_PERSONNEL']);
             $enclos = $this->serviceEnclos->getEnclosParZone($zone['ID_ZONE']);
             $animaux = $this->serviceAnimal->getAnimauxParZone($zone['ID_ZONE']);
         }

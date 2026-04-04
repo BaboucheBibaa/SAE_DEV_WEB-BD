@@ -84,7 +84,7 @@ class BaseModel
         $r = oci_execute($stid);
         if (!$r) {
             $e = oci_error($stid);
-            trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
+            return 0;
         }
 
         return $r;

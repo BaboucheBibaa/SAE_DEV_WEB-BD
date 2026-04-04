@@ -46,14 +46,14 @@ class ConnexionController extends BaseController
         $loginValide = $this->Utils->verifyPassword($password, $user['MDP'] ?? '');
 
         if ($loginValide) {
+            //met à jour la session actuelle avec une nouvelle session (en cas de déconnexion puis connexion)
             session_regenerate_id(true);
             $_SESSION['user'] = $user;
             $this->logEvent(
                 'CONNEXION',
                 "Connexion réussie: login={$login}, id={$user['ID_PERSONNEL']}"
             );
-            header('Location: index.php?action=profil&id=' . $user['ID_PERSONNEL']);
-            exit;
+            $this->redirect('profil',$user['ID_PERSONNEL']);
         } else {
             $this->logEvent(
                 'ERREUR',
@@ -80,6 +80,7 @@ class ConnexionController extends BaseController
             'DECONNEXION',
             "Déconnexion utilisateur id={$userId}"
         );
+        //détruit les variables $_SESSION
         session_destroy();
         $this->redirectWithMessage('home', 'Vous avez été déconnecté avec succès.', 'success');
     }
