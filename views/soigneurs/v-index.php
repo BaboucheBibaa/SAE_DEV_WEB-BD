@@ -84,23 +84,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="mb-3">
-                            <i class="bi bi-file-earmark-text" style="font-size: 2rem; color: #198754;"></i>
-                        </div>
-                        <h5 class="card-title">Statistiques diverses et variées</h5>
-                        <p class="card-text text-muted small flex-grow-1">
-                            Consultez des statistiques sur les soins et la nourriture au sein du zoo.
-                        </p>
-                        <a href="index.php?action=statsSoigneurs" class="btn btn-sm btn-primary mt-auto">
-                            Accéder <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </main>

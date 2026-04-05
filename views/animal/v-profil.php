@@ -137,6 +137,19 @@
                                     </span>
                                 </div>
                             </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <strong style="min-width: 150px;">Nom de la zone:</strong>
+                                    <span class="ms-2">
+                                        <?= !empty($animal['NOM_ZONE'])
+                                            ? htmlspecialchars($animal['NOM_ZONE'])
+                                            : '<span class="text-muted">Non spécifiée</span>'
+                                        ?>
+                                    </span>
+                                </div>
+                            </div>
+
                             <div class="col-md-6 mb-3">
                                 <div class="d-flex align-items-center">
                                     <a href="index.php?action=profilEnclos&latitude=<?= htmlspecialchars($animal['LATITUDE_ENCLOS']) ?>&longitude=<?= htmlspecialchars($animal['LONGITUDE_ENCLOS']) ?>" class="btn btn-sm btn-outline-info mb-3">

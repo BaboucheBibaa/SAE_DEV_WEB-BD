@@ -10,7 +10,7 @@ define("VETERINAIRE", 8);
 
 session_start();
 
-require_once 'config/myparams.inc.php';
+require_once 'myparams.inc.php';
 
 require_once 'config/database.php';
 
@@ -34,6 +34,8 @@ require_once 'models/m-ContratTravail.php';
 require_once 'models/m-CA.php';
 require_once 'models/m-LogWriter.php';
 require_once 'models/m-Comptable.php';
+require_once 'models/m-TravauxBoutique.php';
+require_once 'models/m-AffectationZone.php';
 
 require_once 'utilities/Utils.php';
 
@@ -50,6 +52,8 @@ require_once 'services/ServiceReparation.php';
 require_once 'services/ServiceEspece.php';
 require_once 'services/ServiceCompatibilite.php';
 require_once 'services/ServiceComptable.php';
+require_once 'services/ServiceTravauxBoutique.php';
+require_once 'services/ServiceAffectationZone.php';
 
 require_once 'controllers/c-base.php';
 require_once 'controllers/c-soigneurs.php';
@@ -139,6 +143,12 @@ switch ($action) {
     case 'modifReparation':
     case 'formEditionReparation':
     case 'updateReparation':
+    case 'creationTravauxBoutique':
+    case 'ajoutTravauxBoutique':
+    case 'supprTravauxBoutique':
+    case 'creationAffectationZone':
+    case 'ajoutAffectationZone':
+    case 'supprAffectationZone':
         $controller = new AdminController();
         break;
     case 'respZoneDashboard':
@@ -460,6 +470,26 @@ switch ($action) {
 
     case 'supprContrat':
         $controller->supprContrat($_GET['id']);
+        break;
+
+    case 'creationTravauxBoutique':
+        $controller->formCreationTravauxBoutique();
+        break;
+    case 'ajoutTravauxBoutique':
+        $controller->ajoutTravauxBoutique();
+        break;
+    case 'supprTravauxBoutique':
+        $controller->supprTravauxBoutique($_GET['id_boutique'], $_GET['id_personnel']);
+        break;
+
+    case 'creationAffectationZone':
+        $controller->formCreationAffectationZone();
+        break;
+    case 'ajoutAffectationZone':
+        $controller->ajoutAffectationZone();
+        break;
+    case 'supprAffectationZone':
+        $controller->supprAffectationZone($_GET['id_zone'], $_GET['id_personnel']);
         break;
 
     case 'creationParente':

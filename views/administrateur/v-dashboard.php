@@ -197,7 +197,10 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Nom</th>
+                                        <th>Espèce</th>
                                         <th>Enclos</th>
+                                        <th>Zone</th>
+
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
@@ -207,6 +210,7 @@
                                             <tr>
                                                 <td><?= htmlspecialchars($animal['ID_ANIMAL'] ?? '') ?></td>
                                                 <td><strong><?= htmlspecialchars($animal['NOM_ANIMAL'] ?? '') ?></strong></td>
+                                                <td><strong><?= htmlspecialchars($animal['NOM_ESPECE']) ?></strong></td>
                                                 <td>
                                                     <?php if (!empty($animal['LATITUDE_ENCLOS']) && !empty($animal['LONGITUDE_ENCLOS'])): ?>
                                                         <span class="badge bg-info"><?= htmlspecialchars($animal['LATITUDE_ENCLOS']) ?>, <?= htmlspecialchars($animal['LONGITUDE_ENCLOS']) ?></span>
@@ -214,6 +218,7 @@
                                                         <span class="badge bg-secondary">Non assigné</span>
                                                     <?php endif; ?>
                                                 </td>
+                                                <td><?= htmlspecialchars($animal['NOM_ZONE']) ?></td>
                                                 <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
                                                         <a href="index.php?action=profilAnimal&id=<?= $animal['ID_ANIMAL'] ?>" class="btn btn-outline-info" title="Voir le profil">
@@ -253,6 +258,9 @@
                         <div class="mb-3">
                             <a href="index.php?action=creationZone" class="btn btn-success">
                                 <i class="bi bi-plus-circle"></i> Créer une Zone
+                            </a>
+                            <a href="index.php?action=creationAffectationZone" class="btn btn-info ms-2">
+                                <i class="bi bi-link-45deg"></i> Affecter du Personnel
                             </a>
                         </div>
                         <?php if (!empty($zones)): ?>
@@ -519,6 +527,9 @@
                         <div class="mb-3">
                             <a href="index.php?action=creationBoutique" class="btn btn-success">
                                 <i class="bi bi-plus-circle"></i> Créer une Boutique
+                            </a>
+                            <a href="index.php?action=creationTravauxBoutique" class="btn btn-info ms-2">
+                                <i class="bi bi-link-45deg"></i> Assigner des Employés
                             </a>
                         </div>
                         <?php if (!empty($boutiques)): ?>

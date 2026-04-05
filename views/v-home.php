@@ -48,19 +48,9 @@
                     </div>
                 </div>
             </div>
-            <?php else: ?>
-            <div class="col-md-6">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body text-center p-3">
-                        <h5 class="card-title">Système de gestion</h5>
-                        <p class="text-muted small">Personnel et resources</p>
-                    </div>
-                </div>
-            </div>
             <?php endif; ?>
         </div>
 
-        <!-- Quick Links -->
         <?php if (!empty($_SESSION['user'])): ?>
         <div class="text-center mt-4">
             <div class="btn-group btn-group-sm" role="group">

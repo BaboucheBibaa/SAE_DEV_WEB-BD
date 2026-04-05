@@ -178,21 +178,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-bottom">
-                    <h6 class="mb-0 fw-bold text-primary">
-                        <i class="bi bi-lightning"></i> Actions rapides
-                    </h6>
-                </div>
-                <div class="card-body d-flex flex-column gap-2">
-
-                    <a href="index.php?action=statsBoutique&id=<?= $boutique['ID_BOUTIQUE'] ?>"
-                        class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-bar-chart"></i> Statistiques
-                    </a>
-                </div>
-            </div>
         </div>
     </div>
 </div>

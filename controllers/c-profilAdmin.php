@@ -13,6 +13,8 @@ class AdminController extends BaseController
 
     private $serviceEspece;
     private $serviceCompatibilite;
+    private $serviceTravauxBoutique;
+    private $serviceAffectationZone;
 
     //constructeur de la classe
     public function __construct()
@@ -28,6 +30,8 @@ class AdminController extends BaseController
         $this->serviceSoin = new ServiceSoin();
         $this->serviceEspece = new ServiceEspece();
         $this->serviceCompatibilite = new ServiceCompatibilite();
+        $this->serviceTravauxBoutique = new ServiceTravauxBoutique();
+        $this->serviceAffectationZone = new ServiceAffectationZone();
     }
 
     //  Dashboard admin
@@ -232,7 +236,7 @@ class AdminController extends BaseController
                 'ERREUR',
                 "Erreur lors de la suppression de l'employé id={$id}"
             );
-            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de l\'employé.', 'error');
+            //$this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de l\'employé.', 'error');
         }
     }
 
@@ -1409,6 +1413,170 @@ class AdminController extends BaseController
                 "Erreur lors de la suppression de la compatibilité"
             );
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la suppression de la compatibilité.', 'error');
+        }
+    }
+
+    // ========================
+    //  Travaux Boutique
+    // ========================
+
+    /**
+     * Affiche le formulaire pour assigner des employés aux boutiques
+     *
+     * @return void
+     */
+    public function formCreationTravauxBoutique(): void
+    {
+        $this->requireRole(ADMINID);
+        $data = $this->serviceTravauxBoutique->dataCreationTravauxBoutique();
+        if ($data == null) {
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation du formulaire.', 'error');
+        } else {
+            $this->render('administrateur/v-createTravauxBoutique', $data);
+        }
+    }
+
+    /**
+     * Traite l'ajout d'un employé à une boutique
+     *
+     * @return void
+     */
+    public function ajoutTravauxBoutique(): void
+    {
+        $this->requireRole(ADMINID);
+        $retour = $this->serviceTravauxBoutique->ajoutTravauxBoutique();
+        switch ($retour) {
+            case 1:
+                $this->logEvent(
+                    'INSERTION_BD',
+                    "Employé assigné à une boutique"
+                );
+                $this->redirectWithMessage('creationTravauxBoutique', 'Employé assigné à la boutique avec succès.', 'success');
+                break;
+            case 'boutique':
+                $this->redirectWithMessage('creationTravauxBoutique', 'Erreur : Boutique invalide.', 'error');
+                break;
+            case 'personnel':
+                $this->redirectWithMessage('creationTravauxBoutique', 'Erreur : Personnel invalide.', 'error');
+                break;
+            case 'existe':
+                $this->redirectWithMessage('creationTravauxBoutique', 'Erreur : Cet employé est déjà assigné à cette boutique.', 'error');
+                break;
+            case 'erreur':
+            default:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de l'assignation d'un employé à une boutique"
+                );
+                $this->redirectWithMessage('creationTravauxBoutique', 'Erreur lors de l\'assignation.', 'error');
+                break;
+        }
+    }
+
+    /**
+     * Supprime l'assignation d'un employé à une boutique
+     *
+     * @param int $id_boutique Identifiant de la boutique
+     * @param int $id_personnel Identifiant du personnel
+     * @return void
+     */
+    public function supprTravauxBoutique(int $id_boutique, int $id_personnel): void
+    {
+        $this->requireRole(ADMINID);
+        if ($this->serviceTravauxBoutique->supprimer($id_boutique, $id_personnel)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Assignation d'employé à boutique supprimée: boutique={$id_boutique}, personnel={$id_personnel}"
+            );
+            $this->redirectWithMessage('creationTravauxBoutique', 'Assignation supprimée avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression de l'assignation d'employé à boutique"
+            );
+            $this->redirectWithMessage('creationTravauxBoutique', 'Erreur lors de la suppression de l\'assignation.', 'error');
+        }
+    }
+
+    // ========================
+    //  Affectations de Zone
+    // ========================
+
+    /**
+     * Affiche le formulaire pour affecter du personnel aux zones
+     *
+     * @return void
+     */
+    public function formCreationAffectationZone(): void
+    {
+        $this->requireRole(ADMINID);
+        $data = $this->serviceAffectationZone->dataCreationAffectationZone();
+        if ($data == null) {
+            $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation du formulaire.', 'error');
+        } else {
+            $this->render('administrateur/v-createAffectationZone', $data);
+        }
+    }
+
+    /**
+     * Traite l'ajout d'un personnel à une zone
+     *
+     * @return void
+     */
+    public function ajoutAffectationZone(): void
+    {
+        $this->requireRole(ADMINID);
+        $retour = $this->serviceAffectationZone->ajoutAffectationZone();
+        switch ($retour) {
+            case 1:
+                $this->logEvent(
+                    'INSERTION_BD',
+                    "Personnel affecté à une zone"
+                );
+                $this->redirectWithMessage('creationAffectationZone', 'Personnel affecté à la zone avec succès.', 'success');
+                break;
+            case 'zone':
+                $this->redirectWithMessage('creationAffectationZone', 'Erreur : Zone invalide.', 'error');
+                break;
+            case 'personnel':
+                $this->redirectWithMessage('creationAffectationZone', 'Erreur : Personnel invalide.', 'error');
+                break;
+            case 'existe':
+                $this->redirectWithMessage('creationAffectationZone', 'Erreur : Ce personnel est déjà affecté à cette zone.', 'error');
+                break;
+            case 'erreur':
+            default:
+                $this->logEvent(
+                    'ERREUR',
+                    "Erreur lors de l'affectation d'un personnel à une zone"
+                );
+                $this->redirectWithMessage('creationAffectationZone', 'Erreur lors de l\'affectation.', 'error');
+                break;
+        }
+    }
+
+    /**
+     * Supprime l'affectation d'un personnel à une zone
+     *
+     * @param int $id_zone Identifiant de la zone
+     * @param int $id_personnel Identifiant du personnel
+     * @return void
+     */
+    public function supprAffectationZone(int $id_zone, int $id_personnel): void
+    {
+        $this->requireRole(ADMINID);
+        if ($this->serviceAffectationZone->supprimer($id_zone, $id_personnel)) {
+            $this->logEvent(
+                'SUPPRESSION_BD',
+                "Affectation de personnel à zone supprimée: zone={$id_zone}, personnel={$id_personnel}"
+            );
+            $this->redirectWithMessage('creationAffectationZone', 'Affectation supprimée avec succès.', 'success');
+        } else {
+            $this->logEvent(
+                'ERREUR',
+                "Erreur lors de la suppression de l'affectation de personnel à zone"
+            );
+            $this->redirectWithMessage('creationAffectationZone', 'Erreur lors de la suppression de l\'affectation.', 'error');
         }
     }
 }

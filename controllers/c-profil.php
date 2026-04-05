@@ -64,20 +64,17 @@ class ProfilController extends BaseController
 
         // mdp = actuel ?
         if (!password_verify($oldPassword, $user['MDP'])) {
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Le mot de passe actuel est incorrect.'];
-            $this->redirectWithMessage('profil', 'Le mot de passe actuel est incorrect.', "error");
+            $this->redirectWithMessage('profil', 'Le mot de passe actuel est incorrect.', "error",['id' => $userId]);
         }
 
         // correspondance entre les mdp
         if ($newPassword !== $confirmPassword) {
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Les nouveaux mots de passe ne correspondent pas.'];
-            $this->redirectWithMessage('profil', 'Les nouveaux mots de passe ne correspondent pas.', "error");
+            $this->redirectWithMessage('profil', 'Les nouveaux mots de passe ne correspondent pas.', "error",['id' => $userId]);
         }
 
         // longueur du mdp
         if (strlen($newPassword) < 6) {
-            $_SESSION['flash'] = ['type' => 'error', 'message' => 'Le nouveau mot de passe doit contenir au moins 6 caractères.'];
-            $this->redirectWithMessage('profil', 'Le nouveau mot de passe doit contenir au moins 6 caractères.', "error");
+            $this->redirectWithMessage('profil', 'Le nouveau mot de passe doit contenir au moins 6 caractères.', "error",['id' => $userId]);
         }
 
         // maj du  -> PASSWORD_DEFAULT = bcrypt en ce moment, constante contenant l'algorithme utilisé par PHP par défaut
@@ -88,13 +85,13 @@ class ProfilController extends BaseController
                 'UPDATE_BD',
                 "Mot de passe mis à jour pour l'utilisateur id={$userId}"
             );
-            $this->redirectWithMessage('profil', 'Votre mot de passe a été modifié avec succès.', 'success');
+            $this->redirectWithMessage('profil', 'Votre mot de passe a été modifié avec succès.', 'success',['id' => $userId]);
         } else {
             $this->logEvent(
                 'ERREUR',
                 "Erreur lors de la mise à jour du mot de passe pour l'utilisateur id={$userId}"
             );
-            $this->redirectWithMessage('profil', 'Une erreur a eu lieu lors de la mise à jour du profil.', 'error');
+            $this->redirectWithMessage('profil', 'Une erreur a eu lieu lors de la mise à jour du profil.', 'error', ['id' => $userId]);
         }
     }
 }

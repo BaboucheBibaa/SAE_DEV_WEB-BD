@@ -156,6 +156,7 @@ class User extends BaseModel
      */
     public function suppr($id)
     {
+        echo $id;
         $sql = "DELETE FROM Personnel WHERE ID_Personnel = :id";
         return $this->executeModify($sql, [':id' => $id]);
     }

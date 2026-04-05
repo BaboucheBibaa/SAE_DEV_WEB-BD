@@ -2,7 +2,7 @@
 	<div class="container py-5">
 		<div class="text-center mb-5">
 			<h1 class="h2 fw-bold mb-2"><i class="bi bi-calculator"></i> Dashboard Comptable</h1>
-			<p class="text-muted">Vue d'ensemble des statistiques financières du Zoo'land</p>
+			<p class="text-muted">Vue d'ensemble des statistiques financières de Zoo'land</p>
 		</div>
 
 		<div class="row g-4">

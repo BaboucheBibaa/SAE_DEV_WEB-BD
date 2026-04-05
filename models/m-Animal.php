@@ -15,8 +15,8 @@ class Animal extends BaseModel
      */
     public function getParID($id)
     {
-        $query = "SELECT A.*, E.NOM_ESPECE FROM Animal A 
-                 LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE 
+        $query = "SELECT A.*, E.NOM_ESPECE,Z.NOM_ZONE FROM Animal A 
+                 LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE LEFT JOIN ENCLOS ENC ON A.LATITUDE_ENCLOS = ENC.LATITUDE AND A.LONGITUDE_ENCLOS = ENC.LONGITUDE LEFT JOIN ZONE Z ON Z.ID_ZONE = ENC.ID_ZONE
                  WHERE A.ID_ANIMAL = :id_animal";
         return $this->executeQuery($query, [':id_animal' => $id]);
     }
@@ -72,8 +72,8 @@ class Animal extends BaseModel
      */
     public function getAll()
     {
-        $query = "SELECT A.*, E.NOM_ESPECE FROM Animal A 
-                 LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE";
+        $query = "SELECT A.*, E.NOM_ESPECE, Z.NOM_ZONE FROM Animal A 
+                 LEFT JOIN Espece E ON A.ID_ESPECE = E.ID_ESPECE LEFT JOIN ENCLOS E ON A.LONGITUDE_ENCLOS = E.LONGITUDE AND A.LATITUDE_ENCLOS = E.LATITUDE LEFT JOIN ZONE Z ON Z.ID_ZONE = E.ID_ZONE";
         return $this->executeQueryAll($query);
     }
 
@@ -82,7 +82,8 @@ class Animal extends BaseModel
      */
     public function getParCoordonnees($latitude, $longitude)
     {
-        $query = "SELECT DISTINCT A.*,EC.* FROM Animal A JOIN ESPECE E ON A.ID_ESPECE = E.ID_ESPECE JOIN EST_COMPATIBLE_AVEC EC ON E.ID_ESPECE = EC.ID_ESPECE1
+        $query = "SELECT A.*, E.NOM_ESPECE FROM Animal A 
+                 LEFT JOIN ESPECE E ON A.ID_ESPECE = E.ID_ESPECE
                  WHERE A.LATITUDE_ENCLOS = :latitude AND A.LONGITUDE_ENCLOS = :longitude";
         return $this->executeQueryAll($query, [
             ':latitude' => $latitude,

@@ -75,7 +75,7 @@
                             </li>
                         <?php else: ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="index.php?action=connexion">Connexion</a>
+                                <a class="nav-link" href="index.php?action=afficheConnexion">Connexion</a>
                             </li>
                         <?php endif; ?>
                     </ul>

@@ -35,7 +35,6 @@
 									<th>Prestataire</th>
 									<th>Nature</th>
 									<th>Cout</th>
-									<th class="text-center">Actions</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -73,16 +72,6 @@
 										<td style="min-width: 240px;"><?= htmlspecialchars($reparation['NATURE_REPARATION'] ?? '-') ?></td>
 										<td>
 											<?= htmlspecialchars(isset($reparation['COUT_REPARATION']) ? number_format((float) $reparation['COUT_REPARATION'], 2, ',', ' ') . ' EUR' : '-') ?>
-										</td>
-										<td class="text-center">
-											<div class="btn-group btn-group-sm" role="group">
-												<a href="index.php?action=supprReparation&date_debut=<?= urlencode($reparation['DATE_DEBUT_REPARATION']) ?>&latitude=<?= $reparation['LATITUDE_ENCLOS'] ?>&longitude=<?= $reparation['LONGITUDE_ENCLOS'] ?>" 
-													onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet entretien ?')" 
-													class="btn btn-outline-danger btn-sm" 
-													title="Supprimer">
-													<i class="bi bi-trash"></i>
-												</a>
-											</div>
 										</td>
 									</tr>
 								<?php endforeach; ?>

@@ -12,7 +12,7 @@ class LogWriter
         if (!is_dir(dirname($filename))) {
             throw new Exception("Le répertoire du fichier de log n'existe pas.");
         }
-        $message = str_replace(["\n", "\r"], ' ', $message); // Nettoyer les sauts de ligne pour éviter les problèmes de format
+        $message = str_replace(["\n", "\r"], ' ', $message); //sauts de ligne pour éviter les problèmes de format
         $id = fopen($filename, 'a');
         if (!$id) {
             throw new Exception("Impossible d'ouvrir le fichier de log.");
@@ -21,8 +21,8 @@ class LogWriter
             throw new Exception("Impossible de verrouiller le fichier de log.");
         }
 
-        $timestamp = date('Y-m-d H:i:s');
-        if (!fwrite($id, "[" . $timestamp . "] [" . $type . "] " . $message . "\n")) {
+        $time = date('Y-m-d H:i:s');
+        if (!fwrite($id, "[" . $time . "] [" . $type . "] " . $message . "\n")) {
             throw new Exception("Impossible d'écrire dans le fichier de log.");
         }
         if (!flock($id, LOCK_UN)) {
