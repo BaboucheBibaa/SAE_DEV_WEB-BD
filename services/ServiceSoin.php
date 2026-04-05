@@ -14,20 +14,6 @@ class ServiceSoin
     }
 
     /**
-     * Récupère tous les soins enregistrés
-     * @return array|null Tableau de tous les soins ou null
-     */
-    public function getAllSoin(){
-        return $this->Soin->getAll();
-    }
-    /**
-     * Récupère toutes les nourritures enregistrées
-     * @return array|null Tableau de toutes les nourritures ou null
-     */
-    public function getAllNourriture(){
-        return $this->Soin->getAll();
-    }
-    /**
      * Récupère tous les animaux gérés par un soigneur
      * @param int $id_soigneur ID du soigneur
      * @return array|null Tableau des animaux ou null
@@ -161,14 +147,5 @@ class ServiceSoin
             'ID_PERSONNEL' => $idPersonnel
         ];
         return $this->Nourriture->creer($data);
-    }
-
-    /**
-     * Récupère les statistiques des soins par soigneur
-     * @return array|null Tableau des statistiques ou null
-     */
-    public function getStatsSoigneurs()
-    {
-        return $this->Soin->recupStatsSoigneurs();
     }
 }

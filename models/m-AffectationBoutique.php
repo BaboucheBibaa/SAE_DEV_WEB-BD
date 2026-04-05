@@ -1,6 +1,6 @@
 <?php
 
-class TravauxBoutique extends BaseModel
+class AffectationBoutique extends BaseModel
 {
     /**
      * Récupère tous les employés assignés aux boutiques

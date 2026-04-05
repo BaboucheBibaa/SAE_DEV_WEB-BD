@@ -46,10 +46,4 @@ class Soin extends BaseModel
         ]);
         return $result ? 1 : 2;
     }
-
-    public function recupStatsSoigneurs()
-    {
-        //en cours de conception    
-        return 0;
-    }
 }

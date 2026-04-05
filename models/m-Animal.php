@@ -1,14 +1,6 @@
 <?php
 class Animal extends BaseModel
 {
-    /**
-     * Récupère le nom d'un animal par son ID
-     */
-    public function getNomParID($id)
-    {
-        $query = "SELECT NOM_ANIMAL FROM Animal WHERE ID_ANIMAL = :id_animal";
-        return $this->executeQuery($query, [':id_animal' => $id]);
-    }
 
     /**
      * Récupère un animal avec son espèce par ID

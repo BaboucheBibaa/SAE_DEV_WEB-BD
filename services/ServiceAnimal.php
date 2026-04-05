@@ -57,19 +57,6 @@ class ServiceAnimal
         return $animal;
     }
     /**
-     * Récupère l'espèce d'un animal par l'ID de l'espèce
-     * @param int $id ID de l'espèce
-     * @return array|null Données de l'espèce ou null si non trouvée
-     */
-    public function getEspeceAnimalParID($id)
-    {
-        $espece = $this->Espece->getParID($id);
-        if (!$espece) {
-            return null;
-        }
-        return $espece;
-    }
-    /**
      * Récupère tous les animaux d'une zone
      * @param int $id_zone ID de la zone
      * @return array|null Tableau des animaux de la zone ou null si erreur

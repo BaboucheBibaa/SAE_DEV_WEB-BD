@@ -151,7 +151,7 @@
                                                         <a href="index.php?action=profilEspece&id=<?= $espece['ID_ESPECE'] ?>" class="btn btn-outline-info" title="Voir le profil">
                                                             <i class="bi bi-eye"></i>
                                                         </a>
-                                                        <a href="index.php?action=editionEspece&id=<?= $espece['ID_ESPECE'] ?>" class="btn btn-outline-warning" title="Modifier">
+                                                        <a href="index.php?action=formEditionEspece&id=<?= $espece['ID_ESPECE'] ?>" class="btn btn-outline-warning" title="Modifier">
                                                             <i class="bi bi-pencil"></i>
                                                         </a>
                                                         <a href="index.php?action=supprimerEspece&id=<?= $espece['ID_ESPECE'] ?>" class="btn btn-outline-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette espèce ?')" title="Supprimer">

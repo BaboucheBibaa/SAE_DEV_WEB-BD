@@ -2,18 +2,6 @@
 
 class Nourriture extends BaseModel
 {
-    public function getAll()
-    {
-        $sql = "SELECT * FROM EST_NOURRI";
-        return $this->executeQueryAll($sql);
-    }
-
-    public function getNourritureParPersonne($id_personnel)
-    {
-        $sql = "SELECT * FROM EST_NOURRI WHERE ID_PERSONNEL = :id_personnel";
-        return $this->executeQuery($sql, [':id_personnel' => $id_personnel]);
-    }
-
     public function getNourritureParAnimal($id_animal): mixed
     {
         $sql = "SELECT EN.*, P.NOM,P.PRENOM FROM EST_NOURRI EN JOIN PERSONNEL P ON EN.ID_PERSONNEL = P.ID_PERSONNEL WHERE EN.ID_ANIMAL = :id_animal ORDER BY EN.DATE_NOURRIT DESC";

@@ -46,18 +46,6 @@ class ServiceParrainage
         return $visiteurs;
     }
 
-    /**
-     * Récupère tous les niveaux de parrainages
-     * @return array|null Tableau de tous les niveaux ou null
-     */
-    public function getAll()
-    {
-        $niveaux = $this->Parrainage->getAll();
-        if (!$niveaux) {
-            return null;
-        }
-        return $niveaux;
-    }
 
     /**
      * Supprime un parrainage entre un animal et un visiteur

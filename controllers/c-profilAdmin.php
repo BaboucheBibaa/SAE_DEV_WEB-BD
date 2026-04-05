@@ -13,7 +13,7 @@ class AdminController extends BaseController
 
     private $serviceEspece;
     private $serviceCompatibilite;
-    private $serviceTravauxBoutique;
+    private $serviceAffectationBoutique;
     private $serviceAffectationZone;
 
     //constructeur de la classe
@@ -30,7 +30,7 @@ class AdminController extends BaseController
         $this->serviceSoin = new ServiceSoin();
         $this->serviceEspece = new ServiceEspece();
         $this->serviceCompatibilite = new ServiceCompatibilite();
-        $this->serviceTravauxBoutique = new ServiceTravauxBoutique();
+        $this->serviceAffectationBoutique = new ServiceAffectationBoutique();
         $this->serviceAffectationZone = new ServiceAffectationZone();
     }
 
@@ -1425,10 +1425,10 @@ class AdminController extends BaseController
      *
      * @return void
      */
-    public function formCreationTravauxBoutique(): void
+    public function formCreationEmployeeBoutique(): void
     {
         $this->requireRole(ADMINID);
-        $data = $this->serviceTravauxBoutique->dataCreationTravauxBoutique();
+        $data = $this->serviceAffectationBoutique->dataCreationEmployeeBoutique();
         if ($data == null) {
             $this->redirectWithMessage('adminDashboard', 'Erreur lors de la préparation du formulaire.', 'error');
         } else {
@@ -1444,7 +1444,7 @@ class AdminController extends BaseController
     public function ajoutTravauxBoutique(): void
     {
         $this->requireRole(ADMINID);
-        $retour = $this->serviceTravauxBoutique->ajoutTravauxBoutique();
+        $retour = $this->serviceAffectationBoutique->ajoutEmployeeBoutique();
         switch ($retour) {
             case 1:
                 $this->logEvent(
@@ -1483,7 +1483,7 @@ class AdminController extends BaseController
     public function supprTravauxBoutique(int $id_boutique, int $id_personnel): void
     {
         $this->requireRole(ADMINID);
-        if ($this->serviceTravauxBoutique->supprimer($id_boutique, $id_personnel)) {
+        if ($this->serviceAffectationBoutique->supprimer($id_boutique, $id_personnel)) {
             $this->logEvent(
                 'SUPPRESSION_BD',
                 "Assignation d'employé à boutique supprimée: boutique={$id_boutique}, personnel={$id_personnel}"

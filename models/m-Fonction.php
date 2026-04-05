@@ -31,10 +31,4 @@ class Fonction extends BaseModel
         // Si aucun résultat, retourner un tableau vide pour éviter les erreurs
         return $result ? $result : ['NOM_FONCTION' => ''];
     }
-
-    public function moteurRechercheRecup($searchTerm)
-    {
-        $sql = "SELECT NOM_FONCTION FROM FONCTION WHERE LOWER(NOM_FONCTION) LIKE LOWER(:searchTerm)";
-        return $this->executeQuery($sql, [':searchTerm' => $searchTerm]);
-    }
 }

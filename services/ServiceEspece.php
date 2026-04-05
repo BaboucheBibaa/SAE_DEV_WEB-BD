@@ -90,17 +90,6 @@ class ServiceEspece {
     }
 
     /**
-     * Met à jour une espèce avec les données fournies
-     * @param int $id ID de l'espèce
-     * @param array $data Données à mettre à jour
-     * @return bool|null Résultat de la mise à jour
-     */
-    public function modifierEspece($id, $data)
-    {
-        return $this->Espece->update($id, $data);
-    }
-
-    /**
      * Supprime une espèce de la base de données
      * @param int $id_espece ID de l'espèce à supprimer
      * @return bool|null Résultat de la suppression

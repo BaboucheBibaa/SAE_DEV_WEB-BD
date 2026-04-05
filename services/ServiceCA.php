@@ -7,14 +7,7 @@ class ServiceCA
     {
         $this->CA = new CA();
     }
-    /**
-     * Récupère tous les chiffres d'affaires enregistrés
-     * @return array|null Tableau de tous les CA ou null
-     */
-    public function getAll()
-    {
-        return $this->CA->getAll();
-    }
+
     /**
      * Ajoute un nouveau chiffre d'affaires
      * @param array $data Données du CA (id_boutique, date_ca, montant, etc.)

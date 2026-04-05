@@ -4,10 +4,12 @@ class ProfilController extends BaseController
 {
 
     private $serviceEmployee;
+    private $Utils;
 
     public function __construct()
     {
         $this->serviceEmployee = new ServiceEmployee();
+        $this->Utils = new Utils();
     }
 
     /**
@@ -63,12 +65,12 @@ class ProfilController extends BaseController
         $user = $this->serviceEmployee->getEmployeeParID($userId);
 
         // mdp = actuel ?
-        if (!password_verify($oldPassword, $user['MDP'])) {
+        if (!$this->Utils->verifyPassword($oldPassword, $user['MDP'])) {
             $this->redirectWithMessage('profil', 'Le mot de passe actuel est incorrect.', "error",['id' => $userId]);
         }
 
         // correspondance entre les mdp
-        if ($newPassword !== $confirmPassword) {
+        if ($newPassword != $confirmPassword) {
             $this->redirectWithMessage('profil', 'Les nouveaux mots de passe ne correspondent pas.', "error",['id' => $userId]);
         }
 
@@ -77,8 +79,7 @@ class ProfilController extends BaseController
             $this->redirectWithMessage('profil', 'Le nouveau mot de passe doit contenir au moins 6 caractères.', "error",['id' => $userId]);
         }
 
-        // maj du  -> PASSWORD_DEFAULT = bcrypt en ce moment, constante contenant l'algorithme utilisé par PHP par défaut
-        $MDP = password_hash($newPassword, PASSWORD_DEFAULT);
+        $MDP = $this->Utils->hashPassword($newPassword);
 
         if ($this->serviceEmployee->majPassword($userId, $MDP)) {
             $this->logEvent(

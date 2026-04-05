@@ -10,13 +10,6 @@ class ServiceReparation
         $this->Prestataire = new Prestataire();
     }
 
-    /**
-     * Récupère toutes les réparations/entretiens enregistrés
-     * @return array|null Tableau de toutes les réparations ou null
-     */
-    public function getAll(){
-        return $this->Reparation->getAll();
-    }
 
     public function getAllPrestataires(){
         return $this->Prestataire->getAll();
@@ -212,17 +205,6 @@ class ServiceReparation
     }
 
     /**
-     * Alias pour majPrestataire avec données fournies (pour rétrocompatibilité)
-     * @param int $id ID du prestataire
-     * @param array $data Données à mettre à jour
-     * @return bool|null Résultat de la mise à jour
-     */
-    public function updatePrestataire(int $id, array $data)
-    {
-        return $this->Prestataire->update($id, $data);
-    }
-
-    /**
      * Supprime un prestataire
      * @param int $id ID du prestataire
      * @return bool|null Résultat de la suppression
@@ -230,19 +212,6 @@ class ServiceReparation
     public function supprPrestataire(int $id)
     {
         return $this->Prestataire->suppr($id);
-    }
-
-    /**
-     * Met à jour une réparation/entretien existante
-     * @param string $dateDebut Date de début
-     * @param float $latitude Latitude de l'enclos
-     * @param float $longitude Longitude de l'enclos
-     * @param array $data Données à mettre à jour
-     * @return bool Résultat de la mise à jour
-     */
-    public function updateReparation($data)
-    {
-        return $this->Reparation->update($data);
     }
 
     /**

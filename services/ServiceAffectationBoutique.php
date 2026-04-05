@@ -1,46 +1,23 @@
 <?php
 
-class ServiceTravauxBoutique
+class ServiceAffectationBoutique
 {
-    private $travauxBoutique;
+    private $affectationBoutique;
     private $employee;
     private $boutique;
 
     public function __construct()
     {
-        $this->travauxBoutique = new TravauxBoutique();
+        $this->affectationBoutique = new AffectationBoutique();
         $this->employee = new User();
         $this->boutique = new Boutique();
     }
 
-    /**
-     * Récupère tous les travaux boutique
-     */
-    public function getAll()
-    {
-        return $this->travauxBoutique->getAll();
-    }
-
-    /**
-     * Récupère les employés assignés à une boutique
-     */
-    public function getParBoutique($id_boutique)
-    {
-        return $this->travauxBoutique->getParBoutique($id_boutique);
-    }
-
-    /**
-     * Récupère les boutiques auxquelles un employé est assigné
-     */
-    public function getParEmploye($id_personnel)
-    {
-        return $this->travauxBoutique->getParEmploye($id_personnel);
-    }
 
     /**
      * Prépare les données pour le formulaire d'ajout
      */
-    public function dataCreationTravauxBoutique()
+    public function dataCreationEmployeeBoutique()
     {
         $boutiques = $this->boutique->getAll();
         $employees = $this->employee->getParFonction(EMPLOYEE_BOUTIQUE);
@@ -56,7 +33,7 @@ class ServiceTravauxBoutique
      * Ajoute un employé à une boutique
      * Retourne: 'boutique' | 'personnel' | 'existe' | 'erreur' | 1 (succès)
      */
-    public function ajoutTravauxBoutique()
+    public function ajoutEmployeeBoutique()
     {
         // Validation des entrées
         $id_boutique = $_POST['id_boutique'] ?? null;
@@ -71,12 +48,12 @@ class ServiceTravauxBoutique
         }
 
         // Vérifier que l'assignation n'existe pas déjà
-        if ($this->travauxBoutique->exists($id_boutique, $id_personnel)) {
+        if ($this->affectationBoutique->exists($id_boutique, $id_personnel)) {
             return 'existe';
         }
 
         // Ajouter l'assignation
-        $result = $this->travauxBoutique->ajouter($id_boutique, $id_personnel);
+        $result = $this->affectationBoutique->ajouter($id_boutique, $id_personnel);
 
         return $result ? 1 : 'erreur';
     }
@@ -86,6 +63,6 @@ class ServiceTravauxBoutique
      */
     public function supprimer($id_boutique, $id_personnel)
     {
-        return $this->travauxBoutique->supprimer($id_boutique, $id_personnel);
+        return $this->affectationBoutique->supprimer($id_boutique, $id_personnel);
     }
 }

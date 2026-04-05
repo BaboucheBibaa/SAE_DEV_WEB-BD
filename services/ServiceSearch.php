@@ -94,8 +94,8 @@ class ServiceSearch
             
             // Chercher zones, enclos si filtres présents
             if ($autresFiltres) {
-                $results['zones'] = $this->Zone->moteurRechercheRecup($searchTerm, $filters);
-                $results['enclos'] = $this->Enclos->moteurRechercheRecup($searchTerm, $filters);
+                $results['zones'] = $this->Zone->moteurRechercheRecup($searchTerm);
+                $results['enclos'] = $this->Enclos->moteurRechercheRecup($searchTerm);
             }
         }
 

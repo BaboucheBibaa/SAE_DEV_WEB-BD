@@ -112,17 +112,7 @@ class ServiceEmployee
         //Récupère un employé de la base de données en fonction du login passé en paramètre
         return $this->User->getParLogs($login);
     }
-
-    /**
-     * Récupère les contrats de travail se terminant dans les 30 prochains jours
-     * @return array|null Tableau des contrats proches de l'expiration ou null
-     */
-    public function getFinsDeContrats()
-    {
-        // Récupère les contrats de travail qui se terminent dans les 30 prochains jours
-        return $this->ContratTravail->getFinDeContrats();
-    }
-
+    
     //Ajout/MAJ/Suppression d'un employé + vérification dans l'ajout/modification d'un employé avec regex
 
     /**

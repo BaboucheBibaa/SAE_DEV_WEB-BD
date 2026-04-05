@@ -14,30 +14,6 @@ class ServiceAffectationZone
     }
 
     /**
-     * Récupère toutes les affectations
-     */
-    public function getAll()
-    {
-        return $this->affectationZone->getAll();
-    }
-
-    /**
-     * Récupère le personnel affecté à une zone
-     */
-    public function getParZone($id_zone)
-    {
-        return $this->affectationZone->getParZone($id_zone);
-    }
-
-    /**
-     * Récupère les zones auxquelles un personnel est affecté
-     */
-    public function getParPersonnel($id_personnel)
-    {
-        return $this->affectationZone->getParPersonnel($id_personnel);
-    }
-
-    /**
      * Prépare les données pour le formulaire d'ajout
      */
     public function dataCreationAffectationZone()

@@ -34,7 +34,7 @@ require_once 'models/m-ContratTravail.php';
 require_once 'models/m-CA.php';
 require_once 'models/m-LogWriter.php';
 require_once 'models/m-Comptable.php';
-require_once 'models/m-TravauxBoutique.php';
+require_once 'models/m-AffectationBoutique.php';
 require_once 'models/m-AffectationZone.php';
 
 require_once 'utilities/Utils.php';
@@ -52,12 +52,11 @@ require_once 'services/ServiceReparation.php';
 require_once 'services/ServiceEspece.php';
 require_once 'services/ServiceCompatibilite.php';
 require_once 'services/ServiceComptable.php';
-require_once 'services/ServiceTravauxBoutique.php';
+require_once 'services/ServiceAffectationBoutique.php';
 require_once 'services/ServiceAffectationZone.php';
 
 require_once 'controllers/c-base.php';
 require_once 'controllers/c-soigneurs.php';
-require_once 'controllers/c-employeBoutique.php';
 require_once 'controllers/c-profil.php';
 require_once 'controllers/c-connexion.php';
 require_once 'controllers/c-respSoigneurs.php';
@@ -415,10 +414,6 @@ switch ($action) {
         $controller->profilPrestataire($_GET['id']);
         break;
 
-    case 'statsSoigneurs':
-        $controller->statsSoigneurs();
-        break;
-
     case 'supprimerSoin':
         $controller->supprSoin($_GET['idAnimal'], urldecode($_GET['dateSoin']));
         break;
@@ -473,7 +468,7 @@ switch ($action) {
         break;
 
     case 'creationTravauxBoutique':
-        $controller->formCreationTravauxBoutique();
+        $controller->formCreationEmployeeBoutique();
         break;
     case 'ajoutTravauxBoutique':
         $controller->ajoutTravauxBoutique();

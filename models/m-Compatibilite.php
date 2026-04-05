@@ -32,20 +32,6 @@ class Compatibilité extends BaseModel
     }
 
     /**
-     * Récupère les espèces compatibles avec une espèce donnée
-     * @param int $id_espece ID de l'espèce
-     * @return array Tableau des espèces compatibles
-     */
-    public function getCompatiblesParEspece($id_espece)
-    {
-        $query = "SELECT E.* FROM ESPECE E
-                  JOIN EST_COMPATIBLE_AVEC C ON (E.ID_ESPECE = C.ID_ESPECE1 AND C.ID_ESPECE2 = :id_espece)
-                                             OR (E.ID_ESPECE = C.ID_ESPECE2 AND C.ID_ESPECE1 = :id_espece)
-                  ORDER BY E.NOM_ESPECE";
-        return $this->executeQueryAll($query, [':id_espece' => $id_espece]);
-    }
-
-    /**
      * Ajoute une compatibilité entre deux espèces (bidirectionelle)
      * @param int $id_espece1 Première espèce
      * @param int $id_espece2 Deuxième espèce
