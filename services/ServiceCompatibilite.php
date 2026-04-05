@@ -19,20 +19,6 @@ class ServiceCompatibilite
     }
 
     /**
-     * Récupère les espèces compatibles avec une espèce
-     * @param int $id_espece ID de l'espèce
-     * @return array|null Tableau des espèces compatibles
-     */
-    public function getCompatiblesParEspece($id_espece)
-    {
-        $compatibles = $this->Compatibilite->getCompatiblesParEspece($id_espece);
-        if (!$compatibles) {
-            return null;
-        }
-        return $compatibles;
-    }
-
-    /**
      * Vérifie si deux espèces sont compatibles
      * @param int $id_espece1 Première espèce
      * @param int $id_espece2 Deuxième espèce

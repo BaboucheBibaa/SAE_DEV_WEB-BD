@@ -82,7 +82,7 @@ class Animal extends BaseModel
      */
     public function getParCoordonnees($latitude, $longitude)
     {
-        $query = "SELECT A.* FROM Animal A 
+        $query = "SELECT DISTINCT A.*,EC.* FROM Animal A JOIN ESPECE E ON A.ID_ESPECE = E.ID_ESPECE JOIN EST_COMPATIBLE_AVEC EC ON E.ID_ESPECE = EC.ID_ESPECE1
                  WHERE A.LATITUDE_ENCLOS = :latitude AND A.LONGITUDE_ENCLOS = :longitude";
         return $this->executeQueryAll($query, [
             ':latitude' => $latitude,

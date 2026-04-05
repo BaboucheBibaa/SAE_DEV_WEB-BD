@@ -286,3 +286,7 @@
 [2026-04-04 13:49:38] [CONNEXION] Connexion réussie: login=admin, id=1
 [2026-04-04 13:52:15] [ERREUR] Erreur lors de la création du lien de parenté : animal id=20 et animal id=8
 [2026-04-04 13:52:22] [ERREUR] Erreur lors de la création du lien de parenté : animal id=20 et animal id=8
+[2026-04-05 09:55:35] [ERREUR] Échec connexion: login=admin
+[2026-04-05 09:55:40] [CONNEXION] Connexion réussie: login=admin, id=1
+[2026-04-05 09:56:21] [ERREUR] Erreur lors de la création du lien de parenté : animal id=20 et animal id=8
+[2026-04-05 10:31:31] [INSERTION_BD] Nouvel animal ajouté

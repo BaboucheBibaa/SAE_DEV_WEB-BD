@@ -6,6 +6,7 @@ class ServiceAnimal
     private $Zone;
     private $Enclos;
     private $User;
+    private $Compatibilite;
     public function __construct()
     {
         $this->Animal = new Animal();
@@ -13,6 +14,7 @@ class ServiceAnimal
         $this->Zone = new Zone();
         $this->Enclos = new Enclos();
         $this->User = new User();
+        $this->Compatibilite = new Compatibilité();
     }
     //Getters
     /**
@@ -100,6 +102,40 @@ class ServiceAnimal
     }
 
     /**
+     * Vérifie si une espèce est compatible avec tous les animaux présents dans un enclos
+     * @param int $id_espece_nouvelle ID de l'espèce à ajouter
+     * @param float $latitude Latitude de l'enclos
+     * @param float $longitude Longitude de l'enclos
+     * @return bool true si compatible avec tous, false sinon
+     */
+    public function verifierCompatibiliteAvecEnclos($id_espece_nouvelle, $latitude, $longitude)
+    {
+        // Récupérer tous les animaux présents dans cet enclos
+        $animaux_enclos = $this->Animal->getParCoordonnees($latitude, $longitude);
+        
+        // Si l'enclos est vide, la compatibilité est OK
+        if (empty($animaux_enclos)) {
+            return true;
+        }
+        
+        // Vérifier la compatibilité avec chaque animal présent
+        foreach ($animaux_enclos as $animal_enclos) {
+            $id_espece_enclos = $animal_enclos['ID_ESPECE'];
+            
+            // Vérifier si les deux espèces sont compatibles
+            $compatible = $this->Compatibilite->verifierCompatibilite($id_espece_nouvelle, $id_espece_enclos);
+            
+            // Si une espèce n'est pas compatible, retourner false
+            if (!$compatible) {
+                return false;
+            }
+        }
+        
+        // Tous les animaux présents sont compatibles
+        return true;
+    }
+
+    /**
      * Ajoute un nouvel animal à la base de données
      * @return bool|string|null Résultat de la création ou code d'erreur
      */
@@ -109,6 +145,17 @@ class ServiceAnimal
         if ($validationCode != 'ok') {
             return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
         }
+        
+        // Récupérer les coordonnées et l'espèce du nouvel animal
+        $latitude = $_POST['latitude_enclos_cree'] ?? null;
+        $longitude = $_POST['longitude_enclos_cree'] ?? null;
+        $id_espece_nouvelle = $_POST['id_espece_cree'] ?? null;
+        
+        // Vérifier la compatibilité avec tous les animaux présents dans l'enclos
+        if (!$this->verifierCompatibiliteAvecEnclos($id_espece_nouvelle, $latitude, $longitude)) {
+            return 'compatibilite';
+        }
+        
         //Ajoute un nouvel animal à la base de données
         $data = [
             'nom_animal' => $_POST['nom_animal_cree'] ?? null,
@@ -134,6 +181,47 @@ class ServiceAnimal
         if ($validationCode != 'ok') {
             return $validationCode; // Retourne le code d'erreur correspondant à la première validation qui a échoué
         }
+        
+        // Récupérer l'animal actuellement en base
+        $animal_actuel = $this->Animal->getParID($id);
+        if (!$animal_actuel) {
+            return false;
+        }
+        
+        // Vérifier la compatibilité si l'espèce ou l'enclos change
+        $id_espece_nouvelle = $_POST['id_espece_modif'] ?? $animal_actuel['ID_ESPECE'];
+        $latitude_nouvelle = $_POST['latitude_enclos_modif'] ?? $animal_actuel['LATITUDE_ENCLOS'];
+        $longitude_nouvelle = $_POST['longitude_enclos_modif'] ?? $animal_actuel['LONGITUDE_ENCLOS'];
+        
+        // Si l'enclos ou l'espèce a changé, vérifier la compatibilité
+        if ($id_espece_nouvelle != $animal_actuel['ID_ESPECE'] || 
+            $latitude_nouvelle != $animal_actuel['LATITUDE_ENCLOS'] || 
+            $longitude_nouvelle != $animal_actuel['LONGITUDE_ENCLOS']) {
+            
+            // Récupérer les animaux du nouvel enclos
+            $animaux_enclos = $this->Animal->getParCoordonnees($latitude_nouvelle, $longitude_nouvelle);
+            
+            // Vérifier la compatibilité avec les animaux présents dans l'enclos
+            if (!empty($animaux_enclos)) {
+                foreach ($animaux_enclos as $animal_enclos) {
+                    // Ne pas comparer avec soi-même
+                    if ($animal_enclos['ID_ANIMAL'] == $id) {
+                        continue;
+                    }
+                    
+                    $id_espece_enclos = $animal_enclos['ID_ESPECE'];
+                    
+                    // Vérifier si les deux espèces sont compatibles
+                    $compatible = $this->Compatibilite->verifierCompatibilite($id_espece_nouvelle, $id_espece_enclos);
+                    
+                    // Si une espèce n'est pas compatible, retourner false
+                    if (!$compatible) {
+                        return 'compatibilite';
+                    }
+                }
+            }
+        }
+        
         if (isset($_POST['poids_modif'])) {
             $poids = str_replace('.', ',', $_POST['poids_modif']);
         }

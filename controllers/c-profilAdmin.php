@@ -584,6 +584,9 @@ class AdminController extends BaseController
             case 'poids':
                 $this->redirectWithMessage('creationAnimal', 'Erreur : Poids invalide.', 'error');
                 break;
+            case 'compatibilite':
+                $this->redirectWithMessage('creationAnimal','L\'espèce n\'est pas compatible avec une des espèces dans l\'enclos','error');
+                break;
         }
     }
 
